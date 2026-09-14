@@ -1,0 +1,51 @@
+{
+  "Common": {
+    "appName": "Da3wety",
+    "tagline": "Elegant digital invitations for your occasions",
+    "language": "Language",
+    "arabic": "العربية",
+    "english": "English",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "loading": "Loading…",
+    "copy": "Copy",
+    "copied": "Copied",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "optional": "optional",
+    "seats": "{count, plural, one {# seat} other {# seats}}",
+    "guests": "{count, plural, one {# guest} other {# guests}}",
+    "photos": "{count, plural, one {# photo} other {# photos}}"
+  },
+  "Landing": {
+    "title": "Da3wety — digital invitations for weddings and occasions",
+    "description": "Create your event page, send the invitation on WhatsApp, and track guest replies in one place.",
+    "hero": "A digital invitation worthy of your celebration",
+    "heroSub": "An envelope that opens, a photo that is revealed, and RSVPs that reach you instantly.",
+    "cta": "Get started",
+    "login": "Sign in"
+  },
+  "Auth": {
+    "loginTitle": "Sign in",
+    "loginSubtitle": "Sign in with Google to manage your events.",
+    "continueWithGoogle": "Continue with Google",
+    "signOut": "Sign out",
+    "devLogin": "Developer login (development only)",
+    "email": "Email",
+    "password": "Password",
+    "error": "Sign-in failed. Please try again."
+  },
+  "Errors": {
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The link you opened is invalid or has expired.",
+    "genericTitle": "Something went wrong",
+    "genericBody": "Please try again. If the problem persists, contact us.",
+    "retry": "Try again",
+    "goHome": "Home"
+  }
+}
