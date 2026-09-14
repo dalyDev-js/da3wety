@@ -47,5 +47,21 @@
     "genericBody": "Please try again. If the problem persists, contact us.",
     "retry": "Try again",
     "goHome": "Home"
+  },
+  "Validation": {
+    "required": "This field is required",
+    "invalid": "Invalid value",
+    "tooShort": "Too short",
+    "tooLong": "Too long",
+    "tooSmall": "Value is too small",
+    "tooLarge": "Value is too large",
+    "phoneInvalid": "Invalid Egyptian mobile number (e.g. 01012345678)",
+    "emailInvalid": "Invalid email address",
+    "urlInvalid": "Invalid link",
+    "dateInvalid": "Invalid date",
+    "endBeforeStart": "End time must be after the start time",
+    "fileTooLarge": "File is too large",
+    "fileType": "Unsupported file type",
+    "seatsExceeded": "More seats than allowed"
   }
 }
