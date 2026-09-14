@@ -46,7 +46,10 @@
     "genericTitle": "Something went wrong",
     "genericBody": "Please try again. If the problem persists, contact us.",
     "retry": "Try again",
-    "goHome": "Home"
+    "goHome": "Home",
+    "featureLocked": "This feature is not included in your current package. Upgrade to enable it.",
+    "rateLimited": "Too many attempts in a short time. Please wait and try again.",
+    "unauthorized": "You are not allowed to do that."
   },
   "Validation": {
     "required": "This field is required",
@@ -71,5 +74,124 @@
     "newEvent": "New event",
     "noEvents": "You have not created any events yet.",
     "noEventsHint": "Create your first event and share the invitation with your guests."
+  },
+  "Event": {
+    "newIntro": "Enter the basics. Photos and details can be added after creating the event.",
+    "createdNext": "Event created. Add a cover image and a reveal photo, then publish the invitation.",
+    "saved": "Changes saved.",
+    "create": "Create event",
+    "publish": "Publish invitation",
+    "unpublish": "Unpublish",
+    "sectionBasics": "Basics",
+    "sectionWhenWhere": "When & where",
+    "sectionInvitation": "Invitation",
+    "sectionRsvp": "RSVP",
+    "sectionGallery": "Shared photo gallery",
+    "title": "Event title",
+    "titleHint": "e.g. Ahmed & Sara's wedding",
+    "eventType": "Event type",
+    "honoreePrimary": "Groom / honoree",
+    "honoreeSecondary": "Bride / second honoree",
+    "familyNames": "Family names",
+    "familyNamesHint": "e.g. The Mahmoud and Abdelrahman families invite you",
+    "description": "Invitation text",
+    "startsAt": "Starts at",
+    "endsAt": "Ends at",
+    "timezoneNote": "Times are in Cairo time.",
+    "venueName": "Venue name",
+    "venueAddress": "Address",
+    "venueMapsUrl": "Google Maps link",
+    "locale": "Invitation language",
+    "localeHint": "The invitation page and guest replies use this language.",
+    "coverImage": "Cover image",
+    "coverImageHint": "Shown in the WhatsApp link preview.",
+    "revealImage": "Reveal photo",
+    "revealImageHint": "Revealed after the envelope opens. Square works best.",
+    "imagesAfterCreate": "You can upload images after creating the event.",
+    "imageUploaded": "Image uploaded",
+    "imageUploadFailed": "Image upload failed",
+    "chooseImage": "Choose image",
+    "replaceImage": "Replace image",
+    "removeImage": "Remove",
+    "rsvpMode": "RSVP mode",
+    "rsvpModeHint": "Open: anyone with the public link registers with name and phone. Invite only: guests reply from their personal links.",
+    "openRsvpMaxSeats": "Max seats for open registration",
+    "rsvpDeadline": "RSVP deadline",
+    "galleryEnabled": "Enable the guest photo gallery",
+    "galleryModeration": "Review photos before they appear",
+    "galleryHint": "Guests upload from their phones; photos are deleted automatically a week after the event.",
+    "galleryLocked": "The photo gallery is available on the Standard and Premium packages.",
+    "types": {
+      "wedding": "Wedding",
+      "engagement": "Engagement",
+      "henna": "Henna",
+      "katb_ketab": "Katb ketab",
+      "birthday": "Birthday",
+      "graduation": "Graduation",
+      "other": "Other"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "tiers": {
+      "basic": "Basic",
+      "standard": "Standard",
+      "premium": "Premium"
+    },
+    "rsvpModes": {
+      "open": "Open public link",
+      "invite_only": "Personal invitations only"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "edit": "Edit",
+      "guests": "Guests",
+      "gallery": "Gallery",
+      "checkin": "Check-in"
+    },
+    "stats": {
+      "guests": "Invitations",
+      "attending": "Attending",
+      "declined": "Declined",
+      "pending": "No reply",
+      "invitedSeats": "{count, plural, one {# seat invited} other {# seats invited}}",
+      "expectedSeats": "{count, plural, one {# seat expected} other {# seats expected}}",
+      "attendingOfGuests": "{attending} attending of {guests}"
+    },
+    "share": {
+      "title": "Invitation link",
+      "publishedHint": "The invitation is live. Share the link with your guests.",
+      "draftHint": "The invitation is a draft: guests cannot see it until you publish.",
+      "preview": "Preview"
+    },
+    "delete": {
+      "button": "Delete event",
+      "title": "Delete this event permanently?",
+      "description": "Guests, replies and photos will be deleted. This cannot be undone.",
+      "confirm": "Yes, delete"
+    }
+  },
+  "Invitation": {
+    "greeting": "{name}, we would love to see you",
+    "and": "&",
+    "photoAlt": "Photo of the hosts",
+    "timeAt": "at {time}",
+    "timeRange": "from {start} to {end}",
+    "openMaps": "Open in maps",
+    "metaDescription": "You are invited to celebrate with {primary} {secondary}",
+    "inviteLine": {
+      "wedding": "request the pleasure of your company at the wedding of",
+      "engagement": "request the pleasure of your company at the engagement of",
+      "henna": "invite you to the henna night of",
+      "katb_ketab": "invite you to the katb ketab of",
+      "birthday": "invite you to celebrate the birthday of",
+      "graduation": "invite you to celebrate the graduation of",
+      "other": "invite you to join"
+    },
+    "openEnvelope": "Open the invitation",
+    "skip": "Skip",
+    "replay": "Open again"
   }
 }
