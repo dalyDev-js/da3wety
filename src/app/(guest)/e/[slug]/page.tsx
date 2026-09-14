@@ -8,6 +8,7 @@ import { InvitationStage } from "@/components/invitation/invitation-stage";
 import { RsvpForm } from "@/components/invitation/rsvp-form";
 import { toIntlLocale } from "@/lib/i18n/config";
 import { publicAssetUrl } from "@/lib/storage";
+import { galleryState } from "@/lib/gallery-access";
 import { getVisibleEventBySlug, rsvpDeadlinePassed } from "@/lib/invitation-access";
 
 export async function generateMetadata({ params }: PageProps<"/e/[slug]">): Promise<Metadata> {
@@ -51,7 +52,7 @@ export default async function PublicInvitationPage({ params }: PageProps<"/e/[sl
         seenKey={`e:${slug}`}
         revealImageUrl={event.revealImagePath ? publicAssetUrl(event.revealImagePath) : null}
       >
-        <InvitationCard event={event}>
+        <InvitationCard event={event} galleryHref={galleryState(ctx) === "open" ? `/e/${slug}/gallery` : null}>
           {event.rsvpMode === "open" ? (
             deadlinePassed ? (
               <p className="text-center text-(--inv-muted)">{t("closed")}</p>

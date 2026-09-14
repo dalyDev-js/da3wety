@@ -11,6 +11,7 @@ import { getRsvpForGuest } from "@/db/queries/guests";
 import { toIntlLocale } from "@/lib/i18n/config";
 import { publicAssetUrl } from "@/lib/storage";
 import { rsvpDeadlinePassed } from "@/lib/invitation-access";
+import { galleryState } from "@/lib/gallery-access";
 import { GUEST_TOKEN_RE } from "@/lib/tokens";
 
 export async function generateMetadata({ params }: PageProps<"/i/[token]">): Promise<Metadata> {
@@ -35,7 +36,11 @@ export default async function PersonalInvitationPage({ params }: PageProps<"/i/[
         seenKey={`i:${token}`}
         revealImageUrl={event.revealImagePath ? publicAssetUrl(event.revealImagePath) : null}
       >
-        <InvitationCard event={event} guestName={guest.name}>
+        <InvitationCard
+          event={event}
+          guestName={guest.name}
+          galleryHref={galleryState(ctx) === "open" ? `/i/${token}/gallery` : null}
+        >
           {deadlinePassed ? (
             <p className="text-center text-(--inv-muted)">{rsvp ? t("closedWithAnswer") : t("closed")}</p>
           ) : (

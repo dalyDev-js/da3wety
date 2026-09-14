@@ -193,7 +193,9 @@
     "openEnvelope": "Open the invitation",
     "skip": "Skip",
     "replay": "Open again",
-    "shareText": "You are invited to {title}. Open the invitation and RSVP here:"
+    "shareText": "You are invited to {title}. Open the invitation and RSVP here:",
+    "galleryLink": "Shared photo gallery",
+    "galleryLinkHint": "Share your photos from the celebration"
   },
   "Guests": {
     "count": "{count, plural, one {# invitation} other {# invitations}}",
@@ -264,5 +266,73 @@
     "closedWithAnswer": "The RSVP deadline has passed. Your reply is recorded.",
     "inviteOnly": "Please reply from the personal invitation link you received.",
     "full": "This event has reached its guest limit."
+  },
+  "Gallery": {
+    "title": "Photo gallery",
+    "backToInvitation": "Back to the invitation",
+    "choose": "Add photos",
+    "takePhoto": "Take a photo",
+    "batchLimit": "Up to {count} photos per batch.",
+    "uploading": "Uploading {done} of {total}…",
+    "finished": "{done, plural, =0 {No photos uploaded} one {# photo uploaded} other {# photos uploaded}}{failed, plural, =0 {} other { (# failed)}}",
+    "moderationNote": "Photos appear for everyone after the hosts review them.",
+    "expiresNote": "Photos are deleted automatically on {date}.",
+    "empty": "No photos yet. Be the first to share a moment!",
+    "openPhoto": "View photo",
+    "photoBy": "Photo by {name}",
+    "pendingBadge": "Awaiting review",
+    "download": "Download",
+    "deleteOwn": "Delete my photo",
+    "close": "Close",
+    "errors": {
+      "closed": "The gallery is not available right now.",
+      "limit": "This event has reached its photo limit.",
+      "rate": "Too many uploads. Please wait a moment.",
+      "invalid": "The photo could not be uploaded."
+    },
+    "state": {
+      "disabled": "The gallery is not enabled for this event.",
+      "expired": "The gallery period has ended.",
+      "purged": "The gallery photos have been deleted.",
+      "unpublished": "The invitation is not published.",
+      "open": "The gallery is open."
+    },
+    "locked": {
+      "title": "The photo gallery is not in your package",
+      "body": "Upgrade to Standard or Premium so guests can upload to a shared album.",
+      "cta": "Contact us to upgrade"
+    },
+    "retention": {
+      "title": "This gallery is temporary",
+      "body": "Guest photos are deleted automatically on {date}. Download the ones you want to keep before then."
+    },
+    "purged": {
+      "title": "Gallery deleted",
+      "body": "Guest photos were deleted on {date}."
+    },
+    "notEnabled": "The gallery is not enabled yet.",
+    "enableInSettings": "Enable it on the edit page.",
+    "counts": "{stored} photos ({pending} awaiting review) of {max}",
+    "filters": {
+      "all": "All",
+      "pending": "Awaiting review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "hostEmpty": "No photos",
+    "hostEmptyHint": "Share the gallery link with your guests: {url}",
+    "selectAll": "Select all",
+    "clearSelection": "Clear",
+    "selectedCount": "{count} selected",
+    "select": "Select",
+    "approve": "Approve",
+    "reject": "Reject",
+    "downloadSelected": "Download selected",
+    "deleteSelected": "Delete selected",
+    "status": {
+      "pending": "Awaiting review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    }
   }
 }

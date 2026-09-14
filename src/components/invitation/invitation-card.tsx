@@ -1,4 +1,5 @@
-import { MapPinIcon } from "lucide-react";
+import { ImagesIcon, MapPinIcon } from "lucide-react";
+import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
@@ -12,6 +13,8 @@ type Props = {
   event: Event;
   /** Personal greeting for /i/<token> pages. */
   guestName?: string | null;
+  /** Link to the shared gallery when it is open for this event. */
+  galleryHref?: string | null;
   /** RSVP form, ticket, gallery links: rendered below the card body. */
   children?: ReactNode;
 };
@@ -20,7 +23,7 @@ type Props = {
  * The invitation itself, server-rendered in the event's locale. Everything a guest
  * needs is in this HTML; the envelope animation only wraps it.
  */
-export async function InvitationCard({ event, guestName, children }: Props) {
+export async function InvitationCard({ event, guestName, galleryHref, children }: Props) {
   const locale = toIntlLocale(event.locale);
   const [t, format] = await Promise.all([
     getTranslations({ locale, namespace: "Invitation" }),
@@ -86,6 +89,19 @@ export async function InvitationCard({ event, guestName, children }: Props) {
       <GoldRule className="w-full" />
 
       {children ? <div className="w-full">{children}</div> : null}
+
+      {galleryHref ? (
+        <Link
+          href={galleryHref}
+          className="mt-2 inline-flex items-center gap-2 rounded-full border border-(--inv-gold) px-5 py-2.5 text-(--inv-accent) hover:bg-(--inv-gold-soft)/40"
+        >
+          <ImagesIcon className="size-5" />
+          <span>
+            {t("galleryLink")}
+            <span className="block text-xs text-(--inv-muted)">{t("galleryLinkHint")}</span>
+          </span>
+        </Link>
+      ) : null}
     </article>
   );
 }

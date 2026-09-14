@@ -38,7 +38,7 @@ function getDb(): Db {
 
 /** Lazy proxy: `db.select()` etc. instantiate the client on first call. */
 export const db: Db = new Proxy({} as Db, {
-  get(_target, prop, _receiver) {
+  get(_target, prop) {
     const instance = getDb();
     const value = Reflect.get(instance, prop, instance);
     return typeof value === "function" ? value.bind(instance) : value;
