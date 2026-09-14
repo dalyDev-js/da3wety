@@ -63,5 +63,13 @@
     "fileTooLarge": "File is too large",
     "fileType": "Unsupported file type",
     "seatsExceeded": "More seats than allowed"
+  },
+  "Dashboard": {
+    "myEvents": "My events",
+    "admin": "Admin",
+    "welcome": "Welcome, {name}",
+    "newEvent": "New event",
+    "noEvents": "You have not created any events yet.",
+    "noEventsHint": "Create your first event and share the invitation with your guests."
   }
 }
