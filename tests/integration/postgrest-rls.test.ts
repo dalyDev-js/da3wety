@@ -15,15 +15,19 @@ const secretKey = process.env.SUPABASE_SECRET_KEY;
 const enabled = process.env.RUN_INTEGRATION === "1" && !!url && !!publishableKey && !!secretKey;
 
 describe.skipIf(!enabled)("PostgREST RLS posture", () => {
-  const admin = createClient(url!, secretKey!, { auth: { persistSession: false, autoRefreshToken: false } });
-  const userClient = createClient(url!, publishableKey!, { auth: { persistSession: false, autoRefreshToken: false } });
-  const anonClient = createClient(url!, publishableKey!, { auth: { persistSession: false, autoRefreshToken: false } });
+  const opts = { auth: { persistSession: false, autoRefreshToken: false } };
+  let admin: ReturnType<typeof createClient>;
+  let userClient: ReturnType<typeof createClient>;
+  let anonClient: ReturnType<typeof createClient>;
 
   const email = `rls-test-${Date.now()}@example.com`;
   const password = `Test-${Date.now()}-pw!`;
   let userId = "";
 
   beforeAll(async () => {
+    admin = createClient(url!, secretKey!, opts);
+    userClient = createClient(url!, publishableKey!, opts);
+    anonClient = createClient(url!, publishableKey!, opts);
     const { data, error } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
     if (error) throw error;
     userId = data.user.id;

@@ -4,8 +4,9 @@ import { getTranslations } from "next-intl/server";
 
 import { InvitationCard } from "@/components/invitation/invitation-card";
 import { InvitationStage } from "@/components/invitation/invitation-stage";
+import { RsvpForm } from "@/components/invitation/rsvp-form";
 import { toIntlLocale } from "@/lib/i18n/config";
-import { getVisibleEventBySlug } from "@/lib/invitation-access";
+import { getVisibleEventBySlug, rsvpDeadlinePassed } from "@/lib/invitation-access";
 
 export async function generateMetadata({ params }: PageProps<"/e/[slug]">): Promise<Metadata> {
   const { slug } = await params;
@@ -35,9 +36,23 @@ export default async function PublicInvitationPage({ params }: PageProps<"/e/[sl
   const ctx = await getVisibleEventBySlug(slug);
   if (!ctx) notFound();
 
+  const { event } = ctx;
+  const t = await getTranslations({ locale: toIntlLocale(event.locale), namespace: "Rsvp" });
+  const deadlinePassed = rsvpDeadlinePassed(event);
+
   return (
     <InvitationStage>
-      <InvitationCard event={ctx.event} />
+      <InvitationCard event={event}>
+        {event.rsvpMode === "open" ? (
+          deadlinePassed ? (
+            <p className="text-center text-(--inv-muted)">{t("closed")}</p>
+          ) : (
+            <RsvpForm mode="open" slug={slug} maxSeats={event.openRsvpMaxSeats} />
+          )
+        ) : (
+          <p className="text-center text-(--inv-muted)">{t("inviteOnly")}</p>
+        )}
+      </InvitationCard>
     </InvitationStage>
   );
 }

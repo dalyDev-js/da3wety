@@ -12,7 +12,7 @@ describe("safeNext", () => {
     expect(safeNext(null, "/")).toBe("/");
     expect(safeNext("https://evil.example")).toBe("/dashboard");
     expect(safeNext("//evil.example")).toBe("/dashboard");
-    expect(safeNext("/\evil.example")).toBe("/dashboard");
+    expect(safeNext("/\\evil.example")).toBe("/dashboard");
     expect(safeNext("/ok\r\nSet-Cookie: x")).toBe("/dashboard");
   });
 

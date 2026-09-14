@@ -14,3 +14,8 @@ export async function getVisibleEventBySlug(slug: string): Promise<EventWithPack
   const profile = await currentProfile();
   return profile && profile.id === ctx.event.hostId ? ctx : null;
 }
+
+/** True once the RSVP deadline (if any) is in the past. Kept out of components for the purity lint rule. */
+export function rsvpDeadlinePassed(event: { rsvpDeadline: Date | null }, now: Date = new Date()): boolean {
+  return Boolean(event.rsvpDeadline && event.rsvpDeadline.getTime() < now.getTime());
+}
