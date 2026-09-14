@@ -9,10 +9,7 @@ import { events, guests, packages, rsvps, type Event, type Guest, type Package }
 export type EventWithPackage = { event: Event; pkg: Package };
 
 const eventWithPackage = () =>
-  db
-    .select({ event: events, pkg: packages })
-    .from(events)
-    .innerJoin(packages, eq(packages.tier, events.packageTier));
+  db.select({ event: events, pkg: packages }).from(events).innerJoin(packages, eq(packages.tier, events.packageTier));
 
 /** Host dashboard list with RSVP summary. */
 export const listEventsForHost = cache(async (hostId: string) => {
@@ -20,7 +17,10 @@ export const listEventsForHost = cache(async (hostId: string) => {
     .select({
       event: events,
       guestCount: sql<number>`(select count(*) from ${guests} g where g.event_id = ${events.id})`.mapWith(Number),
-      attendingCount: sql<number>`(select count(*) from ${rsvps} r where r.event_id = ${events.id} and r.status = 'attending')`.mapWith(Number),
+      attendingCount:
+        sql<number>`(select count(*) from ${rsvps} r where r.event_id = ${events.id} and r.status = 'attending')`.mapWith(
+          Number,
+        ),
     })
     .from(events)
     .where(eq(events.hostId, hostId))

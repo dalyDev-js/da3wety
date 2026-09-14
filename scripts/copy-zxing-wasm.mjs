@@ -7,12 +7,8 @@ import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
-const barcodeDetectorPkg = JSON.parse(
-  await readFile(join(root, "node_modules/barcode-detector/package.json"), "utf8"),
-);
-const zxingPkg = JSON.parse(
-  await readFile(join(root, "node_modules/zxing-wasm/package.json"), "utf8"),
-);
+const barcodeDetectorPkg = JSON.parse(await readFile(join(root, "node_modules/barcode-detector/package.json"), "utf8"));
+const zxingPkg = JSON.parse(await readFile(join(root, "node_modules/zxing-wasm/package.json"), "utf8"));
 const pinned = barcodeDetectorPkg.dependencies?.["zxing-wasm"];
 if (pinned && pinned !== zxingPkg.version) {
   throw new Error(
@@ -24,8 +20,5 @@ const src = join(root, "node_modules/zxing-wasm/dist/reader/zxing_reader.wasm");
 const outDir = join(root, "public/wasm");
 await mkdir(outDir, { recursive: true });
 await copyFile(src, join(outDir, "zxing_reader.wasm"));
-await writeFile(
-  join(outDir, "version.json"),
-  JSON.stringify({ zxingWasm: zxingPkg.version }, null, 2) + "\n",
-);
+await writeFile(join(outDir, "version.json"), JSON.stringify({ zxingWasm: zxingPkg.version }, null, 2) + "\n");
 console.log(`copied zxing_reader.wasm (${zxingPkg.version}) to public/wasm`);

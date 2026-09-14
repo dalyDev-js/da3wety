@@ -18,10 +18,14 @@ export default async function NewEventPage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">{t("newEvent")}</h1>
-        <p className="text-muted-foreground text-sm">{tEvent("newIntro")}</p>
+        <p className="text-sm text-muted-foreground">{tEvent("newIntro")}</p>
       </div>
       {/* New events start on Basic, so gallery options are locked until an admin upgrades. */}
-      <EventForm mode="create" defaults={{ timezone: "Africa/Cairo", locale: "ar", rsvpMode: "open" }} gating={{ gallery: false, moderation: false }} />
+      <EventForm
+        mode="create"
+        defaults={{ timezone: "Africa/Cairo", locale: "ar", rsvpMode: "open" }}
+        gating={{ gallery: false, moderation: false }}
+      />
     </div>
   );
 }

@@ -8,15 +8,7 @@ export const PACKAGE_TIERS = ["basic", "standard", "premium"] as const;
 export type PackageTier = (typeof PACKAGE_TIERS)[number];
 export const packageTierEnum = pgEnum("package_tier", PACKAGE_TIERS);
 
-export const EVENT_TYPES = [
-  "wedding",
-  "engagement",
-  "henna",
-  "katb_ketab",
-  "birthday",
-  "graduation",
-  "other",
-] as const;
+export const EVENT_TYPES = ["wedding", "engagement", "henna", "katb_ketab", "birthday", "graduation", "other"] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 export const eventTypeEnum = pgEnum("event_type", EVENT_TYPES);
 

@@ -54,7 +54,7 @@ export function EventForm(props: Props) {
       <input type="hidden" name="timezone" value={d.timezone ?? "Africa/Cairo"} />
 
       {state.status === "error" && state.formError ? (
-        <p role="alert" className="text-destructive bg-destructive/10 rounded-md px-3 py-2 text-sm">
+        <p role="alert" className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {state.formError}
         </p>
       ) : null}
@@ -72,7 +72,14 @@ export function EventForm(props: Props) {
           <FieldGroup>
             <Field data-invalid={invalid("title")}>
               <FieldLabel htmlFor="title">{t("title")}</FieldLabel>
-              <Input id="title" name="title" defaultValue={d.title} required maxLength={120} aria-invalid={invalid("title")} />
+              <Input
+                id="title"
+                name="title"
+                defaultValue={d.title}
+                required
+                maxLength={120}
+                aria-invalid={invalid("title")}
+              />
               <FieldDescription>{t("titleHint")}</FieldDescription>
               <Err errors={errors} field="title" />
             </Field>
@@ -91,21 +98,34 @@ export function EventForm(props: Props) {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field data-invalid={invalid("honoreePrimary")}>
                 <FieldLabel htmlFor="honoreePrimary">{t("honoreePrimary")}</FieldLabel>
-                <Input id="honoreePrimary" name="honoreePrimary" defaultValue={d.honoreePrimary} required maxLength={80} aria-invalid={invalid("honoreePrimary")} />
+                <Input
+                  id="honoreePrimary"
+                  name="honoreePrimary"
+                  defaultValue={d.honoreePrimary}
+                  required
+                  maxLength={80}
+                  aria-invalid={invalid("honoreePrimary")}
+                />
                 <Err errors={errors} field="honoreePrimary" />
               </Field>
               <Field data-invalid={invalid("honoreeSecondary")}>
                 <FieldLabel htmlFor="honoreeSecondary">
-                  {t("honoreeSecondary")} <span className="text-muted-foreground font-normal">({common("optional")})</span>
+                  {t("honoreeSecondary")}{" "}
+                  <span className="font-normal text-muted-foreground">({common("optional")})</span>
                 </FieldLabel>
-                <Input id="honoreeSecondary" name="honoreeSecondary" defaultValue={d.honoreeSecondary ?? ""} maxLength={80} />
+                <Input
+                  id="honoreeSecondary"
+                  name="honoreeSecondary"
+                  defaultValue={d.honoreeSecondary ?? ""}
+                  maxLength={80}
+                />
                 <Err errors={errors} field="honoreeSecondary" />
               </Field>
             </div>
 
             <Field data-invalid={invalid("familyNames")}>
               <FieldLabel htmlFor="familyNames">
-                {t("familyNames")} <span className="text-muted-foreground font-normal">({common("optional")})</span>
+                {t("familyNames")} <span className="font-normal text-muted-foreground">({common("optional")})</span>
               </FieldLabel>
               <Input id="familyNames" name="familyNames" defaultValue={d.familyNames ?? ""} maxLength={160} />
               <FieldDescription>{t("familyNamesHint")}</FieldDescription>
@@ -113,9 +133,15 @@ export function EventForm(props: Props) {
 
             <Field data-invalid={invalid("description")}>
               <FieldLabel htmlFor="description">
-                {t("description")} <span className="text-muted-foreground font-normal">({common("optional")})</span>
+                {t("description")} <span className="font-normal text-muted-foreground">({common("optional")})</span>
               </FieldLabel>
-              <Textarea id="description" name="description" defaultValue={d.description ?? ""} rows={4} maxLength={2000} />
+              <Textarea
+                id="description"
+                name="description"
+                defaultValue={d.description ?? ""}
+                rows={4}
+                maxLength={2000}
+              />
               <Err errors={errors} field="description" />
             </Field>
           </FieldGroup>
@@ -132,14 +158,29 @@ export function EventForm(props: Props) {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field data-invalid={invalid("startsAt")}>
                 <FieldLabel htmlFor="startsAt">{t("startsAt")}</FieldLabel>
-                <Input id="startsAt" name="startsAt" type="datetime-local" defaultValue={d.startsAt} required dir="ltr" aria-invalid={invalid("startsAt")} />
+                <Input
+                  id="startsAt"
+                  name="startsAt"
+                  type="datetime-local"
+                  defaultValue={d.startsAt}
+                  required
+                  dir="ltr"
+                  aria-invalid={invalid("startsAt")}
+                />
                 <Err errors={errors} field="startsAt" />
               </Field>
               <Field data-invalid={invalid("endsAt")}>
                 <FieldLabel htmlFor="endsAt">
-                  {t("endsAt")} <span className="text-muted-foreground font-normal">({common("optional")})</span>
+                  {t("endsAt")} <span className="font-normal text-muted-foreground">({common("optional")})</span>
                 </FieldLabel>
-                <Input id="endsAt" name="endsAt" type="datetime-local" defaultValue={d.endsAt ?? ""} dir="ltr" aria-invalid={invalid("endsAt")} />
+                <Input
+                  id="endsAt"
+                  name="endsAt"
+                  type="datetime-local"
+                  defaultValue={d.endsAt ?? ""}
+                  dir="ltr"
+                  aria-invalid={invalid("endsAt")}
+                />
                 <Err errors={errors} field="endsAt" />
               </Field>
             </div>
@@ -154,7 +195,16 @@ export function EventForm(props: Props) {
             </Field>
             <Field data-invalid={invalid("venueMapsUrl")}>
               <FieldLabel htmlFor="venueMapsUrl">{t("venueMapsUrl")}</FieldLabel>
-              <Input id="venueMapsUrl" name="venueMapsUrl" type="url" inputMode="url" defaultValue={d.venueMapsUrl ?? ""} dir="ltr" placeholder="https://maps.app.goo.gl/…" aria-invalid={invalid("venueMapsUrl")} />
+              <Input
+                id="venueMapsUrl"
+                name="venueMapsUrl"
+                type="url"
+                inputMode="url"
+                defaultValue={d.venueMapsUrl ?? ""}
+                dir="ltr"
+                placeholder="https://maps.app.goo.gl/…"
+                aria-invalid={invalid("venueMapsUrl")}
+              />
               <Err errors={errors} field="venueMapsUrl" />
             </Field>
           </FieldGroup>
@@ -181,11 +231,28 @@ export function EventForm(props: Props) {
 
             {props.mode === "edit" ? (
               <div className="grid gap-6 sm:grid-cols-2">
-                <ImageField name="coverImagePath" kind="cover" eventId={props.eventId} label={t("coverImage")} description={t("coverImageHint")} initialPath={d.coverImagePath ?? null} publicBaseUrl={props.publicBaseUrl} />
-                <ImageField name="revealImagePath" kind="reveal" eventId={props.eventId} label={t("revealImage")} description={t("revealImageHint")} initialPath={d.revealImagePath ?? null} publicBaseUrl={props.publicBaseUrl} aspect="square" />
+                <ImageField
+                  name="coverImagePath"
+                  kind="cover"
+                  eventId={props.eventId}
+                  label={t("coverImage")}
+                  description={t("coverImageHint")}
+                  initialPath={d.coverImagePath ?? null}
+                  publicBaseUrl={props.publicBaseUrl}
+                />
+                <ImageField
+                  name="revealImagePath"
+                  kind="reveal"
+                  eventId={props.eventId}
+                  label={t("revealImage")}
+                  description={t("revealImageHint")}
+                  initialPath={d.revealImagePath ?? null}
+                  publicBaseUrl={props.publicBaseUrl}
+                  aspect="square"
+                />
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm">{t("imagesAfterCreate")}</p>
+              <p className="text-sm text-muted-foreground">{t("imagesAfterCreate")}</p>
             )}
           </FieldGroup>
         </CardContent>
@@ -211,14 +278,29 @@ export function EventForm(props: Props) {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field data-invalid={invalid("openRsvpMaxSeats")}>
                 <FieldLabel htmlFor="openRsvpMaxSeats">{t("openRsvpMaxSeats")}</FieldLabel>
-                <Input id="openRsvpMaxSeats" name="openRsvpMaxSeats" type="number" inputMode="numeric" min={1} max={10} defaultValue={String(d.openRsvpMaxSeats ?? 2)} dir="ltr" />
+                <Input
+                  id="openRsvpMaxSeats"
+                  name="openRsvpMaxSeats"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  max={10}
+                  defaultValue={String(d.openRsvpMaxSeats ?? 2)}
+                  dir="ltr"
+                />
                 <Err errors={errors} field="openRsvpMaxSeats" />
               </Field>
               <Field data-invalid={invalid("rsvpDeadline")}>
                 <FieldLabel htmlFor="rsvpDeadline">
-                  {t("rsvpDeadline")} <span className="text-muted-foreground font-normal">({common("optional")})</span>
+                  {t("rsvpDeadline")} <span className="font-normal text-muted-foreground">({common("optional")})</span>
                 </FieldLabel>
-                <Input id="rsvpDeadline" name="rsvpDeadline" type="datetime-local" defaultValue={d.rsvpDeadline ?? ""} dir="ltr" />
+                <Input
+                  id="rsvpDeadline"
+                  name="rsvpDeadline"
+                  type="datetime-local"
+                  defaultValue={d.rsvpDeadline ?? ""}
+                  dir="ltr"
+                />
                 <Err errors={errors} field="rsvpDeadline" />
               </Field>
             </div>
@@ -230,20 +312,30 @@ export function EventForm(props: Props) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             {t("sectionGallery")}
-            {!props.gating.gallery ? <LockIcon className="text-muted-foreground size-4" /> : null}
+            {!props.gating.gallery ? <LockIcon className="size-4 text-muted-foreground" /> : null}
           </CardTitle>
           <CardDescription>{props.gating.gallery ? t("galleryHint") : t("galleryLocked")}</CardDescription>
         </CardHeader>
         <CardContent>
           <FieldGroup>
             <Field orientation="horizontal">
-              <Checkbox id="galleryEnabled" name="galleryEnabled" defaultChecked={Boolean(d.galleryEnabled)} disabled={!props.gating.gallery} />
+              <Checkbox
+                id="galleryEnabled"
+                name="galleryEnabled"
+                defaultChecked={Boolean(d.galleryEnabled)}
+                disabled={!props.gating.gallery}
+              />
               <FieldLabel htmlFor="galleryEnabled" className="font-normal">
                 {t("galleryEnabled")}
               </FieldLabel>
             </Field>
             <Field orientation="horizontal">
-              <Checkbox id="galleryModeration" name="galleryModeration" defaultChecked={Boolean(d.galleryModeration)} disabled={!props.gating.moderation} />
+              <Checkbox
+                id="galleryModeration"
+                name="galleryModeration"
+                defaultChecked={Boolean(d.galleryModeration)}
+                disabled={!props.gating.moderation}
+              />
               <FieldLabel htmlFor="galleryModeration" className="font-normal">
                 {t("galleryModeration")}
               </FieldLabel>

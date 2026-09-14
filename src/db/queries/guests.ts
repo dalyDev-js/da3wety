@@ -88,7 +88,12 @@ export async function searchGuestsForScanner(eventId: string, term: string, limi
     .select({ guest: guests, rsvp: rsvps })
     .from(guests)
     .leftJoin(rsvps, eq(rsvps.guestId, guests.id))
-    .where(and(eq(guests.eventId, eventId), or(ilike(guests.name, `%${q}%`), sql`${guests.phone} like ${"%" + q.replace(/[^0-9+]/g, "")}`)))
+    .where(
+      and(
+        eq(guests.eventId, eventId),
+        or(ilike(guests.name, `%${q}%`), sql`${guests.phone} like ${"%" + q.replace(/[^0-9+]/g, "")}`),
+      ),
+    )
     .orderBy(asc(guests.name))
     .limit(limit);
 }

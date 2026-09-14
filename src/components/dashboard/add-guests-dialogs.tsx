@@ -7,7 +7,14 @@ import { useState } from "react";
 import { BulkAddForm } from "@/components/dashboard/bulk-add-form";
 import { GuestForm } from "@/components/dashboard/guest-form";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export function AddGuestsDialogs({ eventId }: { eventId: string }) {
   const t = useTranslations("Guests");

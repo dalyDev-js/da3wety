@@ -4,7 +4,11 @@ import { formString, optionalText } from "./form";
 import { EgyptianPhone } from "./phone";
 import { VALIDATION_KEYS, z } from "./zod-config";
 
-const seats = z.coerce.number().int().min(1, { error: VALIDATION_KEYS.tooSmall }).max(20, { error: VALIDATION_KEYS.tooLarge });
+const seats = z.coerce
+  .number()
+  .int()
+  .min(1, { error: VALIDATION_KEYS.tooSmall })
+  .max(20, { error: VALIDATION_KEYS.tooLarge });
 
 /** A guest with a personal link answers the invitation. */
 export const personalRsvpSchema = z.object({

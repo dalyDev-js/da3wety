@@ -26,7 +26,8 @@ export async function toJpeg(file: File, opts: CompressOptions): Promise<File> {
     const { heicTo } = await import("heic-to");
     source = await heicTo({ blob: file, type: "image/jpeg", quality: 0.9 });
   }
-  const input = source instanceof File ? source : new File([source], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" });
+  const input =
+    source instanceof File ? source : new File([source], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" });
 
   return imageCompression(input, {
     maxWidthOrHeight: opts.maxDimension,
@@ -42,7 +43,11 @@ export async function toJpeg(file: File, opts: CompressOptions): Promise<File> {
 export type SignedUploadTarget = { bucket: string; path: string; token: string };
 
 /** PUTs a blob straight to Supabase Storage using a server-minted signed upload token. */
-export async function uploadToSigned(target: SignedUploadTarget, blob: Blob, contentType = "image/jpeg"): Promise<void> {
+export async function uploadToSigned(
+  target: SignedUploadTarget,
+  blob: Blob,
+  contentType = "image/jpeg",
+): Promise<void> {
   const supabase = createClient();
   const { error } = await supabase.storage
     .from(target.bucket)

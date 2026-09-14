@@ -16,7 +16,12 @@ import { ensureActiveTicket, revokeActiveTicket } from "@/lib/tickets";
 import { guestToken as makeGuestToken, GUEST_TOKEN_RE, SLUG_RE } from "@/lib/tokens";
 import { domainError, validationError } from "@/lib/validation/action-errors";
 import type { ActionState } from "@/lib/validation/form";
-import { openRsvpFromFormData, openRsvpSchema, personalRsvpFromFormData, personalRsvpSchema } from "@/lib/validation/rsvp";
+import {
+  openRsvpFromFormData,
+  openRsvpSchema,
+  personalRsvpFromFormData,
+  personalRsvpSchema,
+} from "@/lib/validation/rsvp";
 import { VALIDATION_KEYS } from "@/lib/validation/zod-config";
 
 export type RsvpActionState = ActionState<{ status: RsvpStatus }>;
@@ -45,7 +50,14 @@ async function recordResponse(
   const seats = input.status === "attending" ? input.seats : 0;
   await tx
     .insert(rsvps)
-    .values({ eventId: ctx.event.id, guestId, status: input.status, seats, message: input.message, respondedAt: new Date() })
+    .values({
+      eventId: ctx.event.id,
+      guestId,
+      status: input.status,
+      seats,
+      message: input.message,
+      respondedAt: new Date(),
+    })
     .onConflictDoUpdate({
       target: rsvps.guestId,
       set: {
@@ -72,7 +84,11 @@ function revalidateAfterRsvp(ctx: EventWithPackage, token?: string) {
 }
 
 /** Guest with a personal link (/i/<token>). */
-export async function submitPersonalRsvp(token: string, _prev: RsvpActionState, formData: FormData): Promise<RsvpActionState> {
+export async function submitPersonalRsvp(
+  token: string,
+  _prev: RsvpActionState,
+  formData: FormData,
+): Promise<RsvpActionState> {
   if (!GUEST_TOKEN_RE.test(token)) return { status: "error" };
   const ctx = await getEventByGuestToken(token);
   if (!ctx) return { status: "error" };
@@ -106,7 +122,11 @@ export async function submitPersonalRsvp(token: string, _prev: RsvpActionState, 
 }
 
 /** Self-registration through the open public link (/e/<slug>). Redirects to the new personal link. */
-export async function submitOpenRsvp(slug: string, _prev: RsvpActionState, formData: FormData): Promise<RsvpActionState> {
+export async function submitOpenRsvp(
+  slug: string,
+  _prev: RsvpActionState,
+  formData: FormData,
+): Promise<RsvpActionState> {
   if (!SLUG_RE.test(slug)) return { status: "error" };
   const ctx = await getEventBySlug(slug);
   if (!ctx) return { status: "error" };
@@ -117,7 +137,8 @@ export async function submitOpenRsvp(slug: string, _prev: RsvpActionState, formD
   const parsed = openRsvpSchema.safeParse(openRsvpFromFormData(formData));
   if (!parsed.success) {
     // Honeypot filled: behave like success without storing anything.
-    if (parsed.error.issues.some((i) => i.path[0] === "website")) return { status: "success", data: { status: "attending" } };
+    if (parsed.error.issues.some((i) => i.path[0] === "website"))
+      return { status: "success", data: { status: "attending" } };
     return validationError(parsed.error, locale);
   }
   const maxSeats = ctx.event.openRsvpMaxSeats;
@@ -161,7 +182,11 @@ export async function submitOpenRsvp(slug: string, _prev: RsvpActionState, formD
       }
 
       const seatCap = Math.min(parsed.data.seats, guest.maxSeats);
-      await recordResponse(tx, ctx, guest.id, { status: parsed.data.status, seats: seatCap, message: parsed.data.message ?? null });
+      await recordResponse(tx, ctx, guest.id, {
+        status: parsed.data.status,
+        seats: seatCap,
+        message: parsed.data.message ?? null,
+      });
       return guest.token;
     });
   } catch (error) {

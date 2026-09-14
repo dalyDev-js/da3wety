@@ -38,9 +38,7 @@ function defaultKey(issue: z.core.$ZodRawIssue): ValidationKey {
           : VALIDATION_KEYS.tooShort
         : VALIDATION_KEYS.tooSmall;
     case "too_big":
-      return issue.origin === "string" || issue.origin === "array"
-        ? VALIDATION_KEYS.tooLong
-        : VALIDATION_KEYS.tooLarge;
+      return issue.origin === "string" || issue.origin === "array" ? VALIDATION_KEYS.tooLong : VALIDATION_KEYS.tooLarge;
     case "invalid_format":
       if (issue.format === "email") return VALIDATION_KEYS.emailInvalid;
       if (issue.format === "url") return VALIDATION_KEYS.urlInvalid;

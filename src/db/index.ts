@@ -11,7 +11,8 @@ import * as schema from "./schema";
  * Drizzle over postgres-js, connected to the Supabase *transaction* pooler.
  * - prepare:false — Supavisor transaction mode has no prepared statements.
  * - small pool — every serverless instance holds its own; Supavisor multiplexes.
- * - memoized on globalThis in development so HMR does not leak connections.
+ * - created lazily on first use (never at import/build time) and memoized on
+ *   globalThis in development so HMR does not leak connections.
  */
 function createClient() {
   const sql = postgres(serverEnv().DATABASE_URL, {
@@ -27,10 +28,22 @@ type Db = ReturnType<typeof createClient>;
 
 const globalForDb = globalThis as unknown as { __da3wetyDb?: Db };
 
-export const db: Db =
-  process.env.NODE_ENV === "production"
-    ? createClient()
-    : (globalForDb.__da3wetyDb ??= createClient());
+function getDb(): Db {
+  if (process.env.NODE_ENV === "production") {
+    globalForDb.__da3wetyDb ??= createClient();
+    return globalForDb.__da3wetyDb;
+  }
+  return (globalForDb.__da3wetyDb ??= createClient());
+}
+
+/** Lazy proxy: `db.select()` etc. instantiate the client on first call. */
+export const db: Db = new Proxy({} as Db, {
+  get(_target, prop, _receiver) {
+    const instance = getDb();
+    const value = Reflect.get(instance, prop, instance);
+    return typeof value === "function" ? value.bind(instance) : value;
+  },
+});
 
 export type Database = Db;
 export type Transaction = Parameters<Parameters<Db["transaction"]>[0]>[0];

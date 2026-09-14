@@ -30,7 +30,7 @@ function Stat({ label, value, hint }: { label: string; value: number; hint?: str
           {value}
         </CardTitle>
       </CardHeader>
-      {hint ? <CardContent className="text-muted-foreground text-xs">{hint}</CardContent> : null}
+      {hint ? <CardContent className="text-xs text-muted-foreground">{hint}</CardContent> : null}
     </Card>
   );
 }
@@ -57,8 +57,16 @@ export default async function EventOverviewPage({ params }: PageProps<"/dashboar
   return (
     <div className="space-y-6">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label={t("stats.guests")} value={stats.guests} hint={t("stats.invitedSeats", { count: stats.invitedSeats })} />
-        <Stat label={t("stats.attending")} value={stats.attending} hint={t("stats.expectedSeats", { count: stats.expectedSeats })} />
+        <Stat
+          label={t("stats.guests")}
+          value={stats.guests}
+          hint={t("stats.invitedSeats", { count: stats.invitedSeats })}
+        />
+        <Stat
+          label={t("stats.attending")}
+          value={stats.attending}
+          hint={t("stats.expectedSeats", { count: stats.expectedSeats })}
+        />
         <Stat label={t("stats.declined")} value={stats.declined} />
         <Stat label={t("stats.pending")} value={stats.pending} />
       </div>
@@ -70,7 +78,7 @@ export default async function EventOverviewPage({ params }: PageProps<"/dashboar
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <code dir="ltr" className="bg-muted min-w-0 flex-1 truncate rounded-md px-3 py-2 text-sm">
+            <code dir="ltr" className="min-w-0 flex-1 truncate rounded-md bg-muted px-3 py-2 text-sm">
               {publicLink}
             </code>
             <CopyButton value={publicLink} label={common("copy")} copiedLabel={common("copied")} />
@@ -81,10 +89,21 @@ export default async function EventOverviewPage({ params }: PageProps<"/dashboar
               </Link>
             </Button>
           </div>
-          <dl className="text-muted-foreground grid gap-1 text-sm sm:grid-cols-2">
+          <dl className="grid gap-1 text-sm text-muted-foreground sm:grid-cols-2">
             <div>
               <dt className="inline font-medium">{t("startsAt")}: </dt>
-              <dd className="inline">{format.dateTime(event.startsAt, { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "2-digit", hour12: true, timeZone: event.timezone })}</dd>
+              <dd className="inline">
+                {format.dateTime(event.startsAt, {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                  timeZone: event.timezone,
+                })}
+              </dd>
             </div>
             <div>
               <dt className="inline font-medium">{t("rsvpMode")}: </dt>

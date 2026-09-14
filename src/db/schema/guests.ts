@@ -1,14 +1,5 @@
 import { sql } from "drizzle-orm";
-import {
-  index,
-  pgPolicy,
-  pgTable,
-  smallint,
-  text,
-  timestamp,
-  uniqueIndex,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { index, pgPolicy, pgTable, smallint, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { authenticatedRole } from "drizzle-orm/supabase";
 
 import { ownsEvent, timestamps } from "./_shared";

@@ -12,7 +12,7 @@ export default async function LandingPage() {
       <p className="font-heading text-5xl font-bold tracking-tight">{common("appName")}</p>
       <div className="max-w-xl space-y-3">
         <h1 className="text-3xl font-semibold text-balance">{t("hero")}</h1>
-        <p className="text-muted-foreground text-lg text-pretty">{t("heroSub")}</p>
+        <p className="text-lg text-pretty text-muted-foreground">{t("heroSub")}</p>
       </div>
       <div className="flex flex-wrap items-center justify-center gap-3">
         <Button asChild size="lg">

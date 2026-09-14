@@ -24,9 +24,9 @@ export default async function GlobalNotFound() {
   return (
     <html lang={htmlLang(locale)} dir={TEXT_DIRECTION[locale]} className={`${fontClassName} h-full antialiased`}>
       <body className="flex min-h-full flex-col items-center justify-center gap-6 bg-background px-6 text-center text-foreground">
-        <p className="text-muted-foreground font-mono text-sm">404</p>
+        <p className="font-mono text-sm text-muted-foreground">404</p>
         <h1 className="text-2xl font-semibold">{t("notFoundTitle")}</h1>
-        <p className="text-muted-foreground max-w-md">{t("notFoundBody")}</p>
+        <p className="max-w-md text-muted-foreground">{t("notFoundBody")}</p>
         <Button asChild variant="outline">
           <Link href="/">{t("goHome")}</Link>
         </Button>

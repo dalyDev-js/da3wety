@@ -15,7 +15,11 @@ export const eventFormSchema = z
   .object({
     title: z.string({ error: VALIDATION_KEYS.required }).trim().min(2, { error: VALIDATION_KEYS.tooShort }).max(120),
     eventType: z.enum(EVENT_TYPES),
-    honoreePrimary: z.string({ error: VALIDATION_KEYS.required }).trim().min(1, { error: VALIDATION_KEYS.required }).max(80),
+    honoreePrimary: z
+      .string({ error: VALIDATION_KEYS.required })
+      .trim()
+      .min(1, { error: VALIDATION_KEYS.required })
+      .max(80),
     honoreeSecondary: optionalText(80),
     familyNames: optionalText(160),
     description: optionalText(2000),
@@ -28,7 +32,11 @@ export const eventFormSchema = z
     locale: z.enum(LOCALES),
     rsvpMode: z.enum(RSVP_MODES),
     rsvpDeadline: DATETIME_LOCAL.optional(),
-    openRsvpMaxSeats: z.coerce.number().int().min(1, { error: VALIDATION_KEYS.tooSmall }).max(10, { error: VALIDATION_KEYS.tooLarge }),
+    openRsvpMaxSeats: z.coerce
+      .number()
+      .int()
+      .min(1, { error: VALIDATION_KEYS.tooSmall })
+      .max(10, { error: VALIDATION_KEYS.tooLarge }),
     galleryEnabled: z.boolean(),
     galleryModeration: z.boolean(),
     coverImagePath: optionalText(200),

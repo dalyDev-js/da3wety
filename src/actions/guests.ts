@@ -19,7 +19,9 @@ import { z } from "@/lib/validation/zod-config";
 const uuid = z.uuid();
 
 function isUniqueViolation(error: unknown): boolean {
-  return typeof error === "object" && error !== null && "code" in error && (error as { code?: string }).code === "23505";
+  return (
+    typeof error === "object" && error !== null && "code" in error && (error as { code?: string }).code === "23505"
+  );
 }
 
 async function guestCapacityLeft(eventId: string, maxGuests: number | null): Promise<number> {
@@ -66,7 +68,12 @@ export async function addGuest(eventId: string, _prev: ActionState, formData: Fo
   return { status: "success", message: t("added") };
 }
 
-export async function updateGuest(eventId: string, guestId: string, _prev: ActionState, formData: FormData): Promise<ActionState> {
+export async function updateGuest(
+  eventId: string,
+  guestId: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
   const host = await requireHost();
   if (!uuid.safeParse(eventId).success || !uuid.safeParse(guestId).success) return { status: "error" };
   const ctx = await getEventForHost(eventId, host.id);
@@ -96,7 +103,11 @@ export async function updateGuest(eventId: string, guestId: string, _prev: Actio
   return { status: "success", message: t("saved") };
 }
 
-export type BulkAddResult = ActionState<{ added: number; skipped: number; lineErrors: { line: number; message: string }[] }>;
+export type BulkAddResult = ActionState<{
+  added: number;
+  skipped: number;
+  lineErrors: { line: number; message: string }[];
+}>;
 
 export async function addGuestsBulk(eventId: string, _prev: BulkAddResult, formData: FormData): Promise<BulkAddResult> {
   const host = await requireHost();

@@ -13,7 +13,12 @@ import type { RsvpStatus } from "@/db/schema/enums";
 import { idleState, type FieldErrors } from "@/lib/validation/form";
 
 type Props =
-  | { mode: "personal"; token: string; maxSeats: number; current: { status: RsvpStatus; seats: number; message: string | null } | null }
+  | {
+      mode: "personal";
+      token: string;
+      maxSeats: number;
+      current: { status: RsvpStatus; seats: number; message: string | null } | null;
+    }
   | { mode: "open"; slug: string; maxSeats: number };
 
 function Err({ errors, field }: { errors?: FieldErrors; field: string }) {
@@ -29,7 +34,8 @@ function Err({ errors, field }: { errors?: FieldErrors; field: string }) {
 export function RsvpForm(props: Props) {
   const t = useTranslations("Rsvp");
   const common = useTranslations("Common");
-  const action = props.mode === "personal" ? submitPersonalRsvp.bind(null, props.token) : submitOpenRsvp.bind(null, props.slug);
+  const action =
+    props.mode === "personal" ? submitPersonalRsvp.bind(null, props.token) : submitOpenRsvp.bind(null, props.slug);
   const [state, formAction, pending] = useActionState(action, idleState as RsvpActionState);
   const initialStatus: RsvpStatus | "" = props.mode === "personal" && props.current ? props.current.status : "";
   const [status, setStatus] = useState<RsvpStatus | "">(initialStatus);
@@ -46,19 +52,29 @@ export function RsvpForm(props: Props) {
           : "border-(--inv-gold) bg-transparent text-(--inv-ink)"
       }`}
     >
-      <input type="radio" name="status" value={value} className="sr-only" checked={status === value} onChange={() => setStatus(value)} />
+      <input
+        type="radio"
+        name="status"
+        value={value}
+        className="sr-only"
+        checked={status === value}
+        onChange={() => setStatus(value)}
+      />
       {label}
     </label>
   );
 
   return (
     <form action={formAction} className="mx-auto w-full max-w-sm space-y-5" noValidate aria-labelledby="rsvp-title">
-      <h2 id="rsvp-title" className="font-heading text-center text-2xl">
+      <h2 id="rsvp-title" className="text-center font-heading text-2xl">
         {current ? t("updateTitle") : t("title")}
       </h2>
 
       {state.status === "success" ? (
-        <p role="status" className="rounded-lg border border-(--inv-gold) bg-(--inv-gold-soft)/40 px-4 py-3 text-center">
+        <p
+          role="status"
+          className="rounded-lg border border-(--inv-gold) bg-(--inv-gold-soft)/40 px-4 py-3 text-center"
+        >
           {state.data?.status === "declined" ? t("thanksDeclined") : t("thanksAttending")}
         </p>
       ) : null}
@@ -72,12 +88,31 @@ export function RsvpForm(props: Props) {
         <>
           <Field data-invalid={invalid("name")}>
             <FieldLabel htmlFor="rsvp-name">{t("name")}</FieldLabel>
-            <Input id="rsvp-name" name="name" autoComplete="name" required maxLength={80} aria-invalid={invalid("name")} className="bg-white/60" />
+            <Input
+              id="rsvp-name"
+              name="name"
+              autoComplete="name"
+              required
+              maxLength={80}
+              aria-invalid={invalid("name")}
+              className="bg-white/60"
+            />
             <Err errors={errors} field="name" />
           </Field>
           <Field data-invalid={invalid("phone")}>
             <FieldLabel htmlFor="rsvp-phone">{t("phone")}</FieldLabel>
-            <Input id="rsvp-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" dir="ltr" placeholder="01012345678" required aria-invalid={invalid("phone")} className="bg-white/60 text-start" />
+            <Input
+              id="rsvp-phone"
+              name="phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              dir="ltr"
+              placeholder="01012345678"
+              required
+              aria-invalid={invalid("phone")}
+              className="bg-white/60 text-start"
+            />
             <Err errors={errors} field="phone" />
           </Field>
           {/* Honeypot: hidden from people, filled by bots. */}
@@ -118,14 +153,21 @@ export function RsvpForm(props: Props) {
         <FieldLabel htmlFor="rsvp-message">
           {t("message")} <span className="font-normal text-(--inv-muted)">({common("optional")})</span>
         </FieldLabel>
-        <Textarea id="rsvp-message" name="message" rows={2} maxLength={300} defaultValue={current?.message ?? ""} className="bg-white/60" />
+        <Textarea
+          id="rsvp-message"
+          name="message"
+          rows={2}
+          maxLength={300}
+          defaultValue={current?.message ?? ""}
+          className="bg-white/60"
+        />
         <Err errors={errors} field="message" />
       </Field>
 
       <button
         type="submit"
         disabled={pending || status === ""}
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-(--inv-accent) px-6 py-3.5 text-base font-semibold text-(--inv-paper) transition-opacity disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-(--inv-gold) focus-visible:ring-offset-2 focus-visible:outline-none"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-(--inv-accent) px-6 py-3.5 text-base font-semibold text-(--inv-paper) transition-opacity focus-visible:ring-2 focus-visible:ring-(--inv-gold) focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50"
       >
         {pending ? <Spinner /> : null}
         {current ? t("update") : t("send")}

@@ -1,14 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  formatShortCode,
-  guestToken,
-  normalizeShortCode,
-  qrToken,
-  scannerToken,
-  shortCode,
-  slug,
-} from "@/lib/tokens";
+import { formatShortCode, guestToken, normalizeShortCode, qrToken, scannerToken, shortCode, slug } from "@/lib/tokens";
 
 const unique = (make: () => string, n = 500) => new Set(Array.from({ length: n }, make)).size;
 

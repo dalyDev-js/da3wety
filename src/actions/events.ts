@@ -31,14 +31,19 @@ import { z } from "@/lib/validation/zod-config";
 const uuid = z.uuid();
 
 function isUniqueViolation(error: unknown): boolean {
-  return typeof error === "object" && error !== null && "code" in error && (error as { code?: string }).code === "23505";
+  return (
+    typeof error === "object" && error !== null && "code" in error && (error as { code?: string }).code === "23505"
+  );
 }
 
 /** Insert with a fresh slug; retries on the (astronomically rare) slug collision. */
 async function insertWithSlug(values: Omit<typeof events.$inferInsert, "slug">): Promise<Event> {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const [row] = await db.insert(events).values({ ...values, slug: makeSlug() }).returning();
+      const [row] = await db
+        .insert(events)
+        .values({ ...values, slug: makeSlug() })
+        .returning();
       if (row) return row;
     } catch (error) {
       if (!isUniqueViolation(error) || attempt === 2) throw error;
@@ -147,7 +152,10 @@ export async function setEventStatus(eventId: string, status: EventStatus): Prom
   if (!uuid.safeParse(eventId).success || !EVENT_STATUSES.includes(status)) return;
   const ctx = await getEventForHost(eventId, host.id);
   if (!ctx) return;
-  await db.update(events).set({ status }).where(and(eq(events.id, eventId), eq(events.hostId, host.id)));
+  await db
+    .update(events)
+    .set({ status })
+    .where(and(eq(events.id, eventId), eq(events.hostId, host.id)));
   revalidatePath("/dashboard");
   revalidatePath(`/dashboard/events/${eventId}`, "layout");
   revalidatePath(`/e/${ctx.event.slug}`, "layout");

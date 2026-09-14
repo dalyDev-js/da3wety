@@ -8,8 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Loaded on demand so the animation runtime is not in the initial bundle.
-const loadMotionFeatures = () =>
-  import("@/lib/motion-features").then((m) => m.default);
+const loadMotionFeatures = () => import("@/lib/motion-features").then((m) => m.default);
 
 type ProvidersProps = {
   direction: "rtl" | "ltr";

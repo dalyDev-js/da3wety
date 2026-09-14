@@ -29,7 +29,7 @@ export default async function DashboardPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">{t("myEvents")}</h1>
-          <p className="text-muted-foreground text-sm">{t("welcome", { name: profile.fullName ?? profile.email })}</p>
+          <p className="text-sm text-muted-foreground">{t("welcome", { name: profile.fullName ?? profile.email })}</p>
         </div>
         <Button asChild>
           <Link href="/dashboard/events/new">
@@ -68,13 +68,20 @@ export default async function DashboardPage() {
                     <Badge variant="outline">{tEvent(`tiers.${event.packageTier}`)}</Badge>
                   </ItemTitle>
                   <ItemDescription>
-                    {format.dateTime(event.startsAt, { ...{ dateStyle: undefined }, weekday: "short", day: "numeric", month: "long", year: "numeric", timeZone: event.timezone })}
+                    {format.dateTime(event.startsAt, {
+                      ...{ dateStyle: undefined },
+                      weekday: "short",
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      timeZone: event.timezone,
+                    })}
                     {" · "}
                     {tEvent("stats.attendingOfGuests", { attending: attendingCount, guests: guestCount })}
                   </ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <ChevronLeftIcon className="text-muted-foreground size-4 rtl:rotate-0 ltr:rotate-180" />
+                  <ChevronLeftIcon className="size-4 text-muted-foreground ltr:rotate-180 rtl:rotate-0" />
                 </ItemActions>
               </Link>
             </Item>

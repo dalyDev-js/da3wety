@@ -25,7 +25,9 @@ export const getRsvpStats = cache(async (eventId: string): Promise<RsvpStats> =>
     .select({
       attending: sql<number>`count(*) filter (where ${rsvps.status} = 'attending')`.mapWith(Number),
       declined: sql<number>`count(*) filter (where ${rsvps.status} = 'declined')`.mapWith(Number),
-      expectedSeats: sql<number>`coalesce(sum(${rsvps.seats}) filter (where ${rsvps.status} = 'attending'), 0)`.mapWith(Number),
+      expectedSeats: sql<number>`coalesce(sum(${rsvps.seats}) filter (where ${rsvps.status} = 'attending'), 0)`.mapWith(
+        Number,
+      ),
     })
     .from(rsvps)
     .where(eq(rsvps.eventId, eventId));

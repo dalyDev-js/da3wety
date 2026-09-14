@@ -1,25 +1,9 @@
 import { sql } from "drizzle-orm";
-import {
-  boolean,
-  index,
-  pgPolicy,
-  pgTable,
-  smallint,
-  text,
-  timestamp,
-  uniqueIndex,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { boolean, index, pgPolicy, pgTable, smallint, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { authenticatedRole } from "drizzle-orm/supabase";
 
 import { currentUserId, timestamps } from "./_shared";
-import {
-  eventStatusEnum,
-  eventTypeEnum,
-  localeEnum,
-  packageTierEnum,
-  rsvpModeEnum,
-} from "./enums";
+import { eventStatusEnum, eventTypeEnum, localeEnum, packageTierEnum, rsvpModeEnum } from "./enums";
 import { packages } from "./packages";
 import { profiles } from "./profiles";
 

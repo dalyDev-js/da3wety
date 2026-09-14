@@ -23,17 +23,20 @@ export default async function DashboardLayout({ children }: LayoutProps<"/dashbo
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-3 px-4">
           <nav className="flex items-center gap-4">
             <Link href="/dashboard" className="font-heading text-xl font-bold">
               {common("appName")}
             </Link>
-            <Link href="/dashboard" className="text-muted-foreground hover:text-foreground text-sm">
+            <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground">
               {t("myEvents")}
             </Link>
             {profile.isAdmin ? (
-              <Link href="/admin" className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm">
+              <Link
+                href="/admin"
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+              >
                 <ShieldCheckIcon className="size-4" />
                 {t("admin")}
               </Link>

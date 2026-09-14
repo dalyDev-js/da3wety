@@ -115,10 +115,7 @@ export async function listObjectPaths(bucket: Bucket, prefix: string): Promise<s
  * subfolder. Idempotent; returns the number of objects removed.
  */
 export async function purgeEventFolder(bucket: Bucket, eventId: string): Promise<number> {
-  const paths = [
-    ...(await listObjectPaths(bucket, `${eventId}/thumbs`)),
-    ...(await listObjectPaths(bucket, eventId)),
-  ];
+  const paths = [...(await listObjectPaths(bucket, `${eventId}/thumbs`)), ...(await listObjectPaths(bucket, eventId))];
   if (paths.length === 0) return 0;
   return removeObjects(bucket, paths);
 }

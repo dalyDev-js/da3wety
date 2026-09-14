@@ -26,7 +26,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
     <main className="flex flex-1 items-center justify-center px-4 py-12">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <Link href="/" className="font-heading mb-2 block text-3xl font-bold">
+          <Link href="/" className="mb-2 block font-heading text-3xl font-bold">
             {common("appName")}
           </Link>
           <CardTitle>{t("loginTitle")}</CardTitle>
@@ -34,7 +34,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
         </CardHeader>
         <CardContent className="space-y-4">
           {hasError ? (
-            <p role="alert" className="text-destructive text-sm">
+            <p role="alert" className="text-sm text-destructive">
               {t("error")}
             </p>
           ) : null}
@@ -42,14 +42,21 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
           {devLoginEnabled() ? (
             <form action="/auth/dev-login" method="post" className="space-y-3 border-t pt-4">
-              <p className="text-muted-foreground text-xs">{t("devLogin")}</p>
+              <p className="text-xs text-muted-foreground">{t("devLogin")}</p>
               <div className="space-y-1">
                 <Label htmlFor="dev-email">{t("email")}</Label>
                 <Input id="dev-email" name="email" type="email" autoComplete="username" required dir="ltr" />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="dev-password">{t("password")}</Label>
-                <Input id="dev-password" name="password" type="password" autoComplete="current-password" required dir="ltr" />
+                <Input
+                  id="dev-password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  dir="ltr"
+                />
               </div>
               <Button type="submit" variant="secondary" className="w-full">
                 {t("loginTitle")}

@@ -48,14 +48,11 @@ function parsePublic() {
   const result = publicSchema.safeParse({
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_SUPPORT_WHATSAPP: process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP,
   });
   if (!result.success) {
-    throw new Error(
-      `Invalid public environment variables:\n${formatIssues(result.error)}`,
-    );
+    throw new Error(`Invalid public environment variables:\n${formatIssues(result.error)}`);
   }
   return result.data;
 }
@@ -75,9 +72,7 @@ export function serverEnv() {
   if (!serverCache) {
     const result = serverSchema.safeParse(process.env);
     if (!result.success) {
-      throw new Error(
-        `Invalid server environment variables:\n${formatIssues(result.error)}`,
-      );
+      throw new Error(`Invalid server environment variables:\n${formatIssues(result.error)}`);
     }
     serverCache = result.data;
   }

@@ -11,7 +11,7 @@ export function EventTabs({ tabs }: { tabs: EventTab[] }) {
   const pathname = usePathname();
   return (
     <nav className="-mx-4 overflow-x-auto px-4" aria-label="event sections">
-      <ul className="bg-muted text-muted-foreground inline-flex h-10 min-w-full items-center gap-1 rounded-lg p-1">
+      <ul className="inline-flex h-10 min-w-full items-center gap-1 rounded-lg bg-muted p-1 text-muted-foreground">
         {tabs.map((tab) => {
           const active = tab.exact ? pathname === tab.href : pathname.startsWith(tab.href);
           return (

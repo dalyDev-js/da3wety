@@ -38,9 +38,7 @@ export async function InvitationCard({ event, guestName, children }: Props) {
     <article className="mx-auto flex w-full max-w-md flex-col items-center gap-6 px-6 py-10 text-center text-(--inv-ink)">
       <GoldRule className="w-full" />
 
-      {guestName ? (
-        <p className="text-(--inv-muted)">{t("greeting", { name: guestName })}</p>
-      ) : null}
+      {guestName ? <p className="text-(--inv-muted)">{t("greeting", { name: guestName })}</p> : null}
 
       {event.familyNames ? <p className="font-heading text-xl leading-relaxed">{event.familyNames}</p> : null}
 

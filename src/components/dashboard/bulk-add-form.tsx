@@ -22,23 +22,30 @@ export function BulkAddForm({ eventId, onDone }: { eventId: string; onDone?: () 
     }
   }, [state, onDone]);
 
-  const lineErrors = state.status === "success" ? state.data?.lineErrors ?? [] : [];
-  const parseErrors = state.status === "error" ? state.fieldErrors?.lines ?? [] : [];
+  const lineErrors = state.status === "success" ? (state.data?.lineErrors ?? []) : [];
+  const parseErrors = state.status === "error" ? (state.fieldErrors?.lines ?? []) : [];
 
   return (
     <form action={formAction} className="space-y-4" noValidate>
       {state.status === "error" && state.formError ? (
-        <p role="alert" className="text-destructive text-sm">
+        <p role="alert" className="text-sm text-destructive">
           {state.formError}
         </p>
       ) : null}
       <Field>
         <FieldLabel htmlFor="bulk-lines">{t("bulkLabel")}</FieldLabel>
-        <Textarea id="bulk-lines" name="lines" rows={10} dir="auto" placeholder={t("bulkPlaceholder")} className="font-mono text-sm" />
+        <Textarea
+          id="bulk-lines"
+          name="lines"
+          rows={10}
+          dir="auto"
+          placeholder={t("bulkPlaceholder")}
+          className="font-mono text-sm"
+        />
         <FieldDescription>{t("bulkHint")}</FieldDescription>
       </Field>
       {parseErrors.length || lineErrors.length ? (
-        <ul className="text-destructive max-h-40 space-y-1 overflow-y-auto text-sm">
+        <ul className="max-h-40 space-y-1 overflow-y-auto text-sm text-destructive">
           {parseErrors.map((message, i) => (
             <li key={`p${i}`}>{message}</li>
           ))}

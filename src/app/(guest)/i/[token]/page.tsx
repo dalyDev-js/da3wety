@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
+import { EnvelopeReveal } from "@/components/invitation/envelope-reveal";
 import { InvitationCard } from "@/components/invitation/invitation-card";
 import { InvitationStage } from "@/components/invitation/invitation-stage";
 import { RsvpForm } from "@/components/invitation/rsvp-form";
 import { getEventByGuestToken } from "@/db/queries/events";
 import { getRsvpForGuest } from "@/db/queries/guests";
 import { toIntlLocale } from "@/lib/i18n/config";
+import { publicAssetUrl } from "@/lib/storage";
 import { rsvpDeadlinePassed } from "@/lib/invitation-access";
 import { GUEST_TOKEN_RE } from "@/lib/tokens";
 
@@ -29,18 +31,23 @@ export default async function PersonalInvitationPage({ params }: PageProps<"/i/[
 
   return (
     <InvitationStage>
-      <InvitationCard event={event} guestName={guest.name}>
-        {deadlinePassed ? (
-          <p className="text-center text-(--inv-muted)">{rsvp ? t("closedWithAnswer") : t("closed")}</p>
-        ) : (
-          <RsvpForm
-            mode="personal"
-            token={token}
-            maxSeats={guest.maxSeats}
-            current={rsvp ? { status: rsvp.status, seats: rsvp.seats, message: rsvp.message } : null}
-          />
-        )}
-      </InvitationCard>
+      <EnvelopeReveal
+        seenKey={`i:${token}`}
+        revealImageUrl={event.revealImagePath ? publicAssetUrl(event.revealImagePath) : null}
+      >
+        <InvitationCard event={event} guestName={guest.name}>
+          {deadlinePassed ? (
+            <p className="text-center text-(--inv-muted)">{rsvp ? t("closedWithAnswer") : t("closed")}</p>
+          ) : (
+            <RsvpForm
+              mode="personal"
+              token={token}
+              maxSeats={guest.maxSeats}
+              current={rsvp ? { status: rsvp.status, seats: rsvp.seats, message: rsvp.message } : null}
+            />
+          )}
+        </InvitationCard>
+      </EnvelopeReveal>
     </InvitationStage>
   );
 }

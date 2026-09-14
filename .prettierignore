@@ -1,0 +1,5 @@
+node_modules
+.next
+drizzle
+public/wasm
+package-lock.json

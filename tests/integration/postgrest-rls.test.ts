@@ -6,7 +6,7 @@
  * Runs only when RUN_INTEGRATION=1 and the Supabase env vars are present.
  * Creates a throwaway user with the secret key and deletes it afterwards.
  */
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -14,20 +14,24 @@ const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const secretKey = process.env.SUPABASE_SECRET_KEY;
 const enabled = process.env.RUN_INTEGRATION === "1" && !!url && !!publishableKey && !!secretKey;
 
+// Untyped tables on purpose: the test probes PostgREST as an attacker would.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type LooseClient = SupabaseClient<any, "public", any>;
+
 describe.skipIf(!enabled)("PostgREST RLS posture", () => {
   const opts = { auth: { persistSession: false, autoRefreshToken: false } };
-  let admin: ReturnType<typeof createClient>;
-  let userClient: ReturnType<typeof createClient>;
-  let anonClient: ReturnType<typeof createClient>;
+  let admin: LooseClient;
+  let userClient: LooseClient;
+  let anonClient: LooseClient;
 
   const email = `rls-test-${Date.now()}@example.com`;
   const password = `Test-${Date.now()}-pw!`;
   let userId = "";
 
   beforeAll(async () => {
-    admin = createClient(url!, secretKey!, opts);
-    userClient = createClient(url!, publishableKey!, opts);
-    anonClient = createClient(url!, publishableKey!, opts);
+    admin = createClient(url!, secretKey!, opts) as LooseClient;
+    userClient = createClient(url!, publishableKey!, opts) as LooseClient;
+    anonClient = createClient(url!, publishableKey!, opts) as LooseClient;
     const { data, error } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
     if (error) throw error;
     userId = data.user.id;
@@ -56,7 +60,13 @@ describe.skipIf(!enabled)("PostgREST RLS posture", () => {
   it("host cannot insert events through PostgREST", async () => {
     const { data, error } = await userClient
       .from("events")
-      .insert({ host_id: userId, slug: "rlstest123", title: "x", honoree_primary: "x", starts_at: new Date().toISOString() })
+      .insert({
+        host_id: userId,
+        slug: "rlstest123",
+        title: "x",
+        honoree_primary: "x",
+        starts_at: new Date().toISOString(),
+      })
       .select();
     expect(error).not.toBeNull();
     expect(data).toBeNull();

@@ -67,7 +67,14 @@ export function GuestActions({ eventId, guest, personalLink, shareText }: Props)
   return (
     <>
       <div className="flex items-center gap-1">
-        <Button type="button" variant="outline" size="icon-sm" aria-label={t("shareWhatsApp")} onClick={shareWhatsApp} disabled={pending}>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon-sm"
+          aria-label={t("shareWhatsApp")}
+          onClick={shareWhatsApp}
+          disabled={pending}
+        >
           {guest.inviteSentAt ? <CheckIcon className="text-emerald-600" /> : <MessageCircleIcon />}
         </Button>
         <Button type="button" variant="outline" size="icon-sm" aria-label={t("copyLink")} onClick={copyLink}>
@@ -110,7 +117,10 @@ export function GuestActions({ eventId, guest, personalLink, shareText }: Props)
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{common("cancel")}</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onClick={() => startTransition(() => deleteGuest(eventId, guest.id))}>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={() => startTransition(() => deleteGuest(eventId, guest.id))}
+            >
               {common("delete")}
             </AlertDialogAction>
           </AlertDialogFooter>

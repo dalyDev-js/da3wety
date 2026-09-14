@@ -53,14 +53,19 @@ export default async function GuestsPage({ params, searchParams }: PageProps<"/d
   const shareText = tInvite("shareText", { title: ctx.event.title });
   const pages = Math.max(1, Math.ceil(list.total / list.pageSize));
   const query = (overrides: Record<string, string | number>) => {
-    const p = new URLSearchParams({ q, filter, page: String(page), ...Object.fromEntries(Object.entries(overrides).map(([k, v]) => [k, String(v)])) });
+    const p = new URLSearchParams({
+      q,
+      filter,
+      page: String(page),
+      ...Object.fromEntries(Object.entries(overrides).map(([k, v]) => [k, String(v)])),
+    });
     return `?${p.toString()}`;
   };
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-muted-foreground text-sm">
+        <p className="text-sm text-muted-foreground">
           {t("count", { count: list.total })}
           {ctx.pkg.maxGuests !== null ? ` · ${t("limit", { max: ctx.pkg.maxGuests })}` : null}
         </p>
@@ -69,7 +74,7 @@ export default async function GuestsPage({ params, searchParams }: PageProps<"/d
 
       <form className="flex flex-wrap gap-2" method="get">
         <div className="relative min-w-48 flex-1">
-          <SearchIcon className="text-muted-foreground pointer-events-none absolute inset-y-0 start-2.5 my-auto size-4" />
+          <SearchIcon className="pointer-events-none absolute inset-y-0 start-2.5 my-auto size-4 text-muted-foreground" />
           <Input name="q" defaultValue={q} placeholder={t("searchPlaceholder")} className="ps-8" />
         </div>
         <NativeSelect name="filter" defaultValue={filter} className="w-40">
@@ -108,7 +113,7 @@ export default async function GuestsPage({ params, searchParams }: PageProps<"/d
                 <TableRow key={guest.id}>
                   <TableCell>
                     <div className="font-medium">{guest.name}</div>
-                    <div className="text-muted-foreground text-xs">
+                    <div className="text-xs text-muted-foreground">
                       {guest.groupLabel ? guest.groupLabel : null}
                       {guest.source === "self" ? ` ${t("selfRegistered")}` : null}
                     </div>
@@ -127,11 +132,18 @@ export default async function GuestsPage({ params, searchParams }: PageProps<"/d
                     ) : (
                       <Badge variant="outline">{t("filters.pending")}</Badge>
                     )}
-                    {rsvp?.message ? <p className="text-muted-foreground mt-1 line-clamp-1 max-w-56 text-xs">{rsvp.message}</p> : null}
+                    {rsvp?.message ? (
+                      <p className="mt-1 line-clamp-1 max-w-56 text-xs text-muted-foreground">{rsvp.message}</p>
+                    ) : null}
                   </TableCell>
                   <TableCell className="text-end">
                     <div className="flex justify-end">
-                      <GuestActions eventId={eventId} guest={guest} personalLink={`${siteUrl}/i/${guest.token}`} shareText={shareText} />
+                      <GuestActions
+                        eventId={eventId}
+                        guest={guest}
+                        personalLink={`${siteUrl}/i/${guest.token}`}
+                        shareText={shareText}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

@@ -28,7 +28,9 @@ export async function GET(request: Request) {
           avatarUrl: (meta.avatar_url as string | undefined) ?? (meta.picture as string | undefined) ?? null,
         });
       } catch (e) {
-        console.error(JSON.stringify({ level: "error", scope: "auth.callback", message: "ensureProfile failed", error: String(e) }));
+        console.error(
+          JSON.stringify({ level: "error", scope: "auth.callback", message: "ensureProfile failed", error: String(e) }),
+        );
       }
 
       const forwardedHost = request.headers.get("x-forwarded-host");

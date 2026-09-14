@@ -8,7 +8,16 @@ import { htmlLang, TEXT_DIRECTION, toIntlLocale, type AppLocale } from "@/lib/i1
 
 import "@/app/globals.css";
 
-const GUEST_NAMESPACES = ["Common", "Errors", "Validation", "Invitation", "Rsvp", "Ticket", "Gallery", "Scanner"] as const;
+const GUEST_NAMESPACES = [
+  "Common",
+  "Errors",
+  "Validation",
+  "Invitation",
+  "Rsvp",
+  "Ticket",
+  "Gallery",
+  "Scanner",
+] as const;
 
 type Props = {
   locale: AppLocale;

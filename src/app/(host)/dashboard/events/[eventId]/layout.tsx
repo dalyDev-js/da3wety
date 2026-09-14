@@ -23,7 +23,9 @@ export default async function EventLayout({ children, params }: LayoutProps<"/da
       <div className="space-y-1">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-2xl font-semibold">{ctx.event.title}</h1>
-          <Badge variant={ctx.event.status === "published" ? "default" : "secondary"}>{t(`statuses.${ctx.event.status}`)}</Badge>
+          <Badge variant={ctx.event.status === "published" ? "default" : "secondary"}>
+            {t(`statuses.${ctx.event.status}`)}
+          </Badge>
           <Badge variant="outline">{t(`tiers.${ctx.event.packageTier}`)}</Badge>
         </div>
       </div>

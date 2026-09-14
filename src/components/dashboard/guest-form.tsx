@@ -44,40 +44,73 @@ export function GuestForm({ eventId, guest, onDone }: Props) {
   return (
     <form action={formAction} className="space-y-4" noValidate>
       {state.status === "error" && state.formError ? (
-        <p role="alert" className="text-destructive text-sm">
+        <p role="alert" className="text-sm text-destructive">
           {state.formError}
         </p>
       ) : null}
       <FieldGroup>
         <Field data-invalid={invalid("name")}>
           <FieldLabel htmlFor="guest-name">{t("name")}</FieldLabel>
-          <Input id="guest-name" name="name" defaultValue={guest?.name} required maxLength={80} autoFocus aria-invalid={invalid("name")} />
+          <Input
+            id="guest-name"
+            name="name"
+            defaultValue={guest?.name}
+            required
+            maxLength={80}
+            autoFocus
+            aria-invalid={invalid("name")}
+          />
           <FieldDescription>{t("nameHint")}</FieldDescription>
           <Err errors={errors} field="name" />
         </Field>
         <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
           <Field data-invalid={invalid("phone")}>
             <FieldLabel htmlFor="guest-phone">
-              {t("phone")} <span className="text-muted-foreground font-normal">({common("optional")})</span>
+              {t("phone")} <span className="font-normal text-muted-foreground">({common("optional")})</span>
             </FieldLabel>
-            <Input id="guest-phone" name="phone" type="tel" inputMode="tel" dir="ltr" placeholder="01012345678" defaultValue={guest?.phone ?? ""} aria-invalid={invalid("phone")} className="text-start" />
+            <Input
+              id="guest-phone"
+              name="phone"
+              type="tel"
+              inputMode="tel"
+              dir="ltr"
+              placeholder="01012345678"
+              defaultValue={guest?.phone ?? ""}
+              aria-invalid={invalid("phone")}
+              className="text-start"
+            />
             <Err errors={errors} field="phone" />
           </Field>
           <Field data-invalid={invalid("maxSeats")}>
             <FieldLabel htmlFor="guest-seats">{t("maxSeats")}</FieldLabel>
-            <Input id="guest-seats" name="maxSeats" type="number" inputMode="numeric" min={1} max={MAX_SEATS_PER_INVITATION} defaultValue={guest?.maxSeats ?? 1} dir="ltr" />
+            <Input
+              id="guest-seats"
+              name="maxSeats"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={MAX_SEATS_PER_INVITATION}
+              defaultValue={guest?.maxSeats ?? 1}
+              dir="ltr"
+            />
             <Err errors={errors} field="maxSeats" />
           </Field>
         </div>
         <Field data-invalid={invalid("groupLabel")}>
           <FieldLabel htmlFor="guest-group">
-            {t("groupLabel")} <span className="text-muted-foreground font-normal">({common("optional")})</span>
+            {t("groupLabel")} <span className="font-normal text-muted-foreground">({common("optional")})</span>
           </FieldLabel>
-          <Input id="guest-group" name="groupLabel" defaultValue={guest?.groupLabel ?? ""} maxLength={60} placeholder={t("groupLabelHint")} />
+          <Input
+            id="guest-group"
+            name="groupLabel"
+            defaultValue={guest?.groupLabel ?? ""}
+            maxLength={60}
+            placeholder={t("groupLabelHint")}
+          />
         </Field>
         <Field data-invalid={invalid("notes")}>
           <FieldLabel htmlFor="guest-notes">
-            {t("notes")} <span className="text-muted-foreground font-normal">({common("optional")})</span>
+            {t("notes")} <span className="font-normal text-muted-foreground">({common("optional")})</span>
           </FieldLabel>
           <Textarea id="guest-notes" name="notes" rows={2} maxLength={500} defaultValue={guest?.notes ?? ""} />
           <FieldDescription>{t("notesHint")}</FieldDescription>

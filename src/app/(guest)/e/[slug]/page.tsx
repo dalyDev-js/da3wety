@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
+import { EnvelopeReveal } from "@/components/invitation/envelope-reveal";
 import { InvitationCard } from "@/components/invitation/invitation-card";
 import { InvitationStage } from "@/components/invitation/invitation-stage";
 import { RsvpForm } from "@/components/invitation/rsvp-form";
 import { toIntlLocale } from "@/lib/i18n/config";
+import { publicAssetUrl } from "@/lib/storage";
 import { getVisibleEventBySlug, rsvpDeadlinePassed } from "@/lib/invitation-access";
 
 export async function generateMetadata({ params }: PageProps<"/e/[slug]">): Promise<Metadata> {
@@ -14,7 +16,10 @@ export async function generateMetadata({ params }: PageProps<"/e/[slug]">): Prom
   if (!ctx) return { title: "Da3wety", robots: { index: false } };
   const { event } = ctx;
   const t = await getTranslations({ locale: toIntlLocale(event.locale), namespace: "Invitation" });
-  const description = t("metaDescription", { primary: event.honoreePrimary, secondary: event.honoreeSecondary ?? "" }).trim();
+  const description = t("metaDescription", {
+    primary: event.honoreePrimary,
+    secondary: event.honoreeSecondary ?? "",
+  }).trim();
   const version = event.updatedAt.getTime();
 
   return {
@@ -42,17 +47,22 @@ export default async function PublicInvitationPage({ params }: PageProps<"/e/[sl
 
   return (
     <InvitationStage>
-      <InvitationCard event={event}>
-        {event.rsvpMode === "open" ? (
-          deadlinePassed ? (
-            <p className="text-center text-(--inv-muted)">{t("closed")}</p>
+      <EnvelopeReveal
+        seenKey={`e:${slug}`}
+        revealImageUrl={event.revealImagePath ? publicAssetUrl(event.revealImagePath) : null}
+      >
+        <InvitationCard event={event}>
+          {event.rsvpMode === "open" ? (
+            deadlinePassed ? (
+              <p className="text-center text-(--inv-muted)">{t("closed")}</p>
+            ) : (
+              <RsvpForm mode="open" slug={slug} maxSeats={event.openRsvpMaxSeats} />
+            )
           ) : (
-            <RsvpForm mode="open" slug={slug} maxSeats={event.openRsvpMaxSeats} />
-          )
-        ) : (
-          <p className="text-center text-(--inv-muted)">{t("inviteOnly")}</p>
-        )}
-      </InvitationCard>
+            <p className="text-center text-(--inv-muted)">{t("inviteOnly")}</p>
+          )}
+        </InvitationCard>
+      </EnvelopeReveal>
     </InvitationStage>
   );
 }

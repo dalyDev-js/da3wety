@@ -26,7 +26,16 @@ type Props = {
  * Cover / reveal image upload: compress in the browser, mint a signed upload for
  * this event, upload straight to Storage, and submit the new object path with the form.
  */
-export function ImageField({ name, kind, eventId, label, description, initialPath, publicBaseUrl, aspect = "video" }: Props) {
+export function ImageField({
+  name,
+  kind,
+  eventId,
+  label,
+  description,
+  initialPath,
+  publicBaseUrl,
+  aspect = "video",
+}: Props) {
   const t = useTranslations("Event");
   const id = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,17 +67,19 @@ export function ImageField({ name, kind, eventId, label, description, initialPat
     <Field>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
       <input type="hidden" name={name} value={path ?? ""} />
-      <div className={`bg-muted relative overflow-hidden rounded-lg border ${aspect === "square" ? "aspect-square max-w-xs" : "aspect-video"}`}>
+      <div
+        className={`relative overflow-hidden rounded-lg border bg-muted ${aspect === "square" ? "aspect-square max-w-xs" : "aspect-video"}`}
+      >
         {preview ? (
           // eslint-disable-next-line @next/next/no-img-element -- object URL / public bucket, not optimized
           <img src={preview} alt="" className="size-full object-cover" />
         ) : (
-          <div className="text-muted-foreground flex size-full items-center justify-center">
+          <div className="flex size-full items-center justify-center text-muted-foreground">
             <ImageIcon className="size-8" />
           </div>
         )}
         {busy ? (
-          <div className="bg-background/70 absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center bg-background/70">
             <Spinner />
           </div>
         ) : null}
