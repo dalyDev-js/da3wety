@@ -334,5 +334,86 @@
       "approved": "Approved",
       "rejected": "Rejected"
     }
+  },
+  "Ticket": {
+    "title": "Entry pass",
+    "holder": "{name} · {seats}",
+    "codeLabel": "Or give this code at the door",
+    "save": "Save pass as image",
+    "instructions": "Show this code at the entrance for the welcome team to scan. Turn your screen brightness up.",
+    "staffHint": "This is the guest's pass. Check-in happens only on the welcome team's device."
+  },
+  "Scanner": {
+    "staffName": "Your name",
+    "modeCamera": "Camera",
+    "modeCode": "Code",
+    "modeSearch": "Search",
+    "startCamera": "Start camera",
+    "cameraError": "The camera could not be opened. Use code entry instead.",
+    "lookup": "Look up",
+    "search": "Search",
+    "searchPlaceholder": "Guest name or last digits of the mobile",
+    "admit": "Check in",
+    "admitSeats": "Seats entering",
+    "dismiss": "Dismiss",
+    "admitted": "{name} checked in ({seats})",
+    "failed": "Check-in failed. Try again.",
+    "seatsLine": "confirmed: {attending} · admitted: {admitted}",
+    "state": {
+      "ok": "Confirmed — welcome in",
+      "already_checked_in": "This invitation was already fully checked in",
+      "declined": "This guest declined",
+      "no_rsvp": "The guest has not confirmed",
+      "unknown": "Unknown code for this event",
+      "rate_limited": "Too many attempts. Wait a moment.",
+      "session_invalid": "The scanner link has expired"
+    },
+    "rsvp": {
+      "attending": "Attending",
+      "declined": "Declined",
+      "pending": "No reply"
+    },
+    "session": {
+      "invalid": "This scanner link is not valid",
+      "expired": "This scanner link has expired",
+      "disabled": "Check-in is not enabled for this event"
+    },
+    "sessionHint": "Ask the host for a new link from their dashboard."
+  },
+  "Checkin": {
+    "locked": {
+      "title": "QR check-in is not in your package",
+      "body": "Available on Premium: every confirmed guest gets a QR pass and your welcome team checks people in from their phones."
+    },
+    "enable": {
+      "title": "Enable check-in",
+      "body": "Confirmed guests receive entry passes and you get a scanner link for the welcome team.",
+      "button": "Enable"
+    },
+    "stats": {
+      "partiesIn": "Invitations in",
+      "seatsIn": "People in",
+      "pendingParties": "Not arrived yet",
+      "lastScan": "Last scan"
+    },
+    "link": {
+      "title": "Welcome team link",
+      "body": "Share this link (or the QR) with whoever stands at the door. No sign-in needed. Regenerate it if it leaks.",
+      "rotate": "Regenerate link",
+      "expires": "Link expires {date}"
+    },
+    "export": "Export CSV",
+    "recent": {
+      "title": "Latest check-ins",
+      "empty": "Nobody has been checked in yet.",
+      "guest": "Guest",
+      "seats": "People",
+      "by": "By",
+      "time": "Time"
+    },
+    "method": {
+      "qr": "QR scan",
+      "manual": "Manual"
+    }
   }
 }
