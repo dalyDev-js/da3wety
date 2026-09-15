@@ -16,7 +16,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { EVENT_TYPES, LOCALES, RSVP_MODES } from "@/db/schema/enums";
 import type { EventFormInput } from "@/lib/validation/event";
-import { idleState, type ActionState, type FieldErrors } from "@/lib/validation/form";
+import { idleState, type ActionState, type FieldErrors } from "@/lib/validation/state";
 
 export type EventFormDefaults = Partial<EventFormInput>;
 

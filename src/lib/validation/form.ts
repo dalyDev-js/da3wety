@@ -1,15 +1,10 @@
 import type { ZodError } from "zod";
+import type { FieldErrors } from "./state";
 import { z } from "./zod-config";
 
-/** Field errors as translation keys (from zod) or translated text (after mapping). */
-export type FieldErrors = Record<string, string[] | undefined>;
-
-export type ActionState<TData = undefined> =
-  | { status: "idle" }
-  | { status: "success"; data?: TData; message?: string }
-  | { status: "error"; formError?: string; fieldErrors?: FieldErrors };
-
-export const idleState: ActionState<never> = { status: "idle" };
+// Server-side helpers only. Client components must import state types from ./state
+// so zod never enters a client bundle (enforced by the eslint no-restricted-imports rule).
+export type { ActionState, FieldErrors } from "./state";
 
 export function fieldErrorsFromZod(error: ZodError): FieldErrors {
   return z.flattenError(error).fieldErrors as FieldErrors;

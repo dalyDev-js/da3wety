@@ -10,7 +10,7 @@ import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import type { RsvpStatus } from "@/db/schema/enums";
-import { idleState, type FieldErrors } from "@/lib/validation/form";
+import { idleState, type FieldErrors } from "@/lib/validation/state";
 
 type Props =
   | {

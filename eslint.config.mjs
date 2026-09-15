@@ -29,9 +29,31 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    // Server-only modules must never be pulled into client components.
-    files: ["src/components/**/*.tsx", "src/app/**/*.tsx"],
-    rules: {},
+    // Client components must never pull zod (≈390 KB) into the guest bundle.
+    // Server components under src/app may still import schemas; the ui/ primitives
+    // and shells never validate. Action state types live in lib/validation/state.
+    files: ["src/components/**/*.tsx"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            { name: "framer-motion", message: "Import from 'motion/react' instead." },
+            { name: "zod", message: "Do not import zod in components; validate in server actions." },
+            { name: "zod/v3", message: "Do not import zod in components." },
+            { name: "zod/mini", message: "Do not import zod in components." },
+          ],
+          patterns: [
+            {
+              group: ["@/lib/validation/*", "!@/lib/validation/state"],
+              allowTypeImports: true,
+              message:
+                "Pulls zod into the client bundle. Import state types from '@/lib/validation/state' and phone helpers from '@/lib/phone'.",
+            },
+          ],
+        },
+      ],
+    },
   },
   globalIgnores([
     ".next/**",

@@ -11,8 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import type { Guest } from "@/db/schema";
-import { MAX_SEATS_PER_INVITATION } from "@/lib/validation/guest";
-import { idleState, type ActionState, type FieldErrors } from "@/lib/validation/form";
+import { MAX_SEATS_PER_INVITATION } from "@/lib/validation/state";
+import { idleState, type ActionState, type FieldErrors } from "@/lib/validation/state";
 
 type Props = {
   eventId: string;

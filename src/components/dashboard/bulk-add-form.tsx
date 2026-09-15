@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { idleState } from "@/lib/validation/form";
+import { idleState } from "@/lib/validation/state";
 
 export function BulkAddForm({ eventId, onDone }: { eventId: string; onDone?: () => void }) {
   const t = useTranslations("Guests");

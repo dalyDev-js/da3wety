@@ -131,4 +131,18 @@
   html {
     @apply font-sans;
   }
+
+  /* Motion (motion/react) already honours the OS preference via MotionConfig;
+     this covers the CSS animations from tw-animate-css and the ui primitives
+     (dialogs, sheets, skeletons, spinners) that would otherwise still play. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }

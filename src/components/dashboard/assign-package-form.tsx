@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { PACKAGE_TIERS, type PackageTier } from "@/db/schema/enums";
-import { idleState, type ActionState } from "@/lib/validation/form";
+import { idleState, type ActionState } from "@/lib/validation/state";
 
 export function AssignPackageForm({ eventId, current }: { eventId: string; current: PackageTier }) {
   const t = useTranslations("Admin");

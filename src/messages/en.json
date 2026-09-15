@@ -93,7 +93,7 @@
     "honoreePrimary": "Groom / honoree",
     "honoreeSecondary": "Bride / second honoree",
     "familyNames": "Family names",
-    "familyNamesHint": "e.g. The Mahmoud and Abdelrahman families invite you",
+    "familyNamesHint": "e.g. The Mahmoud and Abdelrahman families",
     "description": "Invitation text",
     "startsAt": "Starts at",
     "endsAt": "Ends at",
@@ -180,7 +180,8 @@
     "timeAt": "at {time}",
     "timeRange": "from {start} to {end}",
     "openMaps": "Open in maps",
-    "metaDescription": "You are invited to celebrate with {primary} {secondary}",
+    "honorees": "{primary} & {secondary}",
+    "metaDescription": "You are invited to celebrate with {names}",
     "inviteLine": {
       "wedding": "request the pleasure of your company at the wedding of",
       "engagement": "request the pleasure of your company at the engagement of",

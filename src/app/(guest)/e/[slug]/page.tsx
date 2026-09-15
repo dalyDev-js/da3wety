@@ -17,10 +17,10 @@ export async function generateMetadata({ params }: PageProps<"/e/[slug]">): Prom
   if (!ctx) return { title: "Da3wety", robots: { index: false } };
   const { event } = ctx;
   const t = await getTranslations({ locale: toIntlLocale(event.locale), namespace: "Invitation" });
-  const description = t("metaDescription", {
-    primary: event.honoreePrimary,
-    secondary: event.honoreeSecondary ?? "",
-  }).trim();
+  const names = event.honoreeSecondary
+    ? t("honorees", { primary: event.honoreePrimary, secondary: event.honoreeSecondary })
+    : event.honoreePrimary;
+  const description = t("metaDescription", { names });
   const version = event.updatedAt.getTime();
 
   return {

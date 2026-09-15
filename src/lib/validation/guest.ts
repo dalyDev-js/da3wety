@@ -1,8 +1,9 @@
 import { formString, optionalText } from "./form";
 import { EgyptianPhone, normalizeEgyptianPhone } from "./phone";
+import { MAX_SEATS_PER_INVITATION } from "./state";
 import { VALIDATION_KEYS, z } from "./zod-config";
 
-export const MAX_SEATS_PER_INVITATION = 20;
+export { MAX_SEATS_PER_INVITATION } from "./state";
 
 const seats = z.coerce
   .number()

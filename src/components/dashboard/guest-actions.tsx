@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Guest } from "@/db/schema";
-import { whatsappDigits } from "@/lib/validation/phone";
+import { whatsappDigits } from "@/lib/phone";
 
 type Props = {
   eventId: string;
