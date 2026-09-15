@@ -77,3 +77,4 @@ See `.env.example`. `SUPABASE_SECRET_KEY`, `DATABASE_URL`, `CRON_SECRET`, `ADMIN
 - Invitation-page performance: the guest bundle is ~215 KB gzipped of JS (React, motion, next-intl) plus ~300 KB of fonts (Cairo variable; Amiri 400 + 700, Arabic + Latin). Dropping Amiri 700 (use `font-normal` on the invitation `h1`) saves ~100 KB if the heading weight is acceptable.
 # da3wety
 # da3wety
+# da3wety
