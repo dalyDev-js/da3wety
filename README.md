@@ -75,3 +75,4 @@ See `.env.example`. `SUPABASE_SECRET_KEY`, `DATABASE_URL`, `CRON_SECRET`, `ADMIN
 - The `public/wasm` folder is generated at install time from `zxing-wasm` and is git-ignored.
 - Client components must not import anything under `src/lib/validation/` except `state.ts` (ESLint enforces it): zod is ~390 KB and belongs in server actions only. Pure phone helpers for the client live in `src/lib/phone.ts`.
 - Invitation-page performance: the guest bundle is ~215 KB gzipped of JS (React, motion, next-intl) plus ~300 KB of fonts (Cairo variable; Amiri 400 + 700, Arabic + Latin). Dropping Amiri 700 (use `font-normal` on the invitation `h1`) saves ~100 KB if the heading weight is acceptable.
+# da3wety
