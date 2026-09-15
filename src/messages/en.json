@@ -415,5 +415,19 @@
       "qr": "QR scan",
       "manual": "Manual"
     }
+  },
+  "Admin": {
+    "title": "Admin",
+    "intro": "Every event on the platform. Assign the package after payment is received off-platform.",
+    "event": "Event",
+    "host": "Host",
+    "date": "Date",
+    "guests": "Attending / invitations",
+    "package": "Package",
+    "tier": "Package",
+    "amount": "Amount (EGP)",
+    "note": "Note",
+    "assign": "Assign",
+    "assigned": "Done"
   }
 }
