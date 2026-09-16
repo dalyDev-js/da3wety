@@ -3,7 +3,7 @@ import { boolean, index, pgPolicy, pgTable, smallint, text, timestamp, uniqueInd
 import { authenticatedRole } from "drizzle-orm/supabase";
 
 import { currentUserId, timestamps } from "./_shared";
-import { eventStatusEnum, eventTypeEnum, localeEnum, packageTierEnum, rsvpModeEnum } from "./enums";
+import { eventStatusEnum, eventTypeEnum, localeEnum, packageTierEnum, rsvpModeEnum, themeIdEnum } from "./enums";
 import { packages } from "./packages";
 import { profiles } from "./profiles";
 
@@ -40,6 +40,12 @@ export const events = pgTable(
     /** Object paths in the public `event-assets` bucket. */
     coverImagePath: text(),
     revealImagePath: text(),
+    /** Invitation palette; see components/invitation/invitation-theme.ts. */
+    theme: themeIdEnum().notNull().default("ivory"),
+    /** Digital gift (نقوط): InstaPay address or wallet number shown with a copy button. */
+    giftEnabled: boolean().notNull().default(false),
+    giftHandle: text(),
+    giftNote: text(),
 
     locale: localeEnum().notNull().default("ar"),
     status: eventStatusEnum().notNull().default("draft"),

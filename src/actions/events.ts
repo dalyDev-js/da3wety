@@ -137,6 +137,10 @@ export async function updateEvent(eventId: string, _prev: ActionState, formData:
       galleryModeration: values.galleryModeration,
       coverImagePath: values.coverImagePath,
       revealImagePath: values.revealImagePath,
+      theme: values.theme,
+      giftEnabled: values.giftEnabled,
+      giftHandle: values.giftHandle,
+      giftNote: values.giftNote,
       galleryExpiresAt: galleryExpiry(values, ctx.pkg.photoRetentionDays),
     })
     .where(and(eq(events.id, eventId), eq(events.hostId, host.id)));

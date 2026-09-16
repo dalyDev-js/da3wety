@@ -1,4 +1,4 @@
-import { EVENT_TYPES, LOCALES, RSVP_MODES } from "@/db/schema/enums";
+import { EVENT_TYPES, LOCALES, RSVP_MODES, THEME_IDS } from "@/db/schema/enums";
 import { wallClockToUtc } from "@/lib/dates";
 
 import { formCheckbox, formString, optionalText } from "./form";
@@ -41,6 +41,10 @@ export const eventFormSchema = z
     galleryModeration: z.boolean(),
     coverImagePath: optionalText(200),
     revealImagePath: optionalText(200),
+    theme: z.enum(THEME_IDS).default("ivory"),
+    giftEnabled: z.boolean(),
+    giftHandle: optionalText(80),
+    giftNote: optionalText(200),
   })
   .transform((v, ctx) => {
     const toInstant = (field: "startsAt" | "endsAt" | "rsvpDeadline"): Date | null => {
@@ -62,6 +66,10 @@ export const eventFormSchema = z
       ctx.addIssue({ code: "custom", path: ["endsAt"], message: VALIDATION_KEYS.endBeforeStart });
     }
 
+    if (v.giftEnabled && !v.giftHandle) {
+      ctx.addIssue({ code: "custom", path: ["giftHandle"], message: VALIDATION_KEYS.required });
+    }
+
     return {
       ...v,
       startsAt: startsAt as Date, // null only when an issue was added (parse fails)
@@ -75,6 +83,8 @@ export const eventFormSchema = z
       venueMapsUrl: v.venueMapsUrl ?? null,
       coverImagePath: v.coverImagePath ?? null,
       revealImagePath: v.revealImagePath ?? null,
+      giftHandle: v.giftEnabled ? (v.giftHandle ?? null) : null,
+      giftNote: v.giftEnabled ? (v.giftNote ?? null) : null,
     };
   });
 
@@ -104,5 +114,9 @@ export function eventFormFromFormData(fd: FormData): EventFormInput {
     galleryModeration: formCheckbox(fd, "galleryModeration"),
     coverImagePath: formString(fd, "coverImagePath"),
     revealImagePath: formString(fd, "revealImagePath"),
+    theme: (formString(fd, "theme") ?? "ivory") as EventFormInput["theme"],
+    giftEnabled: formCheckbox(fd, "giftEnabled"),
+    giftHandle: formString(fd, "giftHandle"),
+    giftNote: formString(fd, "giftNote"),
   };
 }

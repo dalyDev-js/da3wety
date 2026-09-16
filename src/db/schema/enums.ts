@@ -46,3 +46,7 @@ export const checkinMethodEnum = pgEnum("checkin_method", CHECKIN_METHODS);
 export const QR_STATUSES = ["active", "revoked"] as const;
 export type QrStatus = (typeof QR_STATUSES)[number];
 export const qrStatusEnum = pgEnum("qr_status", QR_STATUSES);
+
+export const THEME_IDS = ["ivory", "sage", "navy", "noir"] as const;
+export type ThemeId = (typeof THEME_IDS)[number];
+export const themeIdEnum = pgEnum("theme_id", THEME_IDS);

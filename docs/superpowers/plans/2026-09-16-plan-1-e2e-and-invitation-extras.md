@@ -263,7 +263,7 @@ git commit -m "test(e2e): Playwright harness with dev-login and the guest RSVP f
 - Produces: `events.theme: ThemeId` (default `"ivory"`), `events.giftEnabled: boolean` (default false), `events.giftHandle: string | null`, `events.giftNote: string | null`.
 - Produces: `eventFormSchema` accepts `theme`, `giftEnabled`, `giftHandle`, `giftNote`; output has `giftHandle`/`giftNote` as `string | null`.
 
-- [ ] **Step 1: Write the failing schema test**
+- [x] **Step 1: Write the failing schema test**
 
 ```ts
 // tests/unit/event-schema.test.ts
@@ -313,12 +313,12 @@ describe("eventFormSchema extras", () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `npx vitest run tests/unit/event-schema.test.ts`
 Expected: FAIL — `theme` unknown key stripped / `giftEnabled` missing.
 
-- [ ] **Step 3: Add the enum and columns**
+- [x] **Step 3: Add the enum and columns**
 
 In `src/db/schema/enums.ts` (after `qrStatusEnum`):
 
@@ -339,7 +339,7 @@ In `src/db/schema/events.ts` import `themeIdEnum` and add after `revealImagePath
     giftNote: text(),
 ```
 
-- [ ] **Step 4: Generate the migration**
+- [x] **Step 4: Generate the migration**
 
 Run: `npm run db:generate`
 Expected: `drizzle/0002_*.sql` containing `CREATE TYPE "public"."theme_id"` and four `ALTER TABLE "events" ADD COLUMN` lines. Open it and confirm nothing else changed (no drops).
@@ -347,7 +347,7 @@ Expected: `drizzle/0002_*.sql` containing `CREATE TYPE "public"."theme_id"` and 
 Run: `npm run db:migrate` (local stack)
 Expected: `migrations applied successfully!`
 
-- [ ] **Step 5: Extend the validation schema**
+- [x] **Step 5: Extend the validation schema**
 
 In `src/lib/validation/event.ts` import `THEME_IDS` from `@/db/schema/enums`. Add to the object:
 
@@ -382,7 +382,7 @@ In `eventFormFromFormData` add:
     giftNote: formString(fd, "giftNote"),
 ```
 
-- [ ] **Step 6: Persist in `updateEvent`**
+- [x] **Step 6: Persist in `updateEvent`**
 
 In `src/actions/events.ts` `updateEvent` `.set({...})` add:
 
@@ -395,12 +395,12 @@ In `src/actions/events.ts` `updateEvent` `.set({...})` add:
 
 (`createEvent` only takes the basics; leave it.)
 
-- [ ] **Step 7: Run tests, typecheck, lint**
+- [x] **Step 7: Run tests, typecheck, lint**
 
 Run: `npx vitest run && npm run typecheck && npm run lint`
 Expected: all green, new test file 4 passed.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add src/db/schema drizzle src/lib/validation/event.ts src/actions/events.ts tests/unit/event-schema.test.ts
