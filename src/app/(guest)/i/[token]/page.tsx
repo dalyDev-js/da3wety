@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
-import { EnvelopeReveal } from "@/components/invitation/envelope-reveal";
+import { EnvelopeGate } from "@/components/invitation/envelope-gate";
 import { InvitationCard } from "@/components/invitation/invitation-card";
 import { InvitationStage } from "@/components/invitation/invitation-stage";
 import { RsvpForm } from "@/components/invitation/rsvp-form";
@@ -11,7 +11,7 @@ import { db } from "@/db";
 import { getEventByGuestToken } from "@/db/queries/events";
 import { getRsvpForGuest } from "@/db/queries/guests";
 import { toIntlLocale } from "@/lib/i18n/config";
-import { publicAssetUrl } from "@/lib/storage";
+import { monogram } from "@/lib/monogram";
 import { rsvpDeadlinePassed } from "@/lib/invitation-access";
 import { galleryState } from "@/lib/gallery-access";
 import { packageAllows } from "@/lib/packages";
@@ -38,10 +38,7 @@ export default async function PersonalInvitationPage({ params }: PageProps<"/i/[
 
   return (
     <InvitationStage>
-      <EnvelopeReveal
-        seenKey={`i:${token}`}
-        revealImageUrl={event.revealImagePath ? publicAssetUrl(event.revealImagePath) : null}
-      >
+      <EnvelopeGate monogram={monogram(event.honoreePrimary, event.honoreeSecondary)}>
         <InvitationCard
           event={event}
           guestName={guest.name}
@@ -67,7 +64,7 @@ export default async function PersonalInvitationPage({ params }: PageProps<"/i/[
             />
           )}
         </InvitationCard>
-      </EnvelopeReveal>
+      </EnvelopeGate>
     </InvitationStage>
   );
 }

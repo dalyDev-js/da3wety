@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
-import { EnvelopeReveal } from "@/components/invitation/envelope-reveal";
+import { EnvelopeGate } from "@/components/invitation/envelope-gate";
 import { InvitationCard } from "@/components/invitation/invitation-card";
 import { InvitationStage } from "@/components/invitation/invitation-stage";
 import { RsvpForm } from "@/components/invitation/rsvp-form";
 import { toIntlLocale } from "@/lib/i18n/config";
-import { publicAssetUrl } from "@/lib/storage";
+import { monogram } from "@/lib/monogram";
 import { galleryState } from "@/lib/gallery-access";
 import { getVisibleEventBySlug, rsvpDeadlinePassed } from "@/lib/invitation-access";
 
@@ -48,10 +48,7 @@ export default async function PublicInvitationPage({ params }: PageProps<"/e/[sl
 
   return (
     <InvitationStage>
-      <EnvelopeReveal
-        seenKey={`e:${slug}`}
-        revealImageUrl={event.revealImagePath ? publicAssetUrl(event.revealImagePath) : null}
-      >
+      <EnvelopeGate monogram={monogram(event.honoreePrimary, event.honoreeSecondary)}>
         <InvitationCard event={event} galleryHref={galleryState(ctx) === "open" ? `/e/${slug}/gallery` : null}>
           {event.rsvpMode === "open" ? (
             deadlinePassed ? (
@@ -63,7 +60,7 @@ export default async function PublicInvitationPage({ params }: PageProps<"/e/[sl
             <p className="text-center text-(--inv-muted)">{t("inviteOnly")}</p>
           )}
         </InvitationCard>
-      </EnvelopeReveal>
+      </EnvelopeGate>
     </InvitationStage>
   );
 }

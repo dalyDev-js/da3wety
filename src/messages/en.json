@@ -191,9 +191,9 @@
       "graduation": "invite you to celebrate the graduation of",
       "other": "invite you to join"
     },
-    "openEnvelope": "Open the invitation",
-    "skip": "Skip",
-    "replay": "Open again",
+    "tapToOpen": "Tap to open",
+    "scratchToReveal": "Scratch to reveal",
+    "revealPhoto": "Show the photo",
     "shareText": "You are invited to {title}. Open the invitation and RSVP here:",
     "galleryLink": "Shared photo gallery",
     "galleryLinkHint": "Share your photos from the celebration"
