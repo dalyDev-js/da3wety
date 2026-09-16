@@ -50,3 +50,4 @@ next-env.d.ts
 /blob-report/
 /playwright/.cache/
 /.playwright-mcp/
+tests/e2e/.auth/

@@ -78,11 +78,11 @@
 - Produces: `createPublishedEvent(page: Page, overrides?: Partial<EventInput>): Promise<{ eventId: string; slug: string }>` where `EventInput = { title: string; honoreePrimary: string; honoreeSecondary?: string; startsAt: string /* yyyy-MM-ddTHH:mm */ }`.
 - Produces: `openInvitation(page: Page, slug: string): Promise<void>` — navigates, taps the envelope, waits for the gate to unmount.
 
-- [ ] **Step 1: Exclude e2e from vitest and ignore auth state**
+- [x] **Step 1: Exclude e2e from vitest and ignore auth state**
 
 In `vitest.config.mts` add `exclude: ["tests/e2e/**", "node_modules/**"]` inside `test`. Append `tests/e2e/.auth/` and `playwright-report/` and `test-results/` to `.gitignore`.
 
-- [ ] **Step 2: Write the Playwright config**
+- [x] **Step 2: Write the Playwright config**
 
 ```ts
 // playwright.config.ts
@@ -121,7 +121,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 3: Write the global setup (login once, save cookies)**
+- [x] **Step 3: Write the global setup (login once, save cookies)**
 
 ```ts
 // tests/e2e/global-setup.ts
@@ -144,7 +144,7 @@ export default async function globalSetup(config: FullConfig) {
 }
 ```
 
-- [ ] **Step 4: Write the helpers**
+- [x] **Step 4: Write the helpers**
 
 ```ts
 // tests/e2e/helpers.ts
@@ -195,7 +195,7 @@ export async function openInvitation(page: Page, slug: string) {
 }
 ```
 
-- [ ] **Step 5: Write the first spec (create → publish → open → RSVP → counts)**
+- [x] **Step 5: Write the first spec (create → publish → open → RSVP → counts)**
 
 ```ts
 // tests/e2e/invitation.spec.ts
@@ -232,12 +232,12 @@ test.describe("invitation flow", () => {
 });
 ```
 
-- [ ] **Step 6: Run it**
+- [x] **Step 6: Run it**
 
 Run: `npx supabase start` (if not running), then `npm run test:e2e`
 Expected: 1 passed. If the RSVP submit button selector is ambiguous, use `page.getByRole("button", { name: /إرسال الرد|Send/ })`.
 
-- [ ] **Step 7: Add the UI script and commit**
+- [x] **Step 7: Add the UI script and commit**
 
 `package.json` scripts: `"test:e2e:ui": "playwright test --ui"`.
 
