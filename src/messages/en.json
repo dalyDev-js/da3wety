@@ -208,6 +208,12 @@
     "galleryLink": "Shared photo gallery",
     "galleryLinkHint": "Share your photos from the celebration"
   },
+  "Gift": {
+    "title": "Digital gift",
+    "copy": "Copy",
+    "copied": "Copied",
+    "hint": "Copy the number or address and transfer from your bank or wallet app."
+  },
   "Guests": {
     "count": "{count, plural, one {# invitation} other {# invitations}}",
     "limit": "limit {max}",

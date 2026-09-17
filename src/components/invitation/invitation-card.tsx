@@ -4,6 +4,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { captionClass } from "@/components/invitation/caption";
+import { GiftSection } from "@/components/invitation/gift-section";
 import { GoldRule } from "@/components/invitation/gold-rule";
 import { InvitationHero } from "@/components/invitation/invitation-hero";
 import { getTheme } from "@/components/invitation/invitation-theme";
@@ -100,6 +101,8 @@ export async function InvitationCard({ event, guestName, galleryHref, children }
             ) : null}
           </address>
         ) : null}
+
+        <GiftSection event={event} locale={locale} />
 
         <GoldRule className="w-full" />
 

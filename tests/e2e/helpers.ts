@@ -40,6 +40,7 @@ export async function openInvitation(page: Page, slug: string) {
   await page.goto(`/e/${slug}`);
   const gate = page.getByRole("button", { name: /اضغط لفتح الدعوة|Tap to open/ });
   await expect(gate).toBeVisible();
+  await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe("hidden");
   await gate.click();
   await expect(gate).toBeHidden({ timeout: 8_000 });
 }
