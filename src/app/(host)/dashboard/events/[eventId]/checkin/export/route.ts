@@ -6,7 +6,11 @@ import { getEventForHost } from "@/db/queries/events";
 import { checkins, guests, rsvps } from "@/db/schema";
 import { requireHost } from "@/lib/auth";
 
-const csvCell = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+const csvCell = (v: unknown) => {
+  const value = String(v ?? "");
+  const literal = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+  return `"${literal.replace(/"/g, '""')}"`;
+};
 
 /** Attendance report: one row per invitation with RSVP and admitted seats. */
 export async function GET(_request: Request, { params }: { params: Promise<{ eventId: string }> }) {

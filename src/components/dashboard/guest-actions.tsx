@@ -1,6 +1,14 @@
 "use client";
 
-import { CheckIcon, CopyIcon, MessageCircleIcon, MoreHorizontalIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import {
+  BellRingIcon,
+  CheckIcon,
+  CopyIcon,
+  MessageCircleIcon,
+  MoreHorizontalIcon,
+  PencilIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -35,10 +43,13 @@ type Props = {
   personalLink: string;
   /** Pre-composed invitation text (event locale); the link is appended on its own line. */
   shareText: string;
+  /** Pre-composed reminder text (event locale); the link is appended on its own line. */
+  reminderText: string;
+  pending: boolean;
 };
 
 /** Per-row actions: copy link, WhatsApp share, edit, delete. */
-export function GuestActions({ eventId, guest, personalLink, shareText }: Props) {
+export function GuestActions({ eventId, guest, personalLink, shareText, reminderText, pending: awaitingRsvp }: Props) {
   const t = useTranslations("Guests");
   const common = useTranslations("Common");
   const [editing, setEditing] = useState(false);
@@ -49,6 +60,9 @@ export function GuestActions({ eventId, guest, personalLink, shareText }: Props)
   const waUrl = guest.phone
     ? `https://wa.me/${whatsappDigits(guest.phone)}?text=${encodeURIComponent(message)}`
     : `https://wa.me/?text=${encodeURIComponent(message)}`;
+  const remindUrl = guest.phone
+    ? `https://wa.me/${whatsappDigits(guest.phone)}?text=${encodeURIComponent(`${reminderText}\n${personalLink}`)}`
+    : `https://wa.me/?text=${encodeURIComponent(`${reminderText}\n${personalLink}`)}`;
 
   async function copyLink() {
     try {
@@ -77,6 +91,17 @@ export function GuestActions({ eventId, guest, personalLink, shareText }: Props)
         >
           {guest.inviteSentAt ? <CheckIcon className="text-emerald-600" /> : <MessageCircleIcon />}
         </Button>
+        {awaitingRsvp ? (
+          <Button
+            type="button"
+            variant="outline"
+            size="icon-sm"
+            aria-label={t("remind")}
+            onClick={() => window.open(remindUrl, "_blank", "noopener")}
+          >
+            <BellRingIcon />
+          </Button>
+        ) : null}
         <Button type="button" variant="outline" size="icon-sm" aria-label={t("copyLink")} onClick={copyLink}>
           <CopyIcon />
         </Button>

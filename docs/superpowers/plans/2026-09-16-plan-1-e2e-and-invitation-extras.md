@@ -1548,12 +1548,12 @@ git commit -m "feat(dashboard): guest wishes wall and message column in the CSV 
 - `GuestActions` gains props `reminderText: string` and `pending: boolean`; when `pending`, a second WhatsApp button (bell icon) opens `wa.me` with `${reminderText}\n${personalLink}`.
 - Produces: `pendingLinksText(rows: { name: string; link: string }[]): string` in `src/lib/share-text.ts` — `"name — link"` per line.
 
-- [ ] **Step 1: Messages**
+- [x] **Step 1: Messages**
 
 `ar.json` `Guests`: `"remind": "تذكير على واتساب"`, `"reminderText": "تذكير لطيف 🌷 لم يصلنا ردكم على دعوة {title} بعد. يسعدنا تأكيد حضوركم من هنا:"`, `"copyPending": "نسخ روابط من لم يردّوا"`, `"copiedPending": "{count, plural, zero {لا روابط} one {تم نسخ رابط واحد} two {تم نسخ رابطين} few {تم نسخ # روابط} many {تم نسخ # رابطًا} other {تم نسخ # رابط}}"`.
 `en.json` `Guests`: `"remind": "Remind on WhatsApp"`, `"reminderText": "A gentle reminder 🌷 we have not received your reply to the invitation for {title}. Please confirm here:"`, `"copyPending": "Copy links of pending guests"`, `"copiedPending": "{count, plural, one {Copied # link} other {Copied # links}}"`.
 
-- [ ] **Step 2: Pure helper + test**
+- [x] **Step 2: Pure helper + test**
 
 ```ts
 // src/lib/share-text.ts
@@ -1583,7 +1583,7 @@ describe("pendingLinksText", () => {
 
 Run: `npx vitest run tests/unit/share-text.test.ts` → PASS.
 
-- [ ] **Step 3: Remind button in `GuestActions`**
+- [x] **Step 3: Remind button in `GuestActions`**
 
 Add props `reminderText: string; pending: boolean`. Next to the existing WhatsApp button add:
 
@@ -1603,7 +1603,7 @@ Add props `reminderText: string; pending: boolean`. Next to the existing WhatsAp
 
 with `const remindUrl = guest.phone ? \`https://wa.me/${whatsappDigits(guest.phone)}?text=${encodeURIComponent(\`${reminderText}\n${personalLink}\`)}\` : \`https://wa.me/?text=${encodeURIComponent(\`${reminderText}\n${personalLink}\`)}\`;` and `BellRingIcon` from `lucide-react`.
 
-- [ ] **Step 4: Copy-pending button**
+- [x] **Step 4: Copy-pending button**
 
 ```tsx
 // src/components/dashboard/copy-pending-links.tsx
@@ -1637,11 +1637,11 @@ export function CopyPendingLinks({ rows }: Props) {
 }
 ```
 
-- [ ] **Step 5: Wire the guests page**
+- [x] **Step 5: Wire the guests page**
 
 In `guests/page.tsx`: `const reminderText = tGuests("reminderText", { title: ctx.event.title });` (the page already has a `Guests` translator; use it). Pass `reminderText={reminderText} pending={row.rsvp === null}` to each `GuestActions`. Compute `const pendingRows = list.rows.filter((r) => r.rsvp === null).map((r) => ({ name: r.guest.name, link: \`${siteUrl}/i/${r.guest.token}\` }));` and render `<CopyPendingLinks rows={pendingRows} />` next to the existing toolbar buttons. (Current page only — the helper text says so via the button count.)
 
-- [ ] **Step 6: Gate and commit**
+- [x] **Step 6: Gate and commit**
 
 Run: `npm run typecheck && npm run lint && npx vitest run && npm run test:e2e`
 

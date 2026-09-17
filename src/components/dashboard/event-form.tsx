@@ -35,10 +35,10 @@ type Props =
       publicBaseUrl: string;
     };
 
-function Err({ errors, field }: { errors?: FieldErrors; field: string }) {
+function Err({ errors, field, id }: { errors?: FieldErrors; field: string; id?: string }) {
   const list = errors?.[field];
   if (!list?.length) return null;
-  return <FieldError errors={list.map((message) => ({ message }))} />;
+  return <FieldError id={id} errors={list.map((message) => ({ message }))} />;
 }
 
 export function EventForm(props: Props) {
@@ -263,11 +263,11 @@ export function EventForm(props: Props) {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>{t("sectionTheme")}</CardTitle>
+              <CardTitle id="theme-picker-label">{t("sectionTheme")}</CardTitle>
               <CardDescription>{t("themeHint")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <ThemePicker name="theme" defaultValue={d.theme ?? "ivory"} />
+              <ThemePicker name="theme" defaultValue={d.theme ?? "ivory"} labelledBy="theme-picker-label" />
             </CardContent>
           </Card>
 
@@ -284,7 +284,7 @@ export function EventForm(props: Props) {
                     {t("giftEnabled")}
                   </FieldLabel>
                 </Field>
-                <Field>
+                <Field data-invalid={invalid("giftHandle")}>
                   <FieldLabel htmlFor="giftHandle">{t("giftHandle")}</FieldLabel>
                   <Input
                     id="giftHandle"
@@ -293,10 +293,12 @@ export function EventForm(props: Props) {
                     dir="ltr"
                     inputMode="email"
                     placeholder={t("giftHandleHint")}
+                    aria-invalid={invalid("giftHandle")}
+                    aria-describedby={invalid("giftHandle") ? "giftHandle-error" : undefined}
                   />
-                  <Err errors={errors} field="giftHandle" />
+                  <Err errors={errors} field="giftHandle" id="giftHandle-error" />
                 </Field>
-                <Field>
+                <Field data-invalid={invalid("giftNote")}>
                   <FieldLabel htmlFor="giftNote">{t("giftNote")}</FieldLabel>
                   <Textarea
                     id="giftNote"
@@ -305,8 +307,10 @@ export function EventForm(props: Props) {
                     rows={2}
                     maxLength={200}
                     placeholder={t("giftNoteHint")}
+                    aria-invalid={invalid("giftNote")}
+                    aria-describedby={invalid("giftNote") ? "giftNote-error" : undefined}
                   />
-                  <Err errors={errors} field="giftNote" />
+                  <Err errors={errors} field="giftNote" id="giftNote-error" />
                 </Field>
               </FieldGroup>
             </CardContent>

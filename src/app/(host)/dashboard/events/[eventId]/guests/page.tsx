@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import { AddGuestsDialogs } from "@/components/dashboard/add-guests-dialogs";
+import { CopyPendingLinks } from "@/components/dashboard/copy-pending-links";
 import { GuestActions } from "@/components/dashboard/guest-actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,16 +42,21 @@ export default async function GuestsPage({ params, searchParams }: PageProps<"/d
   const filter: GuestFilter = FILTERS.includes(filterRaw as GuestFilter) ? (filterRaw as GuestFilter) : "all";
   const page = Math.max(1, Number(one(sp.page)) || 1);
 
-  const [t, tRsvp, tInvite, common, list] = await Promise.all([
+  const [t, tRsvp, tInvite, tEventGuests, common, list] = await Promise.all([
     getTranslations("Guests"),
     getTranslations("Rsvp"),
     getTranslations({ locale: toIntlLocale(ctx.event.locale), namespace: "Invitation" }),
+    getTranslations({ locale: toIntlLocale(ctx.event.locale), namespace: "Guests" }),
     getTranslations("Common"),
     listGuests({ eventId, q, filter, page }),
   ]);
 
   const siteUrl = publicEnv().NEXT_PUBLIC_SITE_URL;
   const shareText = tInvite("shareText", { title: ctx.event.title });
+  const reminderText = tEventGuests("reminderText", { title: ctx.event.title });
+  const pendingRows = list.rows
+    .filter((row) => row.rsvp === null)
+    .map((row) => ({ name: row.guest.name, link: `${siteUrl}/i/${row.guest.token}` }));
   const pages = Math.max(1, Math.ceil(list.total / list.pageSize));
   const query = (overrides: Record<string, string | number>) => {
     const p = new URLSearchParams({
@@ -69,7 +75,13 @@ export default async function GuestsPage({ params, searchParams }: PageProps<"/d
           {t("count", { count: list.total })}
           {ctx.pkg.maxGuests !== null ? ` · ${t("limit", { max: ctx.pkg.maxGuests })}` : null}
         </p>
-        <AddGuestsDialogs eventId={eventId} />
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <CopyPendingLinks rows={pendingRows} />
+            <span className="text-xs text-muted-foreground">{t("pendingOnPage", { count: pendingRows.length })}</span>
+          </div>
+          <AddGuestsDialogs eventId={eventId} />
+        </div>
       </div>
 
       <form className="flex flex-wrap gap-2" method="get">
@@ -143,6 +155,8 @@ export default async function GuestsPage({ params, searchParams }: PageProps<"/d
                         guest={guest}
                         personalLink={`${siteUrl}/i/${guest.token}`}
                         shareText={shareText}
+                        reminderText={reminderText}
+                        pending={rsvp === null}
                       />
                     </div>
                   </TableCell>

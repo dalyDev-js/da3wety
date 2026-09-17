@@ -7,15 +7,15 @@ import { THEMES } from "@/components/invitation/invitation-theme";
 import { THEME_IDS, type ThemeId } from "@/db/schema/enums";
 import { cn } from "@/lib/utils";
 
-type Props = { name: "theme"; defaultValue: ThemeId };
+type Props = { name: "theme"; defaultValue: ThemeId; labelledBy: string };
 
 /** Four swatches as native radios; the preview is a tiny envelope in the palette. */
-export function ThemePicker({ name, defaultValue }: Props) {
+export function ThemePicker({ name, defaultValue, labelledBy }: Props) {
   const t = useTranslations("Event.themes");
   const [value, setValue] = useState<ThemeId>(defaultValue);
 
   return (
-    <div role="radiogroup" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div role="radiogroup" aria-labelledby={labelledBy} className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {THEME_IDS.map((id) => {
         const theme = THEMES[id];
         const selected = value === id;

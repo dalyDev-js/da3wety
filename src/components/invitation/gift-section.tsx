@@ -14,7 +14,7 @@ export async function GiftSection({ event, locale }: Props) {
     <section className="w-full space-y-3 text-center">
       <p className="font-heading text-xl">{t("title")}</p>
       {event.giftNote ? <p className="text-(--inv-muted)">{event.giftNote}</p> : null}
-      <p id="gift-handle" dir="ltr" className="font-mono text-lg tracking-wide select-all">
+      <p id="gift-handle" dir="ltr" className="font-mono text-lg select-all">
         {event.giftHandle}
       </p>
       <CopyHandle value={event.giftHandle} label={t("copy")} copiedLabel={t("copied")} />
