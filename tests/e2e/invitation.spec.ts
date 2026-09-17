@@ -25,6 +25,7 @@ test.describe("invitation flow", () => {
 
     const guest = await guestPage(browser, baseURL!);
     await openInvitation(guest.page, slug);
+    await expect(guest.page.getByText(/باقي على المناسبة|Until the big day/)).toBeVisible();
     // No photo on this event: names are visible without scratching.
     await expect(guest.page.getByRole("heading", { level: 1 })).toContainText("أحمد");
 

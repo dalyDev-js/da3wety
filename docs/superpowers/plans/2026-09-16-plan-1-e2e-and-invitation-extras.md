@@ -848,7 +848,7 @@ git commit -m "feat(dashboard): theme picker and digital gift settings"
 **Interfaces:**
 - Produces: `GiftSection({ event, locale })` server component; renders nothing unless `event.giftEnabled && event.giftHandle`.
 
-- [ ] **Step 1: Messages**
+- [x] **Step 1: Messages**
 
 `ar.json` root:
 
@@ -872,7 +872,7 @@ git commit -m "feat(dashboard): theme picker and digital gift settings"
   },
 ```
 
-- [ ] **Step 2: Copy button (client)**
+- [x] **Step 2: Copy button (client)**
 
 ```tsx
 // src/components/invitation/copy-handle.tsx
@@ -917,7 +917,7 @@ export function CopyHandle({ value, label, copiedLabel }: Props) {
 }
 ```
 
-- [ ] **Step 3: Gift section (server)**
+- [x] **Step 3: Gift section (server)**
 
 ```tsx
 // src/components/invitation/gift-section.tsx
@@ -947,16 +947,16 @@ export async function GiftSection({ event, locale }: Props) {
 }
 ```
 
-- [ ] **Step 4: Wire into the card**
+- [x] **Step 4: Wire into the card**
 
 In `invitation-card.tsx` after the `</address>` block (still inside the body `div`), add `<GiftSection event={event} locale={locale} />`.
 
-- [ ] **Step 5: Run e2e and gate**
+- [x] **Step 5: Run e2e and gate**
 
 Run: `npm run typecheck && npm run lint && npx vitest run && npm run test:e2e`
 Expected: both e2e tests pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/components/invitation src/messages
@@ -1284,7 +1284,7 @@ git commit -m "feat(invitation): add-to-calendar links and .ics download"
 - Produces: `countdownParts(target: Date, now: Date): { days: number; hours: number; minutes: number } | null` (null once `now >= target`).
 - Produces: `Countdown({ target: string /* ISO */ })` client component; renders nothing when null.
 
-- [ ] **Step 1: Failing unit test**
+- [x] **Step 1: Failing unit test**
 
 ```ts
 // tests/unit/countdown.test.ts
@@ -1311,11 +1311,11 @@ describe("countdownParts", () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `npx vitest run tests/unit/countdown.test.ts` → FAIL (module not found).
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 ```ts
 // src/lib/countdown.ts
@@ -1336,12 +1336,12 @@ export function countdownParts(target: Date, now: Date): CountdownParts | null {
 
 Run the test → PASS.
 
-- [ ] **Step 4: Messages**
+- [x] **Step 4: Messages**
 
 `ar.json` root: `"Countdown": { "days": "يوم", "hours": "ساعة", "minutes": "دقيقة", "label": "باقي على المناسبة" }`
 `en.json` root: `"Countdown": { "days": "Days", "hours": "Hours", "minutes": "Mins", "label": "Until the big day" }`
 
-- [ ] **Step 5: Component**
+- [x] **Step 5: Component**
 
 ```tsx
 // src/components/invitation/countdown.tsx
@@ -1397,7 +1397,7 @@ export function Countdown({ target }: Props) {
 }
 ```
 
-- [ ] **Step 6: Hero slot**
+- [x] **Step 6: Hero slot**
 
 In `invitation-hero.tsx` add prop `countdown?: ReactNode` and render after the `date` block:
 
@@ -1411,7 +1411,7 @@ In `invitation-hero.tsx` add prop `countdown?: ReactNode` and render after the `
 
 In `invitation-card.tsx` pass `countdown={<Countdown target={event.startsAt.toISOString()} />}`.
 
-- [ ] **Step 7: Gate and commit**
+- [x] **Step 7: Gate and commit**
 
 Run: `npm run typecheck && npm run lint && npx vitest run`
 Open the local test event: after the reveal, the countdown fades in last.

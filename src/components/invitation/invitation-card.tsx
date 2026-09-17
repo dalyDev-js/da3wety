@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { AddToCalendar } from "@/components/invitation/add-to-calendar";
 import { captionClass } from "@/components/invitation/caption";
+import { Countdown } from "@/components/invitation/countdown";
 import { GiftSection } from "@/components/invitation/gift-section";
 import { GoldRule } from "@/components/invitation/gold-rule";
 import { InvitationHero } from "@/components/invitation/invitation-hero";
@@ -31,8 +32,9 @@ type Props = {
 export async function InvitationCard({ event, guestName, galleryHref, children }: Props) {
   const locale = toIntlLocale(event.locale);
   const theme = getTheme(event.theme);
-  const [t, format] = await Promise.all([
+  const [t, countdownT, format] = await Promise.all([
     getTranslations({ locale, namespace: "Invitation" }),
+    getTranslations({ locale, namespace: "Countdown" }),
     getFormatter({ locale }),
   ]);
 
@@ -69,6 +71,18 @@ export async function InvitationCard({ event, guestName, galleryHref, children }
           </h1>
         }
         date={<p className={`text-(--inv-accent)/90 ${captionClass(locale, "text-[13px]")}`}>{dateLine}</p>}
+        countdown={
+          <Countdown
+            target={event.startsAt.toISOString()}
+            locale={locale}
+            labels={{
+              days: countdownT("days"),
+              hours: countdownT("hours"),
+              minutes: countdownT("minutes"),
+              label: countdownT("label"),
+            }}
+          />
+        }
       />
 
       <div className="mx-auto flex w-full max-w-md flex-col items-center gap-6 px-6 pt-4 pb-10">

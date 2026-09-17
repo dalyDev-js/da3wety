@@ -19,6 +19,8 @@ type Props = {
   names: ReactNode;
   /** Date line: last to appear. */
   date: ReactNode;
+  /** Countdown shown after the date. */
+  countdown?: ReactNode;
 };
 
 /* Double hairline frame with bracketed corners; hairlines stay 1px at any size. */
@@ -32,7 +34,7 @@ const INNER =
  * staggered delays once the photo is uncovered. Without a photo everything is
  * shown at once.
  */
-export function InvitationHero({ photoSrc, photoAlt, foil, confetti, intro, names, date }: Props) {
+export function InvitationHero({ photoSrc, photoAlt, foil, confetti, intro, names, date, countdown }: Props) {
   const reduceMotion = useReducedMotion();
   const [revealed, setRevealed] = useState(photoSrc === null);
 
@@ -83,6 +85,12 @@ export function InvitationHero({ photoSrc, photoAlt, foil, confetti, intro, name
           <m.div className="w-full" {...appear(2.3)}>
             {date}
           </m.div>
+
+          {countdown ? (
+            <m.div className="w-full" {...appear(3.1)}>
+              {countdown}
+            </m.div>
+          ) : null}
         </div>
 
         <m.div

@@ -220,6 +220,12 @@
     "apple": "Apple / iPhone",
     "outlook": "Outlook"
   },
+  "Countdown": {
+    "days": "يوم",
+    "hours": "ساعة",
+    "minutes": "دقيقة",
+    "label": "باقي على المناسبة"
+  },
   "Guests": {
     "count": "{count, plural, zero {لا دعوات} one {دعوة واحدة} two {دعوتان} few {# دعوات} many {# دعوة} other {# دعوة}}",
     "limit": "الحد الأقصى {max}",
