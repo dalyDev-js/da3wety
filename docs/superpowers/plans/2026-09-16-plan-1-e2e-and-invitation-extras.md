@@ -1436,7 +1436,7 @@ git commit -m "feat(invitation): countdown to the event in the hero"
 **Interfaces:**
 - Produces: `listWishes(eventId: string, page = 1, pageSize = 50): Promise<{ items: { guestName: string; status: RsvpStatus; message: string; respondedAt: Date }[]; total: number }>` — only rsvps with a non-empty message, newest first.
 
-- [ ] **Step 1: Query**
+- [x] **Step 1: Query**
 
 Append to `src/db/queries/guests.ts`:
 
@@ -1463,12 +1463,12 @@ export const listWishes = cache(async (eventId: string, page = 1, pageSize = 50)
 
 Add `isNotNull`, `ne`, `desc`, `count` to the drizzle-orm import if missing.
 
-- [ ] **Step 2: Messages**
+- [x] **Step 2: Messages**
 
 `ar.json` `Dashboard`: `"wishes": { "title": "تهاني الضيوف", "empty": "لم يكتب أحد رسالة بعد.", "count": "{count, plural, zero {لا رسائل} one {رسالة واحدة} two {رسالتان} few {# رسائل} many {# رسالة} other {# رسالة}}" }`
 `en.json` `Dashboard`: `"wishes": { "title": "Guest wishes", "empty": "No messages yet.", "count": "{count, plural, one {# message} other {# messages}}" }`
 
-- [ ] **Step 3: Component**
+- [x] **Step 3: Component**
 
 ```tsx
 // src/components/dashboard/wishes-list.tsx
@@ -1516,15 +1516,15 @@ export async function WishesList({ eventId }: { eventId: string }) {
 
 Add `<WishesList eventId={eventId} />` at the end of the overview page's `space-y-6` div.
 
-- [ ] **Step 4: CSV column**
+- [x] **Step 4: CSV column**
 
 In the export route add `"message"` to `header` after `"rsvp"`, and the matching value from the row's rsvp (`row.rsvp?.message ?? ""`). Check how rows are built in that file and add the field in the same place the `rsvp` status is read.
 
-- [ ] **Step 5: E2E**
+- [x] **Step 5: E2E**
 
 In the first e2e test, fill `textarea[name="message"]` with `"ألف مبروك!"` before submitting the RSVP, and after returning to the dashboard: `await expect(page.getByText("ألف مبروك!")).toBeVisible();`
 
-- [ ] **Step 6: Gate and commit**
+- [x] **Step 6: Gate and commit**
 
 Run: `npm run typecheck && npm run lint && npx vitest run && npm run test:e2e`
 

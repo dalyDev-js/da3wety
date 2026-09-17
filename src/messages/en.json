@@ -73,7 +73,12 @@
     "welcome": "Welcome, {name}",
     "newEvent": "New event",
     "noEvents": "You have not created any events yet.",
-    "noEventsHint": "Create your first event and share the invitation with your guests."
+    "noEventsHint": "Create your first event and share the invitation with your guests.",
+    "wishes": {
+      "title": "Guest wishes",
+      "empty": "No messages yet.",
+      "count": "{count, plural, one {# message} other {# messages}}"
+    }
   },
   "Event": {
     "newIntro": "Enter the basics. Photos and details can be added after creating the event.",

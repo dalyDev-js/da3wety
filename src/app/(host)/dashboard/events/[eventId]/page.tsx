@@ -7,6 +7,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { setEventStatus } from "@/actions/events";
 import { CopyButton } from "@/components/dashboard/copy-button";
 import { DeleteEventButton } from "@/components/dashboard/delete-event-button";
+import { WishesList } from "@/components/dashboard/wishes-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getEventForHost } from "@/db/queries/events";
@@ -35,12 +36,19 @@ function Stat({ label, value, hint }: { label: string; value: number; hint?: str
   );
 }
 
-export default async function EventOverviewPage({ params }: PageProps<"/dashboard/events/[eventId]">) {
+function positiveInteger(value: string | string[] | undefined): number {
+  const candidate = Array.isArray(value) ? value[0] : value;
+  const parsed = Number(candidate);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : 1;
+}
+
+export default async function EventOverviewPage({ params, searchParams }: PageProps<"/dashboard/events/[eventId]">) {
   const host = await requireHost();
   const { eventId } = await params;
   const ctx = await getEventForHost(eventId, host.id);
   if (!ctx) notFound();
   const { event } = ctx;
+  const wishesPage = positiveInteger((await searchParams).wishesPage);
 
   const [t, common, format, stats] = await Promise.all([
     getTranslations("Event"),
@@ -130,6 +138,8 @@ export default async function EventOverviewPage({ params }: PageProps<"/dashboar
           </div>
         </CardContent>
       </Card>
+
+      <WishesList eventId={eventId} page={wishesPage} />
     </div>
   );
 }

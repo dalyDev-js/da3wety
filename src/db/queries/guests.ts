@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, count, desc, eq, ilike, isNull, or, sql, type SQL } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, isNotNull, isNull, ne, or, sql, type SQL } from "drizzle-orm";
 import { cache } from "react";
 
 import { db } from "@/db";
@@ -79,6 +79,32 @@ export const getRsvpForGuest = cache(async (guestId: string): Promise<Rsvp | nul
   const [row] = await db.select().from(rsvps).where(eq(rsvps.guestId, guestId)).limit(1);
   return row ?? null;
 });
+
+export type Wish = { guestName: string; status: Rsvp["status"]; message: string; respondedAt: Date };
+
+/** RSVP messages for the host's wishes wall, newest first. */
+export const listWishes = cache(
+  async (eventId: string, page = 1, pageSize = 50): Promise<{ items: Wish[]; total: number }> => {
+    const where = and(eq(rsvps.eventId, eventId), isNotNull(rsvps.message), ne(rsvps.message, ""));
+    const [rows, [{ total }]] = await Promise.all([
+      db
+        .select({
+          guestName: guests.name,
+          status: rsvps.status,
+          message: rsvps.message,
+          respondedAt: rsvps.respondedAt,
+        })
+        .from(rsvps)
+        .innerJoin(guests, eq(guests.id, rsvps.guestId))
+        .where(where)
+        .orderBy(desc(rsvps.respondedAt))
+        .limit(pageSize)
+        .offset((page - 1) * pageSize),
+      db.select({ total: count() }).from(rsvps).where(where),
+    ]);
+    return { items: rows.map((r) => ({ ...r, message: r.message ?? "" })), total };
+  },
+);
 
 /** Door-staff search: event-scoped, minimum 3 characters, capped results. */
 export async function searchGuestsForScanner(eventId: string, term: string, limit = 5): Promise<GuestRow[]> {

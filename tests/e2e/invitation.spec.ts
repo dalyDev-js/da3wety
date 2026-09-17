@@ -41,6 +41,7 @@ test.describe("invitation flow", () => {
     await guest.page.fill('input[name="name"]', "عمر e2e");
     await guest.page.fill('input[name="phone"]', "01012345678");
     await guest.page.selectOption('select[name="seats"]', "2");
+    await guest.page.fill('textarea[name="message"]', "ألف مبروك!");
     await guest.page.getByRole("button", { name: /إرسال الرد|Send reply/ }).click();
     await guest.page.waitForURL(/\/i\/[A-Za-z0-9_-]{16}\?rsvp=1$/, { timeout: 30_000 });
     await guest.ctx.close();
@@ -51,6 +52,16 @@ test.describe("invitation flow", () => {
       .first()
       .locator("..");
     await expect(attending.getByText("1", { exact: true })).toBeVisible();
+    await expect(page.getByText("ألف مبروك!", { exact: true })).toBeVisible();
+
+    await page.goto(`/dashboard/events/${eventId}?wishesPage=2`);
+    await expect(page.getByText("ألف مبروك!", { exact: true })).toBeVisible();
+
+    const csvResponse = await page.request.get(`/dashboard/events/${eventId}/checkin/export`);
+    expect(csvResponse.ok()).toBe(true);
+    const csv = await csvResponse.text();
+    expect(csv).toContain("rsvp,message,seats_attending");
+    expect(csv).toContain('"attending","ألف مبروك!"');
   });
 
   test("published invitation opens on mobile without console errors", async ({ page }, testInfo) => {

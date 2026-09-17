@@ -22,6 +22,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ eve
       group: guests.groupLabel,
       maxSeats: guests.maxSeats,
       status: rsvps.status,
+      message: rsvps.message,
       seats: rsvps.seats,
       admitted:
         sql<number>`coalesce((select sum(c.seats_admitted) from ${checkins} c where c.guest_id = ${guests.id}), 0)`.mapWith(
@@ -34,11 +35,31 @@ export async function GET(_request: Request, { params }: { params: Promise<{ eve
     .where(eq(guests.eventId, eventId))
     .orderBy(asc(guests.name));
 
-  const header = ["name", "phone", "group", "max_seats", "rsvp", "seats_attending", "seats_admitted", "last_checkin"];
+  const header = [
+    "name",
+    "phone",
+    "group",
+    "max_seats",
+    "rsvp",
+    "message",
+    "seats_attending",
+    "seats_admitted",
+    "last_checkin",
+  ];
   const lines = [
     header.join(","),
     ...rows.map((r) =>
-      [r.name, r.phone, r.group, r.maxSeats, r.status ?? "pending", r.seats ?? 0, r.admitted, r.lastCheckin ?? ""]
+      [
+        r.name,
+        r.phone,
+        r.group,
+        r.maxSeats,
+        r.status ?? "pending",
+        r.message ?? "",
+        r.seats ?? 0,
+        r.admitted,
+        r.lastCheckin ?? "",
+      ]
         .map(csvCell)
         .join(","),
     ),
