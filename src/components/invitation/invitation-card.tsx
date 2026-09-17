@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { AddToCalendar } from "@/components/invitation/add-to-calendar";
 import { captionClass } from "@/components/invitation/caption";
 import { GiftSection } from "@/components/invitation/gift-section";
 import { GoldRule } from "@/components/invitation/gold-rule";
@@ -83,6 +84,8 @@ export async function InvitationCard({ event, guestName, galleryHref, children }
             {endLine ? t("timeRange", { start: timeLine, end: endLine }) : t("timeAt", { time: timeLine })}
           </p>
         </div>
+
+        <AddToCalendar event={event} locale={locale} />
 
         {event.venueName || event.venueAddress ? (
           <address className="space-y-1 not-italic">

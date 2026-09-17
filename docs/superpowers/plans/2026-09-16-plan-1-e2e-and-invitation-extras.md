@@ -987,7 +987,7 @@ git commit -m "feat(invitation): digital gift section with copy button"
   export function icsFilename(title: string): string;                    // "da3wety-<slugified>.ics"
   ```
 
-- [ ] **Step 1: Write the failing unit tests**
+- [x] **Step 1: Write the failing unit tests**
 
 ```ts
 // tests/unit/calendar.test.ts
@@ -1046,12 +1046,12 @@ describe("calendar", () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `npx vitest run tests/unit/calendar.test.ts`
 Expected: FAIL — module not found.
 
-- [ ] **Step 3: Implement `src/lib/calendar.ts`**
+- [x] **Step 3: Implement `src/lib/calendar.ts`**
 
 ```ts
 /**
@@ -1155,12 +1155,12 @@ export function icsFilename(title: string): string {
 }
 ```
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `npx vitest run tests/unit/calendar.test.ts`
 Expected: PASS (5 tests).
 
-- [ ] **Step 5: Route handler**
+- [x] **Step 5: Route handler**
 
 ```ts
 // src/app/(guest)/e/[slug]/event.ics/route.ts
@@ -1197,7 +1197,7 @@ export async function GET(_req: Request, { params }: RouteContext<"/e/[slug]/eve
 
 (`RouteContext` is Next 16's generated helper type, like `PageProps`; if typecheck complains, type the second argument as `{ params: Promise<{ slug: string }> }`.)
 
-- [ ] **Step 6: Messages and the component**
+- [x] **Step 6: Messages and the component**
 
 `ar.json` root `"Calendar": { "add": "أضف إلى التقويم", "google": "Google", "apple": "Apple / iPhone", "outlook": "Outlook" }`; `en.json` `"Calendar": { "add": "Add to calendar", "google": "Google", "apple": "Apple / iPhone", "outlook": "Outlook" }`.
 
@@ -1246,7 +1246,7 @@ export async function AddToCalendar({ event, locale }: Props) {
 
 In `invitation-card.tsx`, directly after the date/time `div`, add `<AddToCalendar event={event} locale={locale} />`.
 
-- [ ] **Step 7: E2E assertion**
+- [x] **Step 7: E2E assertion**
 
 Append to the first e2e test, after the RSVP thanks assertion:
 
@@ -1258,7 +1258,7 @@ Append to the first e2e test, after the RSVP thanks assertion:
     expect(download.suggestedFilename()).toMatch(/\.ics$/);
 ```
 
-- [ ] **Step 8: Gate and commit**
+- [x] **Step 8: Gate and commit**
 
 Run: `npm run typecheck && npm run lint && npx vitest run && npm run test:e2e`
 Expected: green.

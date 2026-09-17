@@ -214,6 +214,12 @@
     "copied": "Copied",
     "hint": "Copy the number or address and transfer from your bank or wallet app."
   },
+  "Calendar": {
+    "add": "Add to calendar",
+    "google": "Google",
+    "apple": "Apple / iPhone",
+    "outlook": "Outlook"
+  },
   "Guests": {
     "count": "{count, plural, one {# invitation} other {# invitations}}",
     "limit": "limit {max}",

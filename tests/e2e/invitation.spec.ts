@@ -28,6 +28,12 @@ test.describe("invitation flow", () => {
     // No photo on this event: names are visible without scratching.
     await expect(guest.page.getByRole("heading", { level: 1 })).toContainText("أحمد");
 
+    const [download] = await Promise.all([
+      guest.page.waitForEvent("download"),
+      guest.page.getByRole("link", { name: /Apple/ }).click(),
+    ]);
+    expect(download.suggestedFilename()).toMatch(/\.ics$/);
+
     const attendingChoice = guest.page.getByLabel(/سأحضر|I will attend/);
     await guest.page.getByText(/سأحضر|I will attend/, { exact: true }).click();
     await expect(attendingChoice).toBeChecked();
