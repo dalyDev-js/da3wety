@@ -6,10 +6,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
 import { captionClass } from "@/components/invitation/caption";
+import type { InvitationTheme } from "@/components/invitation/invitation-theme";
 
 type Props = {
   src: string;
   alt: string;
+  foil: InvitationTheme["foil"];
+  confetti: string[];
   /** Share of the cover that must be scratched before it dissolves. */
   threshold?: number;
   onRevealed?: () => void;
@@ -18,7 +21,6 @@ type Props = {
 const RADIUS = 20;
 const ALPHA_VISIBLE = 32;
 const PROGRESS_EVERY_MS = 120;
-const GOLD = ["#b9933e", "#d4b96a", "#e2d3a6", "#f3ebdd", "#8c6d2f"];
 
 /**
  * The couple photo behind a scratch-off foil. The cover is painted on a canvas
@@ -27,7 +29,7 @@ const GOLD = ["#b9933e", "#d4b96a", "#e2d3a6", "#f3ebdd", "#8c6d2f"];
  * readback stays cheap. Past the threshold the foil fades out and confetti
  * falls. A plain button reveals it for keyboard and assistive-tech users.
  */
-export function ScratchPhoto({ src, alt, threshold = 0.85, onRevealed }: Props) {
+export function ScratchPhoto({ src, alt, foil, confetti, threshold = 0.85, onRevealed }: Props) {
   const t = useTranslations("Invitation");
   const locale = useLocale();
   const reduceMotion = useReducedMotion();
@@ -79,7 +81,7 @@ export function ScratchPhoto({ src, alt, threshold = 0.85, onRevealed }: Props) 
       ctx.ellipse(w / 2, h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
       ctx.clip();
 
-      ctx.fillStyle = "rgba(222, 208, 176, 0.97)";
+      ctx.fillStyle = withAlpha(foil.base, 0.97);
       ctx.fillRect(0, 0, w, h);
 
       const area = w * h;
@@ -88,10 +90,10 @@ export function ScratchPhoto({ src, alt, threshold = 0.85, onRevealed }: Props) 
         const r = Math.random();
         ctx.fillStyle =
           r < 0.5
-            ? `rgba(236, 226, 200, ${(0.35 + Math.random() * 0.45).toFixed(2)})`
+            ? withAlpha(foil.light, 0.35 + Math.random() * 0.45)
             : r < 0.85
-              ? `rgba(190, 168, 120, ${(0.25 + Math.random() * 0.4).toFixed(2)})`
-              : `rgba(246, 238, 218, ${(0.4 + Math.random() * 0.4).toFixed(2)})`;
+              ? withAlpha(foil.dark, 0.25 + Math.random() * 0.4)
+              : withAlpha(foil.bright, 0.4 + Math.random() * 0.4);
         ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
       }
       // Coarser flecks.
@@ -99,17 +101,17 @@ export function ScratchPhoto({ src, alt, threshold = 0.85, onRevealed }: Props) 
         const r = Math.random();
         ctx.fillStyle =
           r < 0.5
-            ? `rgba(228, 214, 180, ${(0.55 + Math.random() * 0.4).toFixed(2)})`
+            ? withAlpha(foil.light, 0.55 + Math.random() * 0.4)
             : r < 0.85
-              ? `rgba(176, 150, 96, ${(0.45 + Math.random() * 0.4).toFixed(2)})`
-              : `rgba(250, 244, 226, ${(0.65 + Math.random() * 0.35).toFixed(2)})`;
+              ? withAlpha(foil.dark, 0.45 + Math.random() * 0.4)
+              : withAlpha(foil.bright, 0.65 + Math.random() * 0.35);
         ctx.beginPath();
         ctx.arc(Math.random() * w, Math.random() * h, Math.random() * 1.2 + 0.3, 0, Math.PI * 2);
         ctx.fill();
       }
       // Glitter.
       for (let i = 0, n = Math.floor(area / 1200); i < n; i++) {
-        ctx.fillStyle = `rgba(255, 250, 235, ${(0.8 + Math.random() * 0.2).toFixed(2)})`;
+        ctx.fillStyle = withAlpha(foil.glitter, 0.8 + Math.random() * 0.2);
         ctx.beginPath();
         ctx.arc(Math.random() * w, Math.random() * h, Math.random() + 0.6, 0, Math.PI * 2);
         ctx.fill();
@@ -121,7 +123,7 @@ export function ScratchPhoto({ src, alt, threshold = 0.85, onRevealed }: Props) 
     paint();
     window.addEventListener("resize", paint);
     return () => window.removeEventListener("resize", paint);
-  }, [countCovered]);
+  }, [countCovered, foil]);
 
   const finish = useCallback(
     (withConfetti: boolean) => {
@@ -136,9 +138,9 @@ export function ScratchPhoto({ src, alt, threshold = 0.85, onRevealed }: Props) 
         canvas.style.pointerEvents = "none";
       }
       onRevealed?.();
-      if (withConfetti) void burst("big");
+      if (withConfetti) void burst("big", confetti);
     },
-    [onRevealed],
+    [confetti, onRevealed],
   );
 
   function localPoint(e: ReactPointerEvent<HTMLCanvasElement>) {
@@ -152,7 +154,7 @@ export function ScratchPhoto({ src, alt, threshold = 0.85, onRevealed }: Props) 
     if (!canvas || !ctx || done.current) return;
     if (!started) {
       setStarted(true);
-      if (!reduceMotion) void burst("small");
+      if (!reduceMotion) void burst("small", confetti);
     }
     ctx.globalCompositeOperation = "destination-out";
     ctx.lineWidth = RADIUS * 2;
@@ -243,9 +245,9 @@ export function ScratchPhoto({ src, alt, threshold = 0.85, onRevealed }: Props) 
   );
 }
 
-async function burst(kind: "small" | "big") {
+async function burst(kind: "small" | "big", colors: string[]) {
   const confetti = (await import("canvas-confetti")).default;
-  const base = { shapes: ["circle" as const], colors: GOLD, zIndex: 60, disableForReducedMotion: true };
+  const base = { shapes: ["circle" as const], colors, zIndex: 60, disableForReducedMotion: true };
   if (kind === "small") {
     confetti({
       ...base,
@@ -296,4 +298,10 @@ async function burst(kind: "small" | "big") {
     if (Date.now() < until) requestAnimationFrame(sides);
   };
   sides();
+}
+
+/** "#rrggbb" + alpha → "rgba(r, g, b, a)" for canvas fills. */
+function withAlpha(hex: string, alpha: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha.toFixed(2)})`;
 }

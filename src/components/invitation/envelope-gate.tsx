@@ -94,7 +94,11 @@ export function EnvelopeGate({ monogram, children }: Props) {
               {/* Interior seen once the flap lifts. */}
               <div
                 className="absolute inset-0"
-                style={{ clipPath: LINER, background: "linear-gradient(180deg, #d9cfbb 0%, #e5dccb 60%)" }}
+                style={{
+                  clipPath: LINER,
+                  background:
+                    "linear-gradient(180deg, var(--inv-env-liner) 0%, color-mix(in srgb, var(--inv-env-liner) 70%, var(--inv-paper)) 60%)",
+                }}
               />
               {/* The card inside the pocket. */}
               <div
@@ -105,16 +109,16 @@ export function EnvelopeGate({ monogram, children }: Props) {
                 <div className="absolute inset-[7.5%] border border-(--inv-gold)/40" />
               </div>
               {/* Pocket: side folds then the bottom fold, each with a soft seam. */}
-              <Fold clip={FOLD_LEFT} shade="linear-gradient(90deg, #efe7d8, #e8dfcd)" />
-              <Fold clip={FOLD_RIGHT} shade="linear-gradient(270deg, #efe7d8, #e8dfcd)" />
-              <Fold clip={FOLD_BOTTOM} shade="linear-gradient(0deg, #f1e9da, #e9e0ce)" />
+              <Fold clip={FOLD_LEFT} shade="linear-gradient(90deg, var(--inv-env-fold), var(--inv-env-fold-deep))" />
+              <Fold clip={FOLD_RIGHT} shade="linear-gradient(270deg, var(--inv-env-fold), var(--inv-env-fold-deep))" />
+              <Fold clip={FOLD_BOTTOM} shade="linear-gradient(0deg, var(--inv-env-fold), var(--inv-env-fold-deep))" />
               {/* Soft seam under the flap edge; fades as the flap lifts. */}
               <div
                 className="gate-flap-shadow absolute inset-0"
                 style={{
                   clipPath: FLAP,
                   transform: "translateY(3px)",
-                  background: "rgba(42,26,29,0.09)",
+                  background: "color-mix(in srgb, var(--inv-ink) 10%, transparent)",
                   filter: "blur(2px)",
                 }}
               />
@@ -134,7 +138,8 @@ export function EnvelopeGate({ monogram, children }: Props) {
                   className="absolute inset-0"
                   style={{
                     clipPath: FLAP,
-                    background: "linear-gradient(180deg, #f4ede0 0%, #ede4d3 42%, #e4dac8 58%)",
+                    background:
+                      "linear-gradient(180deg, var(--inv-env-flap) 0%, color-mix(in srgb, var(--inv-env-flap) 60%, var(--inv-env-flap-deep)) 42%, var(--inv-env-flap-deep) 58%)",
                     backfaceVisibility: "hidden",
                   }}
                 >
@@ -142,11 +147,11 @@ export function EnvelopeGate({ monogram, children }: Props) {
                 </div>
                 {/* Back of the flap, visible mid-flip. */}
                 <div
-                  className="absolute inset-0 bg-[#e3d9c6]"
+                  className="absolute inset-0 bg-(--inv-env-back)"
                   style={{ clipPath: FLAP, transform: "rotateX(180deg)", backfaceVisibility: "hidden" }}
                 />
                 <m.span
-                  className="gate-monogram absolute top-[41%] left-1/2 -translate-x-1/2 font-heading text-[clamp(2.75rem,9vw,4.5rem)] leading-none whitespace-nowrap text-[#dcd2bf]"
+                  className="gate-monogram absolute top-[41%] left-1/2 -translate-x-1/2 font-heading text-[clamp(2.75rem,9vw,4.5rem)] leading-none whitespace-nowrap text-(--inv-env-monogram)"
                   style={{
                     backfaceVisibility: "hidden",
                     textShadow: "-1px -1px 1px rgba(255,255,255,0.85), 1px 1.5px 2px rgba(42,26,29,0.22)",

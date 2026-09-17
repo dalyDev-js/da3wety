@@ -21,7 +21,6 @@ export async function generateMetadata({ params }: PageProps<"/e/[slug]">): Prom
     ? t("honorees", { primary: event.honoreePrimary, secondary: event.honoreeSecondary })
     : event.honoreePrimary;
   const description = t("metaDescription", { names });
-  const version = event.updatedAt.getTime();
 
   return {
     title: event.title,
@@ -31,7 +30,6 @@ export async function generateMetadata({ params }: PageProps<"/e/[slug]">): Prom
       description,
       type: "website",
       locale: event.locale === "ar" ? "ar_EG" : "en_GB",
-      images: [{ url: `/e/${slug}/opengraph-image?v=${version}`, width: 1200, height: 630, alt: event.title }],
     },
     twitter: { card: "summary_large_image", title: event.title, description },
   };
@@ -47,7 +45,7 @@ export default async function PublicInvitationPage({ params }: PageProps<"/e/[sl
   const deadlinePassed = rsvpDeadlinePassed(event);
 
   return (
-    <InvitationStage>
+    <InvitationStage theme={event.theme}>
       <EnvelopeGate monogram={monogram(event.honoreePrimary, event.honoreeSecondary)}>
         <InvitationCard event={event} galleryHref={galleryState(ctx) === "open" ? `/e/${slug}/gallery` : null}>
           {event.rsvpMode === "open" ? (

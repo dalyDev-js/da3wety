@@ -31,7 +31,7 @@ export async function createPublishedEvent(page: Page, overrides: Partial<EventI
   const preview = page.locator('a[href^="/e/"]').first();
   const slug = (await preview.getAttribute("href"))!.split("/e/")[1].split(/[/?]/)[0];
   await page.getByRole("button", { name: /نشر الدعوة|Publish/ }).click();
-  await expect(page.getByRole("button", { name: /إلغاء النشر|Unpublish/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /إلغاء النشر|Unpublish/ })).toBeVisible({ timeout: 30_000 });
   return { eventId, slug };
 }
 

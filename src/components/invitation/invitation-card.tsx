@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { captionClass } from "@/components/invitation/caption";
 import { GoldRule } from "@/components/invitation/gold-rule";
 import { InvitationHero } from "@/components/invitation/invitation-hero";
+import { getTheme } from "@/components/invitation/invitation-theme";
 import type { Event } from "@/db/schema";
 import { formats, toIntlLocale } from "@/lib/i18n/config";
 import { publicAssetUrl } from "@/lib/storage";
@@ -27,6 +28,7 @@ type Props = {
  */
 export async function InvitationCard({ event, guestName, galleryHref, children }: Props) {
   const locale = toIntlLocale(event.locale);
+  const theme = getTheme(event.theme);
   const [t, format] = await Promise.all([
     getTranslations({ locale, namespace: "Invitation" }),
     getFormatter({ locale }),
@@ -44,6 +46,8 @@ export async function InvitationCard({ event, guestName, galleryHref, children }
       <InvitationHero
         photoSrc={revealSrc}
         photoAlt={t("photoAlt")}
+        foil={theme.foil}
+        confetti={theme.confetti}
         intro={
           <>
             {guestName ? <p className="text-sm text-(--inv-muted)">{t("greeting", { name: guestName })}</p> : null}

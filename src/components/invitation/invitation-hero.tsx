@@ -6,10 +6,13 @@ import * as m from "motion/react-m";
 import { useState, type ReactNode } from "react";
 
 import { ScratchPhoto } from "@/components/invitation/scratch-photo";
+import type { InvitationTheme } from "@/components/invitation/invitation-theme";
 
 type Props = {
   photoSrc: string | null;
   photoAlt: string;
+  foil: InvitationTheme["foil"];
+  confetti: string[];
   /** Greeting, family names and the invite line: above the photo. */
   intro: ReactNode;
   /** Honoree names: below the photo. */
@@ -29,7 +32,7 @@ const INNER =
  * staggered delays once the photo is uncovered. Without a photo everything is
  * shown at once.
  */
-export function InvitationHero({ photoSrc, photoAlt, intro, names, date }: Props) {
+export function InvitationHero({ photoSrc, photoAlt, foil, confetti, intro, names, date }: Props) {
   const reduceMotion = useReducedMotion();
   const [revealed, setRevealed] = useState(photoSrc === null);
 
@@ -63,7 +66,13 @@ export function InvitationHero({ photoSrc, photoAlt, intro, names, date }: Props
 
           {photoSrc ? (
             <div className="w-full">
-              <ScratchPhoto src={photoSrc} alt={photoAlt} onRevealed={() => setRevealed(true)} />
+              <ScratchPhoto
+                src={photoSrc}
+                alt={photoAlt}
+                foil={foil}
+                confetti={confetti}
+                onRevealed={() => setRevealed(true)}
+              />
             </div>
           ) : null}
 

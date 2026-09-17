@@ -438,7 +438,7 @@ git commit -m "feat(db): theme enum and digital gift columns on events"
 - Consumes: `ThemeId`, `THEME_IDS` from `@/db/schema/enums`.
 - `InvitationStage` gets `theme?: ThemeId`; `InvitationHero` gets `foil: InvitationTheme["foil"]`, `confetti: string[]`; `ScratchPhoto` gets `foil`, `confetti`.
 
-- [ ] **Step 1: Write the failing theme test**
+- [x] **Step 1: Write the failing theme test**
 
 ```ts
 // tests/unit/themes.test.ts
@@ -475,12 +475,12 @@ describe("invitation themes", () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `npx vitest run tests/unit/themes.test.ts`
 Expected: FAIL — `THEMES`/`getTheme` not exported.
 
-- [ ] **Step 3: Rewrite `invitation-theme.ts`**
+- [x] **Step 3: Rewrite `invitation-theme.ts`**
 
 ```ts
 import type { CSSProperties } from "react";
@@ -562,12 +562,12 @@ export function invitationThemeStyle(id: ThemeId | null | undefined): CSSPropert
 }
 ```
 
-- [ ] **Step 4: Run the theme test**
+- [x] **Step 4: Run the theme test**
 
 Run: `npx vitest run tests/unit/themes.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Thread the theme through the stage and pages**
+- [x] **Step 5: Thread the theme through the stage and pages**
 
 `invitation-stage.tsx`:
 
@@ -592,7 +592,7 @@ export function InvitationStage({ theme, children }: { theme?: ThemeId; children
 
 In `e/[slug]/page.tsx`, `i/[token]/page.tsx`, `q/[qrToken]/page.tsx` change `<InvitationStage>` to `<InvitationStage theme={event.theme}>` (in `q` the event is `row.event`).
 
-- [ ] **Step 6: Envelope reads CSS variables**
+- [x] **Step 6: Envelope reads CSS variables**
 
 In `envelope-gate.tsx` replace literal colours:
 
@@ -603,7 +603,7 @@ In `envelope-gate.tsx` replace literal colours:
 - monogram: replace `text-[#dcd2bf]` with `text-(--inv-env-monogram)`
 - the seam shadow and veil already use the paper/ink variables — for `noir` the shadow `rgba(42,26,29,…)` is invisible; change the seam shadow to `background: "color-mix(in srgb, var(--inv-ink) 10%, transparent)"`.
 
-- [ ] **Step 7: Foil and confetti from props**
+- [x] **Step 7: Foil and confetti from props**
 
 In `scratch-photo.tsx`: add props `foil: InvitationTheme["foil"]` and `confetti: string[]`; delete the `GOLD` constant; replace the literal `rgba(...)` tints with `withAlpha(foil.base, 0.97)` etc. Add the helper at the bottom of the file:
 
@@ -619,18 +619,18 @@ Mapping: base fill → `withAlpha(foil.base, 0.97)`; fine grain three tones → 
 
 In `invitation-hero.tsx` add props `foil` and `confetti` and pass them to `ScratchPhoto`. In `invitation-card.tsx` compute `const theme = getTheme(event.theme)` and pass `foil={theme.foil} confetti={theme.confetti}`.
 
-- [ ] **Step 8: OG image uses the theme**
+- [x] **Step 8: OG image uses the theme**
 
 In `src/app/(guest)/e/[slug]/opengraph-image.tsx` replace the literal paper/ink colours with `const theme = getTheme(event.theme)` → `theme.paper` for the background and `theme.ink` for the names (import `getTheme` from `@/components/invitation/invitation-theme`). Open `/e/lhtestev01/opengraph-image` after the next step to confirm.
 
-- [ ] **Step 9: Verify visually and run the gate**
+- [x] **Step 9: Verify visually and run the gate**
 
 Run: `npm run typecheck && npm run lint && npx vitest run`
 Then temporarily set the local test event to `navy`:
 `node --env-file=.env.local --input-type=module -e "import postgres from 'postgres'; const s=postgres(process.env.DATABASE_URL,{max:1,prepare:false}); await s\`update events set theme='navy' where slug='lhtestev01'\`; await s.end();"`
 and open `http://localhost:3000/e/lhtestev01` in `npm run dev`: navy envelope, gold monogram, cream foil. Set it back to `ivory` afterwards.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add src/components/invitation src/app/(guest) tests/unit/themes.test.ts

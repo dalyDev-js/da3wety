@@ -37,7 +37,7 @@ export default async function PersonalInvitationPage({ params }: PageProps<"/i/[
     rsvp?.status === "attending" && packageAllows(ctx.pkg, "checkin") ? await getActiveTicket(db, guest.id) : null;
 
   return (
-    <InvitationStage>
+    <InvitationStage theme={event.theme}>
       <EnvelopeGate monogram={monogram(event.honoreePrimary, event.honoreeSecondary)}>
         <InvitationCard
           event={event}

@@ -28,7 +28,7 @@ export default async function TicketPage({ params }: PageProps<"/q/[qrToken]">) 
 
   const t = await getTranslations({ locale: toIntlLocale(row.event.locale), namespace: "Ticket" });
   return (
-    <InvitationStage>
+    <InvitationStage theme={row.event.theme}>
       <div className="mx-auto w-full max-w-md px-6 py-10">
         <p className="mb-6 text-center font-heading text-2xl">{row.event.title}</p>
         <Ticket locale={row.event.locale} guestName={row.guest.name} seats={row.rsvp?.seats ?? 1} ticket={row.ticket} />

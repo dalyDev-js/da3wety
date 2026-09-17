@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { ImageResponse } from "next/og";
 
-import { DEFAULT_INVITATION_THEME as theme } from "@/components/invitation/invitation-theme";
+import { getTheme } from "@/components/invitation/invitation-theme";
 import { getEventBySlug } from "@/db/queries/events";
 import { publicAssetUrl } from "@/lib/storage";
 
@@ -11,8 +11,7 @@ export const alt = "Da3wety invitation";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// The font is loaded once per instance; the event is read per request. generateMetadata
-// versions the image URL with updatedAt so WhatsApp/Facebook caches miss after edits.
+// The font is loaded once per instance; the event is read per request.
 const fontBold = readFile(join(process.cwd(), "src/assets/fonts/Amiri-Bold.ttf"));
 
 /**
@@ -24,6 +23,7 @@ export default async function OpenGraphImage({ params }: { params: Promise<{ slu
   const { slug } = await params;
   const ctx = await getEventBySlug(slug);
   const event = ctx && ctx.event.status === "published" ? ctx.event : null;
+  const theme = getTheme(event?.theme);
   const cover = event?.coverImagePath ? publicAssetUrl(event.coverImagePath) : null;
   const names = event ? [event.honoreePrimary, event.honoreeSecondary].filter(Boolean) : ["دعوتي"];
 
