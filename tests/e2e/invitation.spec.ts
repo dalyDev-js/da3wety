@@ -57,4 +57,40 @@ test.describe("invitation flow", () => {
 
     expect(consoleErrors).toEqual([]);
   });
+
+  test("host picks a theme and enables the gift section; the invitation reflects both", async ({
+    page,
+    browser,
+    baseURL,
+  }, testInfo) => {
+    test.skip(testInfo.project.name !== "host-desktop", "Host setup runs in the authenticated project");
+
+    const { eventId, slug } = await createPublishedEvent(page);
+    await page.goto(`/dashboard/events/${eventId}/edit`);
+    await page.getByRole("radio", { name: /كحلي|Navy/ }).check({ force: true });
+    await page.getByLabel(/عرض قسم الهدية|Show the gift section/).check();
+    await page.fill('input[name="giftHandle"]', "01012345678");
+    await page.fill('textarea[name="giftNote"]', "حضوركم أغلى هدية");
+    await page
+      .getByRole("button", { name: /حفظ|Save/ })
+      .first()
+      .click();
+    await expect(page.getByText(/تم حفظ التغييرات|Changes saved/)).toBeVisible();
+
+    await page.reload();
+    await expect(page.getByRole("radio", { name: /كحلي|Navy/ })).toBeChecked();
+    await expect(page.getByLabel(/عرض قسم الهدية|Show the gift section/)).toBeChecked();
+    await expect(page.locator('input[name="giftHandle"]')).toHaveValue("01012345678");
+    await expect(page.locator('textarea[name="giftNote"]')).toHaveValue("حضوركم أغلى هدية");
+
+    const guest = await guestPage(browser, baseURL!);
+    await openInvitation(guest.page, slug);
+    const paper = await guest.page
+      .locator("main")
+      .evaluate((el) => getComputedStyle(el).getPropertyValue("--inv-paper").trim());
+    expect(paper).toBe("#f6efe9");
+    await expect(guest.page.getByText("حضوركم أغلى هدية")).toBeVisible();
+    await expect(guest.page.getByRole("button", { name: /نسخ|Copy/ })).toBeVisible();
+    await guest.ctx.close();
+  });
 });

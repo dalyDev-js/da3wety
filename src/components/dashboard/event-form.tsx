@@ -6,6 +6,7 @@ import { useActionState } from "react";
 
 import { createEvent, updateEvent } from "@/actions/events";
 import { ImageField } from "@/components/dashboard/image-field";
+import { ThemePicker } from "@/components/dashboard/theme-picker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -257,6 +258,61 @@ export function EventForm(props: Props) {
           </FieldGroup>
         </CardContent>
       </Card>
+
+      {props.mode === "edit" ? (
+        <>
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("sectionTheme")}</CardTitle>
+              <CardDescription>{t("themeHint")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ThemePicker name="theme" defaultValue={d.theme ?? "ivory"} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("sectionGift")}</CardTitle>
+              <CardDescription>{t("giftHint")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FieldGroup>
+                <Field orientation="horizontal">
+                  <Checkbox id="giftEnabled" name="giftEnabled" defaultChecked={Boolean(d.giftEnabled)} />
+                  <FieldLabel htmlFor="giftEnabled" className="font-normal">
+                    {t("giftEnabled")}
+                  </FieldLabel>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="giftHandle">{t("giftHandle")}</FieldLabel>
+                  <Input
+                    id="giftHandle"
+                    name="giftHandle"
+                    defaultValue={d.giftHandle ?? ""}
+                    dir="ltr"
+                    inputMode="email"
+                    placeholder={t("giftHandleHint")}
+                  />
+                  <Err errors={errors} field="giftHandle" />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="giftNote">{t("giftNote")}</FieldLabel>
+                  <Textarea
+                    id="giftNote"
+                    name="giftNote"
+                    defaultValue={d.giftNote ?? ""}
+                    rows={2}
+                    maxLength={200}
+                    placeholder={t("giftNoteHint")}
+                  />
+                  <Err errors={errors} field="giftNote" />
+                </Field>
+              </FieldGroup>
+            </CardContent>
+          </Card>
+        </>
+      ) : null}
 
       <Card>
         <CardHeader>

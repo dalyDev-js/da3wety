@@ -650,7 +650,7 @@ git commit -m "feat(invitation): four colour themes driving envelope, foil and c
 **Interfaces:**
 - Produces: `ThemePicker({ name, defaultValue }: { name: "theme"; defaultValue: ThemeId })` — renders four labelled radio inputs (`value` = theme id) so the existing `FormData` flow needs no JS.
 
-- [ ] **Step 1: Messages**
+- [x] **Step 1: Messages**
 
 `ar.json` → `Event`:
 
@@ -684,7 +684,7 @@ git commit -m "feat(invitation): four colour themes driving envelope, foil and c
 
 Run `npx vitest run tests/unit/messages.test.ts` → PASS (key parity).
 
-- [ ] **Step 2: Theme picker component**
+- [x] **Step 2: Theme picker component**
 
 ```tsx
 // src/components/dashboard/theme-picker.tsx
@@ -753,7 +753,7 @@ export function ThemePicker({ name, defaultValue }: Props) {
 }
 ```
 
-- [ ] **Step 3: Add the two sections to the form**
+- [x] **Step 3: Add the two sections to the form**
 
 In `event-form.tsx`, between the invitation card (`sectionInvitation`) and the RSVP card, add:
 
@@ -798,7 +798,7 @@ In `event-form.tsx`, between the invitation card (`sectionInvitation`) and the R
 
 Import `ThemePicker`. `d` is the existing defaults object typed from `EventFormInput`; `theme`, `giftEnabled`, `giftHandle`, `giftNote` exist on it after Task 2 (check how `d` is built — if it maps from `Event`, add the four fields there).
 
-- [ ] **Step 4: Extend the e2e spec**
+- [x] **Step 4: Extend the e2e spec**
 
 Add to `tests/e2e/invitation.spec.ts`:
 
@@ -825,7 +825,7 @@ Add to `tests/e2e/invitation.spec.ts`:
 
 (The gift assertions pass after Task 5; leave the test in place — it fails red until then, which is the point.)
 
-- [ ] **Step 5: Run unit + lint, then commit**
+- [x] **Step 5: Run unit + lint, then commit**
 
 Run: `npm run typecheck && npm run lint && npx vitest run`
 Expected: green. `npm run test:e2e` → the new test fails on the gift assertions (expected until Task 5).
