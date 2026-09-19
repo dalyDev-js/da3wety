@@ -1656,7 +1656,7 @@ git commit -m "feat(guests): WhatsApp reminder for pending guests and copy-all-p
 
 **Files:** none (operations)
 
-- [ ] **Step 1: Bundle check**
+- [x] **Step 1: Bundle check**
 
 Run: `npm run build` and compare the `/e/[slug]` first-load JS to the previous build (`git stash`-free: read the sizes printed by `next build` before/after, or `ls -la .next/static/chunks`). Must be ≤ +15 KB gz. If over, lazy-load `Countdown` with `next/dynamic`.
 
