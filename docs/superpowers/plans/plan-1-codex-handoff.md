@@ -2,6 +2,8 @@
 
 Updated: 2026-09-19
 
+Subsequent full-project review (2026-09-20): see [implementation and review report](../../reviews/full-project-review.md) for the security/concurrency fixes, Arabic preview repair, current test evidence, local commands, and remaining limitations. This original task history is preserved below.
+
 ## Status: COMPLETE for the authorized scope
 
 Tasks 1–9 and Task 10 Step 1 are complete. Whole-branch review identified one CSV safety issue and three small UI issues; all four were fixed, the full test gate passed again, and scoped re-review approved the implementation with no new blockers. The final production rebuild and bundle comparison also passed. Production operations remain intentionally excluded.
