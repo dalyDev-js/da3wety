@@ -8,5 +8,5 @@ type Props = { locale: string; children: ReactNode; className?: string };
 
 /** Small-caps label above a heading (Latin: tracked uppercase; Arabic: medium weight, no tracking). */
 export function Eyebrow({ locale, children, className = "" }: Props) {
-  return <p className={`${captionClass(locale, "text-[12px]")} text-gold ${className}`}>{children}</p>;
+  return <p className={`${captionClass(locale, "text-[12px]")} text-gold-deep ${className}`}>{children}</p>;
 }

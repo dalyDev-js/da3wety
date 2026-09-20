@@ -22,7 +22,7 @@ export function LocaleToggle({ current, labels }: Props) {
       type="button"
       variant="ghost"
       size="sm"
-      aria-label={labels.language}
+      title={labels.language}
       disabled={pending}
       onClick={() => startTransition(() => setLocale(next))}
     >

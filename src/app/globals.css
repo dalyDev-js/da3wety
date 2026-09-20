@@ -11,6 +11,7 @@
   --color-ink: var(--ink);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
+  --color-gold-deep: var(--gold-deep);
   --font-sans: var(--font-sans);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-heading: var(--font-heading);
@@ -59,6 +60,8 @@
   --ink: #2a1a1d;
   --gold: #b9933e;
   --gold-soft: #e2d3a6;
+  /* Gold dark enough for small text (AA on paper and white). */
+  --gold-deep: #8c6d2f;
 
   --background: #faf6ee;
   --foreground: var(--ink);
@@ -71,7 +74,7 @@
   --secondary: var(--paper);
   --secondary-foreground: var(--ink);
   --muted: #f1eadc;
-  --muted-foreground: #7a6a66;
+  --muted-foreground: #6b5b57;
   --accent: #f6efe1;
   --accent-foreground: var(--ink);
   --destructive: oklch(0.577 0.245 27.325);
