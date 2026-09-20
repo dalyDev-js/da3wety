@@ -39,3 +39,33 @@ const TIER_RANK: Record<PackageTier, number> = { basic: 0, standard: 1, premium:
 export function tierRank(tier: PackageTier): number {
   return TIER_RANK[tier];
 }
+
+export type PackageHighlight =
+  | { key: "guests"; count: number | null }
+  | { key: "gallery"; included: boolean }
+  | { key: "photos"; count: number }
+  | { key: "retention"; days: number }
+  | { key: "moderation"; included: boolean }
+  | { key: "checkin"; included: boolean };
+
+type HighlightSource = Pick<
+  Package,
+  "maxGuests" | "galleryEnabled" | "moderationEnabled" | "maxPhotos" | "photoRetentionDays" | "checkinEnabled"
+>;
+
+/** Display bullets for a tier, in marketing order. Photo rows only appear when the gallery is included. */
+export function packageHighlights(pkg: HighlightSource): PackageHighlight[] {
+  const out: PackageHighlight[] = [
+    { key: "guests", count: pkg.maxGuests },
+    { key: "gallery", included: pkg.galleryEnabled },
+  ];
+  if (pkg.galleryEnabled) {
+    out.push(
+      { key: "photos", count: pkg.maxPhotos },
+      { key: "retention", days: pkg.photoRetentionDays },
+      { key: "moderation", included: pkg.moderationEnabled },
+    );
+  }
+  out.push({ key: "checkin", included: pkg.checkinEnabled });
+  return out;
+}

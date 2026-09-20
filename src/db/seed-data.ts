@@ -2,12 +2,14 @@ import type { Package } from "./schema/packages";
 
 type PackageSeed = Omit<Package, "createdAt" | "updatedAt">;
 
+// priceEgp values are placeholder launch prices; operators set the real value in the DB
+// (seed.ts deliberately never overwrites price_egp).
 export const PACKAGE_SEED: PackageSeed[] = [
   {
     tier: "basic",
     nameAr: "الباقة الأساسية",
     nameEn: "Basic",
-    priceEgp: 0,
+    priceEgp: 499,
     sortOrder: 1,
     isActive: true,
     maxGuests: 300,
@@ -21,7 +23,7 @@ export const PACKAGE_SEED: PackageSeed[] = [
     tier: "standard",
     nameAr: "الباقة المتوسطة",
     nameEn: "Standard",
-    priceEgp: 0,
+    priceEgp: 999,
     sortOrder: 2,
     isActive: true,
     maxGuests: 500,
@@ -35,7 +37,7 @@ export const PACKAGE_SEED: PackageSeed[] = [
     tier: "premium",
     nameAr: "الباقة المميزة",
     nameEn: "Premium",
-    priceEgp: 0,
+    priceEgp: 1999,
     sortOrder: 3,
     isActive: true,
     maxGuests: 1000,

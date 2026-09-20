@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { PACKAGE_SEED } from "@/db/seed-data";
-import { assertFeature, FeatureLockedError, packageAllows, tierRank } from "@/lib/packages";
+import { assertFeature, FeatureLockedError, packageAllows, packageHighlights, tierRank } from "@/lib/packages";
 
 const byTier = Object.fromEntries(PACKAGE_SEED.map((p) => [p.tier, p]));
 
@@ -42,5 +42,30 @@ describe("tierRank", () => {
   it("orders tiers", () => {
     expect(tierRank("basic")).toBeLessThan(tierRank("standard"));
     expect(tierRank("standard")).toBeLessThan(tierRank("premium"));
+  });
+});
+
+describe("packageHighlights", () => {
+  it("basic: guests, gallery off, checkin off — no photo rows", () => {
+    expect(packageHighlights(byTier.basic)).toEqual([
+      { key: "guests", count: 300 },
+      { key: "gallery", included: false },
+      { key: "checkin", included: false },
+    ]);
+  });
+
+  it("premium: full list in display order", () => {
+    expect(packageHighlights(byTier.premium)).toEqual([
+      { key: "guests", count: 1000 },
+      { key: "gallery", included: true },
+      { key: "photos", count: 1000 },
+      { key: "retention", days: 7 },
+      { key: "moderation", included: true },
+      { key: "checkin", included: true },
+    ]);
+  });
+
+  it("null maxGuests means unlimited", () => {
+    expect(packageHighlights({ ...byTier.basic, maxGuests: null })[0]).toEqual({ key: "guests", count: null });
   });
 });
