@@ -304,9 +304,13 @@
     "closed": "The RSVP deadline has passed.",
     "closedWithAnswer": "The RSVP deadline has passed. Your reply is recorded.",
     "inviteOnly": "Please reply from the personal invitation link you received.",
+    "usePersonalLink": "Please use your personal invitation link, or contact the host for help.",
     "full": "This event has reached its guest limit."
   },
   "Gallery": {
+    "pages": "Gallery pages",
+    "previous": "Previous",
+    "next": "Next",
     "title": "Photo gallery",
     "backToInvitation": "Back to the invitation",
     "choose": "Add photos",

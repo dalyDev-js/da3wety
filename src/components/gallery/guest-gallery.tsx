@@ -6,16 +6,19 @@ import { GoldRule } from "@/components/invitation/gold-rule";
 import { InvitationStage } from "@/components/invitation/invitation-stage";
 import { PhotoGrid, type GridPhoto } from "@/components/gallery/photo-grid";
 import { Uploader } from "@/components/gallery/uploader";
-import { listPublicPhotos, listSessionPhotos } from "@/db/queries/photos";
+import { listPublicPhotos, listSessionPhotos, PHOTO_PAGE_SIZE } from "@/db/queries/photos";
+import { pageNumber } from "@/lib/pagination";
 import type { Photo } from "@/db/schema";
 import { galleryState, getUploadSession, resolveGalleryRef, type GalleryRef } from "@/lib/gallery-access";
 import { formats, toIntlLocale } from "@/lib/i18n/config";
 import { BUCKETS, createSignedReadUrls } from "@/lib/storage";
 
-type Props = { galleryRef: GalleryRef; backHref: string };
+type Props = { galleryRef: GalleryRef; backHref: string; page?: unknown };
 
 /** Guest-facing gallery shared by the public and personal links. */
-export async function GuestGallery({ galleryRef, backHref }: Props) {
+export async function GuestGallery({ galleryRef, backHref, page: requestedPage }: Props) {
+  let page = pageNumber(requestedPage);
+  let total = 0;
   const ctx = await resolveGalleryRef(galleryRef);
   if (!ctx) return null;
   const { event } = ctx;
@@ -26,10 +29,18 @@ export async function GuestGallery({ galleryRef, backHref }: Props) {
   let grid: GridPhoto[] = [];
   if (state === "open") {
     const session = await getUploadSession();
-    const [{ rows: pub }, own] = await Promise.all([
-      listPublicPhotos(event.id),
+    const [initialPhotos, own] = await Promise.all([
+      listPublicPhotos(event.id, page),
       session ? listSessionPhotos(event.id, session) : Promise.resolve([] as Photo[]),
     ]);
+    let publicPhotos = initialPhotos;
+    total = publicPhotos.total;
+    const lastPage = Math.max(1, Math.ceil(total / PHOTO_PAGE_SIZE));
+    if (page > lastPage) {
+      page = lastPage;
+      publicPhotos = await listPublicPhotos(event.id, page);
+    }
+    const pub = publicPhotos.rows;
     const ownIds = new Set(own.map((p) => p.id));
     const merged: Photo[] = [...own.filter((p) => p.status !== "approved"), ...pub];
     const urls = await createSignedReadUrls(
@@ -47,7 +58,7 @@ export async function GuestGallery({ galleryRef, backHref }: Props) {
   }
 
   return (
-    <InvitationStage>
+    <InvitationStage theme={event.theme}>
       <div className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8">
         <header className="space-y-2 text-center">
           <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-(--inv-muted)">
@@ -78,6 +89,15 @@ export async function GuestGallery({ galleryRef, backHref }: Props) {
             ) : (
               <p className="py-10 text-center text-(--inv-muted)">{t("empty")}</p>
             )}
+            {total > PHOTO_PAGE_SIZE ? (
+              <nav aria-label={t("pages")} className="flex justify-center gap-6">
+                {page > 1 ? <Link href={`?page=${page - 1}`}>{t("previous")}</Link> : null}
+                <span>
+                  {page} / {Math.ceil(total / PHOTO_PAGE_SIZE)}
+                </span>
+                {page * PHOTO_PAGE_SIZE < total ? <Link href={`?page=${page + 1}`}>{t("next")}</Link> : null}
+              </nav>
+            ) : null}
           </>
         ) : (
           <p className="py-10 text-center text-(--inv-muted)">{t(`state.${state}`)}</p>

@@ -2,6 +2,7 @@ import { and, eq, isNull, lt, or, sql } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { db } from "@/db";
+import { lockEvent } from "@/db/event-lock";
 import { listStaleReservations } from "@/db/queries/photos";
 import { events, photos } from "@/db/schema";
 import { serverEnv } from "@/lib/env";
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
           isNull(events.purgeStartedAt),
           lt(events.purgeStartedAt, sql`now() - make_interval(mins => ${LOCK_STALE_MINUTES})`),
         ),
-        sql`${events.id} in (select id from ${events} where ${events.galleryPurgedAt} is null and ${events.galleryExpiresAt} < now() order by ${events.galleryExpiresAt} limit ${MAX_EVENTS_PER_RUN})`,
+        sql`${events.id} in (select id from ${events} where ${events.galleryPurgedAt} is null and ${events.galleryExpiresAt} < now() and (${events.purgeStartedAt} is null or ${events.purgeStartedAt} < now() - make_interval(mins => ${LOCK_STALE_MINUTES})) order by ${events.galleryExpiresAt} limit ${MAX_EVENTS_PER_RUN})`,
       ),
     )
     .returning({ id: events.id, slug: events.slug });
@@ -78,10 +79,15 @@ export async function GET(request: NextRequest) {
   for (const photo of stale) {
     if (Date.now() - started > TIME_BUDGET_MS) break;
     try {
-      const paths = [photo.storagePath, photo.thumbPath].filter(Boolean);
-      if (paths.length) await removeObjects(BUCKETS.photos, paths);
-      await db.delete(photos).where(eq(photos.id, photo.id));
-      summary.staleReservations++;
+      await db.transaction(async (tx) => {
+        if (!(await lockEvent(tx, photo.eventId))) return;
+        const [current] = await tx.select().from(photos).where(eq(photos.id, photo.id));
+        if (!current || current.uploadState !== "reserved") return;
+        const paths = [current.storagePath, current.thumbPath].filter(Boolean);
+        if (paths.length) await removeObjects(BUCKETS.photos, paths);
+        await tx.delete(photos).where(eq(photos.id, photo.id));
+        summary.staleReservations++;
+      });
     } catch (error) {
       summary.errors++;
       log.error("cron.cleanup", "stale reservation cleanup failed", { photoId: photo.id, error });

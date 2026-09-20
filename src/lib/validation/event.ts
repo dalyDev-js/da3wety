@@ -28,7 +28,7 @@ export const eventFormSchema = z
     timezone: IANA_ZONE.default("Africa/Cairo"),
     venueName: optionalText(120),
     venueAddress: optionalText(300),
-    venueMapsUrl: z.url({ error: VALIDATION_KEYS.urlInvalid }).optional(),
+    venueMapsUrl: z.url({ protocol: /^https?$/, error: VALIDATION_KEYS.urlInvalid }).optional(),
     locale: z.enum(LOCALES),
     rsvpMode: z.enum(RSVP_MODES),
     rsvpDeadline: DATETIME_LOCAL.optional(),

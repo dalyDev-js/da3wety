@@ -7,7 +7,10 @@ type Fields = Record<string, unknown>;
 
 function write(level: Level, scope: string, message: string, fields?: Fields) {
   const entry = { ts: new Date().toISOString(), level, scope, message, ...fields };
-  const line = JSON.stringify(entry, (_k, v) => (v instanceof Error ? { name: v.name, message: v.message } : v));
+  // Database error messages may contain query parameters (including bearer links).
+  const line = JSON.stringify(entry, (_k, v) =>
+    v instanceof Error ? { name: v.name, ...(process.env.NODE_ENV === "production" ? {} : { message: v.message }) } : v,
+  );
   if (level === "error") console.error(line);
   else if (level === "warn") console.warn(line);
   else console.info(line);

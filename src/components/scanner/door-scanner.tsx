@@ -48,14 +48,6 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
     try {
       if (staffRef.current) staffRef.current.value = localStorage.getItem(STAFF_KEY) ?? "";
     } catch {}
-    import("@yudiel/react-qr-scanner").then(({ prepareZXingModule }) => {
-      prepareZXingModule({
-        overrides: {
-          locateFile: (path: string, prefix: string) => (path.endsWith(".wasm") ? `/wasm/${path}` : prefix + path),
-        },
-        fireImmediately: true,
-      });
-    });
     return () => {
       wakeLock.current?.release().catch(() => {});
     };
@@ -74,6 +66,19 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
   }, []);
 
   async function startCamera() {
+    try {
+      const { prepareZXingModule } = await import("@yudiel/react-qr-scanner");
+      prepareZXingModule({
+        overrides: {
+          locateFile: (path: string, prefix: string) => (path.endsWith(".wasm") ? `/wasm/${path}` : prefix + path),
+        },
+        fireImmediately: true,
+      });
+    } catch {
+      setMode("code");
+      toast.error(t("cameraError"));
+      return;
+    }
     setCameraOn(true);
     try {
       wakeLock.current = await navigator.wakeLock?.request("screen");
@@ -89,6 +94,8 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
     setBusy(true);
     try {
       applyResult(await lookupByCode(scannerToken, raw), "qr");
+    } catch {
+      toast.error(t("failed"));
     } finally {
       setBusy(false);
     }
@@ -100,6 +107,8 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
     setBusy(true);
     try {
       applyResult(await lookupByCode(scannerToken, raw), "manual");
+    } catch {
+      toast.error(t("failed"));
     } finally {
       setBusy(false);
     }
@@ -107,30 +116,42 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
 
   async function submitSearch(form: FormData) {
     const term = String(form.get("term") ?? "");
-    setHits(await searchGuests(scannerToken, term));
+    setBusy(true);
+    try {
+      setHits(await searchGuests(scannerToken, term));
+    } catch {
+      toast.error(t("failed"));
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function admit() {
-    if (!result || !("guest" in result)) return;
+    if (!result || result.state !== "ok" || !("guest" in result)) return;
     setBusy(true);
     const staff = staffRef.current?.value.trim() ?? "";
     try {
       localStorage.setItem(STAFF_KEY, staff);
     } catch {}
-    const r = await recordCheckin(scannerToken, {
-      guestId: result.guest.id,
-      qrTokenId: result.qrTokenId,
-      seats,
-      scannedBy: staff || undefined,
-      method,
-    });
-    setBusy(false);
-    if (r.ok) {
-      toast.success(t("admitted", { name: result.guest.name, seats }));
-      setResult(null);
-      setHits([]);
-    } else {
+    try {
+      const r = await recordCheckin(scannerToken, {
+        guestId: result.guest.id,
+        qrTokenId: result.qrTokenId,
+        seats,
+        scannedBy: staff || undefined,
+        method,
+      });
+      if (r.ok) {
+        toast.success(t("admitted", { name: result.guest.name, seats }));
+        setResult(null);
+        setHits([]);
+      } else {
+        toast.error(t("failed"));
+      }
+    } catch {
       toast.error(t("failed"));
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -197,6 +218,7 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
         <form action={submitCode} className="flex gap-2">
           <Input
             name="code"
+            aria-label={t("modeCode")}
             dir="ltr"
             autoComplete="off"
             inputMode="text"
@@ -212,7 +234,13 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
       {mode === "search" ? (
         <div className="space-y-2">
           <form action={submitSearch} className="flex gap-2">
-            <Input name="term" placeholder={t("searchPlaceholder")} minLength={3} autoComplete="off" />
+            <Input
+              name="term"
+              aria-label={t("searchPlaceholder")}
+              placeholder={t("searchPlaceholder")}
+              minLength={3}
+              autoComplete="off"
+            />
             <Button type="submit">{t("search")}</Button>
           </form>
           <ul className="divide-y rounded-lg border">
@@ -223,8 +251,13 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
                   className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start"
                   onClick={async () => {
                     setBusy(true);
-                    applyResult(await lookupByGuestId(scannerToken, h.id), "manual");
-                    setBusy(false);
+                    try {
+                      applyResult(await lookupByGuestId(scannerToken, h.id), "manual");
+                    } catch {
+                      toast.error(t("failed"));
+                    } finally {
+                      setBusy(false);
+                    }
                   }}
                 >
                   <span>
@@ -266,13 +299,18 @@ export function DoorScanner({ scannerToken, eventTitle }: Props) {
                   id="admit-seats"
                   type="number"
                   min={1}
-                  max={50}
+                  max={Math.max(1, result.seatsAttending - result.seatsAdmitted)}
                   value={seats}
                   onChange={(e) => setSeats(Math.max(1, Number(e.target.value) || 1))}
                   className="w-20"
                   dir="ltr"
                 />
-                <Button onClick={admit} disabled={busy} className="ms-auto" size="lg">
+                <Button
+                  onClick={admit}
+                  disabled={busy || result.state !== "ok" || seats > result.seatsAttending - result.seatsAdmitted}
+                  className="ms-auto"
+                  size="lg"
+                >
                   {t("admit")}
                 </Button>
                 <Button variant="ghost" onClick={() => setResult(null)}>

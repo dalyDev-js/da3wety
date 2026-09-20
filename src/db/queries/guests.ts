@@ -5,6 +5,7 @@ import { cache } from "react";
 
 import { db } from "@/db";
 import { guests, rsvps, type Guest, type Rsvp } from "@/db/schema";
+import { pageNumber } from "@/lib/pagination";
 
 export type GuestRow = { guest: Guest; rsvp: Rsvp | null };
 
@@ -40,7 +41,7 @@ function filterClause(filter: GuestFilter): SQL | undefined {
 
 /** Paginated, searchable guest list for the host dashboard. */
 export const listGuests = cache(async (params: GuestListParams): Promise<GuestListResult> => {
-  const page = Math.max(1, params.page ?? 1);
+  const page = pageNumber(params.page);
   const pageSize = Math.min(100, Math.max(10, params.pageSize ?? 50));
   const q = params.q?.trim();
 
@@ -99,7 +100,7 @@ export const listWishes = cache(
         .where(where)
         .orderBy(desc(rsvps.respondedAt))
         .limit(pageSize)
-        .offset((page - 1) * pageSize),
+        .offset((pageNumber(page) - 1) * pageSize),
       db.select({ total: count() }).from(rsvps).where(where),
     ]);
     return { items: rows.map((r) => ({ ...r, message: r.message ?? "" })), total };
@@ -110,6 +111,7 @@ export const listWishes = cache(
 export async function searchGuestsForScanner(eventId: string, term: string, limit = 5): Promise<GuestRow[]> {
   const q = term.trim();
   if (q.length < 3) return [];
+  const phone = q.replace(/[^0-9+]/g, "");
   return db
     .select({ guest: guests, rsvp: rsvps })
     .from(guests)
@@ -117,7 +119,7 @@ export async function searchGuestsForScanner(eventId: string, term: string, limi
     .where(
       and(
         eq(guests.eventId, eventId),
-        or(ilike(guests.name, `%${q}%`), sql`${guests.phone} like ${"%" + q.replace(/[^0-9+]/g, "")}`),
+        or(ilike(guests.name, `%${q}%`), phone.length >= 3 ? sql`${guests.phone} like ${"%" + phone}` : undefined),
       ),
     )
     .orderBy(asc(guests.name))

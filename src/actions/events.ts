@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";
+import { lockEvent } from "@/db/event-lock";
 import { getEventForHost } from "@/db/queries/events";
 import { getPackage } from "@/db/queries/packages";
 import { EVENT_STATUSES, events, type Event, type EventStatus } from "@/db/schema";
@@ -108,42 +109,45 @@ export async function updateEvent(eventId: string, _prev: ActionState, formData:
   }
 
   try {
-    if (values.galleryEnabled) assertFeature(ctx.pkg, "gallery");
-    if (values.galleryModeration) assertFeature(ctx.pkg, "moderation");
+    await db.transaction(async (tx) => {
+      const current = await lockEvent(tx, eventId);
+      if (!current || current.event.hostId !== host.id) throw new Error("Event unavailable");
+      if (values.galleryEnabled) assertFeature(current.pkg, "gallery");
+      if (values.galleryModeration) assertFeature(current.pkg, "moderation");
+      await tx
+        .update(events)
+        .set({
+          eventType: values.eventType,
+          title: values.title,
+          honoreePrimary: values.honoreePrimary,
+          honoreeSecondary: values.honoreeSecondary,
+          familyNames: values.familyNames,
+          description: values.description,
+          startsAt: values.startsAt,
+          endsAt: values.endsAt,
+          timezone: values.timezone,
+          venueName: values.venueName,
+          venueAddress: values.venueAddress,
+          venueMapsUrl: values.venueMapsUrl,
+          locale: values.locale,
+          rsvpMode: values.rsvpMode,
+          rsvpDeadline: values.rsvpDeadline,
+          openRsvpMaxSeats: values.openRsvpMaxSeats,
+          galleryEnabled: values.galleryEnabled,
+          galleryModeration: values.galleryModeration,
+          coverImagePath: values.coverImagePath,
+          revealImagePath: values.revealImagePath,
+          theme: values.theme,
+          giftEnabled: values.giftEnabled,
+          giftHandle: values.giftHandle,
+          giftNote: values.giftNote,
+          galleryExpiresAt: galleryExpiry(values, current.pkg.photoRetentionDays),
+        })
+        .where(and(eq(events.id, eventId), eq(events.hostId, host.id)));
+    });
   } catch (error) {
     return domainError(error);
   }
-
-  await db
-    .update(events)
-    .set({
-      eventType: values.eventType,
-      title: values.title,
-      honoreePrimary: values.honoreePrimary,
-      honoreeSecondary: values.honoreeSecondary,
-      familyNames: values.familyNames,
-      description: values.description,
-      startsAt: values.startsAt,
-      endsAt: values.endsAt,
-      timezone: values.timezone,
-      venueName: values.venueName,
-      venueAddress: values.venueAddress,
-      venueMapsUrl: values.venueMapsUrl,
-      locale: values.locale,
-      rsvpMode: values.rsvpMode,
-      rsvpDeadline: values.rsvpDeadline,
-      openRsvpMaxSeats: values.openRsvpMaxSeats,
-      galleryEnabled: values.galleryEnabled,
-      galleryModeration: values.galleryModeration,
-      coverImagePath: values.coverImagePath,
-      revealImagePath: values.revealImagePath,
-      theme: values.theme,
-      giftEnabled: values.giftEnabled,
-      giftHandle: values.giftHandle,
-      giftNote: values.giftNote,
-      galleryExpiresAt: galleryExpiry(values, ctx.pkg.photoRetentionDays),
-    })
-    .where(and(eq(events.id, eventId), eq(events.hostId, host.id)));
 
   revalidatePath("/dashboard");
   revalidatePath(`/dashboard/events/${eventId}`, "layout");

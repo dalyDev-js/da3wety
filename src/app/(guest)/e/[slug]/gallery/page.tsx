@@ -10,9 +10,11 @@ export async function generateMetadata({ params }: PageProps<"/e/[slug]/gallery"
   return { title: ctx?.event.title ?? "Da3wety", robots: { index: false } };
 }
 
-export default async function PublicGalleryPage({ params }: PageProps<"/e/[slug]/gallery">) {
+export default async function PublicGalleryPage({ params, searchParams }: PageProps<"/e/[slug]/gallery">) {
   const { slug } = await params;
   const ctx = await getVisibleEventBySlug(slug);
   if (!ctx) notFound();
-  return <GuestGallery galleryRef={{ kind: "slug", value: slug }} backHref={`/e/${slug}`} />;
+  return (
+    <GuestGallery galleryRef={{ kind: "slug", value: slug }} backHref={`/e/${slug}`} page={(await searchParams).page} />
+  );
 }

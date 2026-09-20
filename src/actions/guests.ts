@@ -5,7 +5,8 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
 import { db } from "@/db";
-import { countGuests, getEventForHost } from "@/db/queries/events";
+import { getEventForHost } from "@/db/queries/events";
+import { guestCapacityLeft, lockEvent } from "@/db/event-lock";
 import { getGuestForEvent } from "@/db/queries/guests";
 import { guests } from "@/db/schema";
 import { requireHost } from "@/lib/auth";
@@ -19,14 +20,10 @@ import { z } from "@/lib/validation/zod-config";
 const uuid = z.uuid();
 
 function isUniqueViolation(error: unknown): boolean {
+  if (error instanceof Error && error.cause) return isUniqueViolation(error.cause);
   return (
     typeof error === "object" && error !== null && "code" in error && (error as { code?: string }).code === "23505"
   );
-}
-
-async function guestCapacityLeft(eventId: string, maxGuests: number | null): Promise<number> {
-  if (maxGuests === null) return Number.POSITIVE_INFINITY;
-  return Math.max(0, maxGuests - (await countGuests(eventId)));
 }
 
 function revalidateGuests(eventId: string) {
@@ -44,21 +41,24 @@ export async function addGuest(eventId: string, _prev: ActionState, formData: Fo
   if (!parsed.success) return validationError(parsed.error);
   const t = await getTranslations("Guests");
 
-  if ((await guestCapacityLeft(eventId, ctx.pkg.maxGuests)) < 1) {
-    return { status: "error", formError: t("limitReached", { max: ctx.pkg.maxGuests ?? 0 }) };
-  }
-
   try {
-    await db.insert(guests).values({
-      eventId,
-      name: parsed.data.name,
-      phone: parsed.data.phone ?? null,
-      maxSeats: parsed.data.maxSeats,
-      groupLabel: parsed.data.groupLabel ?? null,
-      notes: parsed.data.notes ?? null,
-      token: guestToken(),
-      source: "host",
+    const added = await db.transaction(async (tx) => {
+      const current = await lockEvent(tx, eventId);
+      if (!current || current.event.hostId !== host.id) return false;
+      if ((await guestCapacityLeft(tx, eventId, current.pkg.maxGuests)) < 1) return false;
+      await tx.insert(guests).values({
+        eventId,
+        name: parsed.data.name,
+        phone: parsed.data.phone ?? null,
+        maxSeats: parsed.data.maxSeats,
+        groupLabel: parsed.data.groupLabel ?? null,
+        notes: parsed.data.notes ?? null,
+        token: guestToken(),
+        source: "host",
+      });
+      return true;
     });
+    if (!added) return { status: "error", formError: t("limitReached", { max: ctx.pkg.maxGuests ?? 0 }) };
   } catch (error) {
     if (isUniqueViolation(error)) return { status: "error", fieldErrors: { phone: [t("phoneExists")] } };
     throw error;
@@ -128,33 +128,40 @@ export async function addGuestsBulk(eventId: string, _prev: BulkAddResult, formD
     };
   }
 
-  const capacity = await guestCapacityLeft(eventId, ctx.pkg.maxGuests);
-  const toInsert = parsedGuests.slice(0, Number.isFinite(capacity) ? capacity : parsedGuests.length);
-  let added = 0;
-  let skipped = parsedGuests.length - toInsert.length;
-
-  // One row at a time so a duplicate phone skips only that guest.
-  for (const g of toInsert) {
-    try {
-      await db.insert(guests).values({
-        eventId,
-        name: g.name,
-        phone: g.phone ?? null,
-        maxSeats: g.maxSeats,
-        groupLabel: g.groupLabel ?? null,
-        token: guestToken(),
-        source: "host",
-      });
-      added++;
-    } catch (error) {
-      if (isUniqueViolation(error)) {
+  const { added, skipped } = await db.transaction(async (tx) => {
+    const current = await lockEvent(tx, eventId);
+    if (!current || current.event.hostId !== host.id) return { added: 0, skipped: parsedGuests.length };
+    let capacity = await guestCapacityLeft(tx, eventId, current.pkg.maxGuests);
+    let added = 0;
+    let skipped = 0;
+    for (const g of parsedGuests) {
+      if (capacity < 1) {
+        skipped++;
+        continue;
+      }
+      const inserted = await tx
+        .insert(guests)
+        .values({
+          eventId,
+          name: g.name,
+          phone: g.phone ?? null,
+          maxSeats: g.maxSeats,
+          groupLabel: g.groupLabel ?? null,
+          token: guestToken(),
+          source: "host",
+        })
+        .onConflictDoNothing()
+        .returning({ id: guests.id });
+      if (inserted.length) {
+        added++;
+        capacity--;
+      } else {
         skipped++;
         lineErrors.push({ line: g.line, message: t("phoneExists") });
-      } else {
-        throw error;
       }
     }
-  }
+    return { added, skipped };
+  });
 
   log.info("guests.bulk", "bulk add", { eventId, added, skipped, invalid: errors.length });
   revalidateGuests(eventId);

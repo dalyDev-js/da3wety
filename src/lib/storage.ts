@@ -38,7 +38,7 @@ export function publicAssetUrl(path: string): string {
 
 /** Guards that a path stays inside the event's folder. */
 export function pathBelongsToEvent(path: string, eventId: string): boolean {
-  return path.startsWith(`${eventId}/`) && !path.includes("..");
+  return path.startsWith(`${eventId}/`) && /^[a-zA-Z0-9/_\-.]+$/.test(path) && !path.includes("..");
 }
 
 export type SignedUpload = { path: string; token: string };
@@ -80,6 +80,19 @@ export async function objectExists(bucket: Bucket, path: string): Promise<boolea
   const { data, error } = await createAdminClient().storage.from(bucket).exists(path);
   if (error) return false;
   return Boolean(data);
+}
+
+/** Validate storage-reported metadata rather than trusting the upload request. */
+export async function validPhotoObject(path: string): Promise<boolean> {
+  const { data, error } = await createAdminClient().storage.from(BUCKETS.photos).info(path);
+  return (
+    !error &&
+    !!data &&
+    typeof data.size === "number" &&
+    data.size > 0 &&
+    data.size <= PHOTO_MAX_BYTES &&
+    IMAGE_MIME_TYPES.some((mime) => mime === data.contentType)
+  );
 }
 
 /** remove() accepts at most 1000 paths per call. */

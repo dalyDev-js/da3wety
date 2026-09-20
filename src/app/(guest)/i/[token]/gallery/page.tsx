@@ -11,9 +11,15 @@ export async function generateMetadata({ params }: PageProps<"/i/[token]/gallery
   return { title: ctx?.event.title ?? "Da3wety", robots: { index: false } };
 }
 
-export default async function PersonalGalleryPage({ params }: PageProps<"/i/[token]/gallery">) {
+export default async function PersonalGalleryPage({ params, searchParams }: PageProps<"/i/[token]/gallery">) {
   const { token } = await params;
   const ctx = GUEST_TOKEN_RE.test(token) ? await getEventByGuestToken(token) : null;
   if (!ctx || ctx.event.status !== "published") notFound();
-  return <GuestGallery galleryRef={{ kind: "token", value: token }} backHref={`/i/${token}`} />;
+  return (
+    <GuestGallery
+      galleryRef={{ kind: "token", value: token }}
+      backHref={`/i/${token}`}
+      page={(await searchParams).page}
+    />
+  );
 }

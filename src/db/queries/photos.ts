@@ -4,6 +4,7 @@ import { and, count, desc, eq, inArray, lt, sql } from "drizzle-orm";
 import { cache } from "react";
 
 import { db } from "@/db";
+import { pageNumber } from "@/lib/pagination";
 import { photos, type Photo, type PhotoStatus } from "@/db/schema";
 
 export const PHOTO_PAGE_SIZE = 40;
@@ -18,7 +19,7 @@ export const listPublicPhotos = cache(async (eventId: string, page = 1): Promise
       .where(where)
       .orderBy(desc(photos.createdAt))
       .limit(PHOTO_PAGE_SIZE)
-      .offset((Math.max(1, page) - 1) * PHOTO_PAGE_SIZE),
+      .offset((pageNumber(page) - 1) * PHOTO_PAGE_SIZE),
     db.select({ value: count() }).from(photos).where(where),
   ]);
   return { rows, total: totalRow?.value ?? 0 };
@@ -49,7 +50,7 @@ export const listPhotosForHost = cache(
         .where(where)
         .orderBy(desc(photos.createdAt))
         .limit(PHOTO_PAGE_SIZE)
-        .offset((Math.max(1, page) - 1) * PHOTO_PAGE_SIZE),
+        .offset((pageNumber(page) - 1) * PHOTO_PAGE_SIZE),
       db.select({ value: count() }).from(photos).where(where),
     ]);
     return { rows, total: totalRow?.value ?? 0 };

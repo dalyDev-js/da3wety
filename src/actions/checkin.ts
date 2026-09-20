@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { db } from "@/db";
+import { lockEvent } from "@/db/event-lock";
 import { getEventForHost } from "@/db/queries/events";
 import { searchGuestsForScanner } from "@/db/queries/guests";
 import { checkins, events, guests, qrTokens, rsvps, type Event } from "@/db/schema";
@@ -176,12 +177,44 @@ export async function recordCheckin(scannerToken: string, input: z.input<typeof 
   const ua = (await headers()).get("user-agent")?.slice(0, 200) ?? null;
 
   const result = await db.transaction(async (tx) => {
+    const current = await lockEvent(tx, eventId);
+    if (
+      !current ||
+      !current.event.checkinEnabled ||
+      current.event.status !== "published" ||
+      current.event.scannerToken !== scannerToken ||
+      !packageAllows(current.pkg, "checkin") ||
+      (current.event.scannerTokenExpiresAt && current.event.scannerTokenExpiresAt.getTime() <= Date.now())
+    )
+      return null;
     const [guest] = await tx
       .select({ id: guests.id })
       .from(guests)
       .where(and(eq(guests.id, parsed.data.guestId), eq(guests.eventId, eventId)))
       .for("update");
     if (!guest) return null;
+    const [rsvp] = await tx.select().from(rsvps).where(eq(rsvps.guestId, guest.id));
+    if (rsvp?.status !== "attending") return null;
+    if (parsed.data.method === "qr" && !parsed.data.qrTokenId) return null;
+    if (parsed.data.qrTokenId) {
+      const [ticket] = await tx
+        .select({ id: qrTokens.id })
+        .from(qrTokens)
+        .where(
+          and(
+            eq(qrTokens.id, parsed.data.qrTokenId),
+            eq(qrTokens.guestId, guest.id),
+            eq(qrTokens.eventId, eventId),
+            eq(qrTokens.status, "active"),
+          ),
+        );
+      if (!ticket) return null;
+    }
+    const [before] = await tx
+      .select({ total: sql<number>`coalesce(sum(${checkins.seatsAdmitted}), 0)`.mapWith(Number) })
+      .from(checkins)
+      .where(and(eq(checkins.eventId, eventId), eq(checkins.guestId, guest.id)));
+    if (before.total + parsed.data.seats > rsvp.seats) return null;
     await tx.insert(checkins).values({
       eventId,
       guestId: guest.id,

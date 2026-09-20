@@ -18,6 +18,10 @@ const base = {
 };
 
 describe("eventFormSchema extras", () => {
+  it("only accepts HTTP(S) map links", () => {
+    expect(eventFormSchema.safeParse({ ...base, venueMapsUrl: "javascript:alert(1)" }).success).toBe(false);
+    expect(eventFormSchema.safeParse({ ...base, venueMapsUrl: "https://maps.google.com/" }).success).toBe(true);
+  });
   it("defaults theme to ivory and gift to off", () => {
     const out = eventFormSchema.parse(base);
     expect(out.theme).toBe("ivory");

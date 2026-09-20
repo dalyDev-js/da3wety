@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import { db, type Transaction } from "@/db";
-import { countGuests, getEventByGuestToken, getEventBySlug, type EventWithPackage } from "@/db/queries/events";
+import { getEventByGuestToken, getEventBySlug, type EventWithPackage } from "@/db/queries/events";
+import { guestCapacityLeft, lockEvent } from "@/db/event-lock";
 import { guests, rsvps, type Event, type Package, type RsvpStatus } from "@/db/schema";
 import { toIntlLocale, type AppLocale } from "@/lib/i18n/config";
 import { log } from "@/lib/log";
@@ -105,17 +106,24 @@ export async function submitPersonalRsvp(
 
   try {
     await enforceRateLimit({ scope: "rsvp-personal", subject: token, limit: 20, windowSeconds: 3600 });
-    const status = await db.transaction((tx) =>
-      recordResponse(tx, ctx, ctx.guest.id, {
+    const status = await db.transaction(async (tx) => {
+      const current = await lockEvent(tx, ctx.event.id);
+      if (!current || !rsvpOpen(current.event)) throw new RsvpClosedError();
+      const [guest] = await tx.select().from(guests).where(eq(guests.id, ctx.guest.id)).for("update");
+      if (!guest || (parsed.data.status === "attending" && parsed.data.seats > guest.maxSeats)) {
+        throw new RsvpClosedError();
+      }
+      return recordResponse(tx, current, guest.id, {
         status: parsed.data.status,
         seats: parsed.data.seats,
         message: parsed.data.message ?? null,
-      }),
-    );
+      });
+    });
     log.info("rsvp.personal", "response recorded", { eventId: ctx.event.id, guestId: ctx.guest.id, status });
     revalidateAfterRsvp(ctx, token);
     return { status: "success", data: { status } };
   } catch (error) {
+    if (error instanceof RsvpClosedError) return { status: "error", formError: t("closed") };
     if (error instanceof RateLimitedError) return domainError(error, locale);
     throw error;
   }
@@ -153,36 +161,34 @@ export async function submitOpenRsvp(
     await enforceRateLimit({ scope: "rsvp-open-event", subject: ctx.event.id, limit: 300, windowSeconds: 3600 });
 
     personalToken = await db.transaction(async (tx) => {
-      // Existing phone -> update that guest's answer instead of duplicating.
+      const current = await lockEvent(tx, ctx.event.id);
+      if (!current || !rsvpOpen(current.event) || current.event.rsvpMode !== "open") throw new RsvpClosedError();
+      // A phone number is contact data, not proof of ownership of a private link.
       const [existing] = await tx
         .select()
         .from(guests)
         .where(and(eq(guests.eventId, ctx.event.id), eq(guests.phone, parsed.data.phone)))
         .limit(1);
 
-      let guest = existing;
-      if (!guest) {
-        if (ctx.pkg.maxGuests !== null && (await countGuests(ctx.event.id)) >= ctx.pkg.maxGuests) {
-          throw new GuestLimitError();
-        }
-        const [inserted] = await tx
-          .insert(guests)
-          .values({
-            eventId: ctx.event.id,
-            name: parsed.data.name,
-            phone: parsed.data.phone,
-            token: makeGuestToken(),
-            source: "self",
-            maxSeats,
-          })
-          .returning();
-        guest = inserted!;
-      } else if (existing && existing.source === "self" && existing.name !== parsed.data.name) {
-        await tx.update(guests).set({ name: parsed.data.name }).where(eq(guests.id, existing.id));
+      if (existing) throw new ExistingGuestError();
+      if ((await guestCapacityLeft(tx, current.event.id, current.pkg.maxGuests)) < 1) {
+        throw new GuestLimitError();
       }
+      const [inserted] = await tx
+        .insert(guests)
+        .values({
+          eventId: ctx.event.id,
+          name: parsed.data.name,
+          phone: parsed.data.phone,
+          token: makeGuestToken(),
+          source: "self",
+          maxSeats: current.event.openRsvpMaxSeats,
+        })
+        .returning();
+      const guest = inserted!;
 
       const seatCap = Math.min(parsed.data.seats, guest.maxSeats);
-      await recordResponse(tx, ctx, guest.id, {
+      await recordResponse(tx, current, guest.id, {
         status: parsed.data.status,
         seats: seatCap,
         message: parsed.data.message ?? null,
@@ -190,6 +196,8 @@ export async function submitOpenRsvp(
       return guest.token;
     });
   } catch (error) {
+    if (error instanceof RsvpClosedError) return { status: "error", formError: t("closed") };
+    if (error instanceof ExistingGuestError) return { status: "error", formError: t("usePersonalLink") };
     if (error instanceof GuestLimitError) return { status: "error", formError: t("full") };
     if (error instanceof RateLimitedError) return domainError(error, locale);
     throw error;
@@ -206,3 +214,6 @@ class GuestLimitError extends Error {
     this.name = "GuestLimitError";
   }
 }
+
+class ExistingGuestError extends Error {}
+class RsvpClosedError extends Error {}

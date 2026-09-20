@@ -14,6 +14,7 @@ const ONE_YEAR = 60 * 60 * 24 * 365;
 export async function resolveGalleryRef(
   ref: GalleryRef,
 ): Promise<(EventWithPackage & { guestId: string | null; guestName: string | null }) | null> {
+  if (!ref || (ref.kind !== "token" && ref.kind !== "slug") || typeof ref.value !== "string") return null;
   if (ref.kind === "token") {
     if (!GUEST_TOKEN_RE.test(ref.value)) return null;
     const ctx = await getEventByGuestToken(ref.value);
@@ -30,7 +31,7 @@ export function galleryState(ctx: EventWithPackage, now: Date = new Date()): Gal
   const { event, pkg } = ctx;
   if (event.status !== "published") return "unpublished";
   if (!pkg.galleryEnabled || !event.galleryEnabled) return "disabled";
-  if (event.galleryPurgedAt) return "purged";
+  if (event.galleryPurgedAt || event.purgeStartedAt) return "purged";
   if (event.galleryExpiresAt && event.galleryExpiresAt.getTime() < now.getTime()) return "expired";
   return "open";
 }
@@ -46,6 +47,12 @@ export async function ensureUploadSession(): Promise<string> {
   const existing = await getUploadSession();
   if (existing) return existing;
   const value = guestToken();
-  (await cookies()).set(SESSION_COOKIE, value, { path: "/", maxAge: ONE_YEAR, sameSite: "lax", httpOnly: true });
+  (await cookies()).set(SESSION_COOKIE, value, {
+    path: "/",
+    maxAge: ONE_YEAR,
+    sameSite: "lax",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  });
   return value;
 }

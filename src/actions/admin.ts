@@ -35,11 +35,11 @@ export async function assignPackage(_prev: ActionState, formData: FormData): Pro
   if (!parsed.success) return { status: "error", formError: "invalid" };
   const { eventId, tier, amountEgp, note } = parsed.data;
 
-  const [event] = await db.select().from(events).where(eq(events.id, eventId)).limit(1);
-  if (!event) return { status: "error", formError: "not found" };
   const pkg = await getPackage(tier);
 
-  await db.transaction(async (tx) => {
+  const assigned = await db.transaction(async (tx) => {
+    const [event] = await tx.select().from(events).where(eq(events.id, eventId)).for("update");
+    if (!event) return false;
     await tx
       .update(events)
       .set({
@@ -69,7 +69,9 @@ export async function assignPackage(_prev: ActionState, formData: FormData): Pro
         .where(and(eq(rsvps.eventId, eventId), eq(rsvps.status, "attending"), isNull(qrTokens.id)));
       for (const row of attending) await ensureActiveTicket(tx, eventId, row.guestId);
     }
+    return true;
   });
+  if (!assigned) return { status: "error", formError: "not found" };
 
   log.info("admin.assignPackage", "package assigned", { eventId, tier, adminId: admin.id, amountEgp });
   revalidatePath("/admin");

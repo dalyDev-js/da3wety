@@ -1,11 +1,13 @@
 "use server";
 
-import { and, eq, inArray } from "drizzle-orm";
+import { randomUUID } from "node:crypto";
+import { and, count, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
+import { lockEvent } from "@/db/event-lock";
 import { getEventForHost } from "@/db/queries/events";
-import { countPhotosForEvent, getPhotosByIds } from "@/db/queries/photos";
+import { getPhotosByIds } from "@/db/queries/photos";
 import { photos, PHOTO_STATUSES, type PhotoStatus } from "@/db/schema";
 import { requireHost } from "@/lib/auth";
 import {
@@ -20,7 +22,7 @@ import { enforceRateLimit, RateLimitedError, requestIp } from "@/lib/rate-limit"
 import {
   BUCKETS,
   createSignedUpload,
-  objectExists,
+  validPhotoObject,
   PHOTO_MAX_BYTES,
   photoPaths,
   removeObjects,
@@ -50,9 +52,6 @@ export async function reservePhotoUpload(input: z.input<typeof reserveInput>): P
   const ctx = await resolveGalleryRef(parsed.data.ref as GalleryRef);
   if (!ctx || galleryState(ctx) !== "open") return { ok: false, reason: "closed" };
 
-  const counts = await countPhotosForEvent(ctx.event.id);
-  if (counts.stored >= ctx.pkg.maxPhotos) return { ok: false, reason: "limit" };
-
   const session = await ensureUploadSession();
   try {
     await enforceRateLimit({ scope: "upload-session", subject: session, limit: 60, windowSeconds: 3600 });
@@ -62,25 +61,32 @@ export async function reservePhotoUpload(input: z.input<typeof reserveInput>): P
     throw error;
   }
 
-  const [row] = await db
-    .insert(photos)
-    .values({
-      eventId: ctx.event.id,
-      guestId: ctx.guestId,
-      uploaderName: parsed.data.uploaderName ?? ctx.guestName,
-      uploadSession: session,
-      storagePath: "",
-      thumbPath: "",
-      sizeBytes: parsed.data.sizeBytes,
-      width: parsed.data.width,
-      height: parsed.data.height,
-      status: ctx.event.galleryModeration ? "pending" : "approved",
-    })
-    .returning({ id: photos.id });
-  const photoId = row!.id;
+  const photoId = randomUUID();
   const paths = photoPaths(ctx.event.id, photoId);
-  await db.update(photos).set(paths).where(eq(photos.id, photoId));
-
+  const reservation = await db.transaction(async (tx) => {
+    const current = await lockEvent(tx, ctx.event.id);
+    if (!current || galleryState(current) !== "open") return "closed" as const;
+    const [total] = await tx.select({ value: count() }).from(photos).where(eq(photos.eventId, ctx.event.id));
+    if (total.value >= current.pkg.maxPhotos) return "limit" as const;
+    await tx
+      .insert(photos)
+      .values({
+        id: photoId,
+        eventId: ctx.event.id,
+        guestId: ctx.guestId,
+        uploaderName: parsed.data.uploaderName ?? ctx.guestName,
+        uploadSession: session,
+        ...paths,
+        sizeBytes: parsed.data.sizeBytes,
+        width: parsed.data.width,
+        height: parsed.data.height,
+        status: current.event.galleryModeration ? "pending" : "approved",
+      })
+      .returning({ id: photos.id });
+    return null;
+  });
+  if (reservation) return { ok: false, reason: reservation };
+  // Retain a failed reservation until cleanup: one token may already have been issued.
   const [main, thumb] = await Promise.all([
     createSignedUpload(BUCKETS.photos, paths.storagePath),
     createSignedUpload(BUCKETS.photos, paths.thumbPath),
@@ -93,7 +99,7 @@ export async function confirmPhotoUpload(ref: GalleryRef, photoId: string): Prom
   if (!z.uuid().safeParse(photoId).success) return { ok: false };
   const ctx = await resolveGalleryRef(ref);
   const session = await getUploadSession();
-  if (!ctx || !session) return { ok: false };
+  if (!ctx || !session || galleryState(ctx) !== "open") return { ok: false };
 
   const [photo] = await db
     .select()
@@ -102,14 +108,23 @@ export async function confirmPhotoUpload(ref: GalleryRef, photoId: string): Prom
     .limit(1);
   if (!photo) return { ok: false };
   if (photo.uploadState === "stored") return { ok: true };
+  if (photo.createdAt.getTime() <= Date.now() - 2 * 3600_000) return { ok: false };
 
-  const [mainOk, thumbOk] = await Promise.all([
-    objectExists(BUCKETS.photos, photo.storagePath),
-    objectExists(BUCKETS.photos, photo.thumbPath),
-  ]);
+  const [mainOk, thumbOk] = await Promise.all([validPhotoObject(photo.storagePath), validPhotoObject(photo.thumbPath)]);
   if (!mainOk || !thumbOk) return { ok: false };
 
-  await db.update(photos).set({ uploadState: "stored" }).where(eq(photos.id, photoId));
+  const confirmed = await db.transaction(async (tx) => {
+    const current = await lockEvent(tx, ctx.event.id);
+    if (!current || galleryState(current) !== "open" || photo.createdAt.getTime() <= Date.now() - 2 * 3600_000)
+      return false;
+    const rows = await tx
+      .update(photos)
+      .set({ uploadState: "stored" })
+      .where(and(eq(photos.id, photoId), eq(photos.uploadSession, session)))
+      .returning({ id: photos.id });
+    return rows.length === 1;
+  });
+  if (!confirmed) return { ok: false };
   revalidatePath(`/e/${ctx.event.slug}/gallery`);
   revalidatePath(`/dashboard/events/${ctx.event.id}/gallery`);
   return { ok: true };

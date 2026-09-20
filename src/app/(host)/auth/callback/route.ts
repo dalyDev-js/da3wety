@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 
 import { ensureProfile } from "@/db/queries/profiles";
+import { publicEnv } from "@/lib/env";
+import { log } from "@/lib/log";
 import { safeNext } from "@/lib/safe-next";
 import { createClient } from "@/lib/supabase/server";
 
 /**
  * Google OAuth (PKCE) callback: exchanges the code for a session, makes sure the
- * profile row exists, then redirects to `next`. Mirrors the Supabase docs partial,
- * including the x-forwarded-host handling behind Vercel's load balancer.
+ * profile row exists, then redirects to a safe path on the configured site origin.
  */
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -28,16 +29,12 @@ export async function GET(request: Request) {
           avatarUrl: (meta.avatar_url as string | undefined) ?? (meta.picture as string | undefined) ?? null,
         });
       } catch (e) {
-        console.error(
-          JSON.stringify({ level: "error", scope: "auth.callback", message: "ensureProfile failed", error: String(e) }),
-        );
+        log.error("auth.callback", "ensureProfile failed", { error: e });
       }
 
-      const forwardedHost = request.headers.get("x-forwarded-host");
       const isLocal = process.env.NODE_ENV === "development";
       if (isLocal) return NextResponse.redirect(`${origin}${next}`);
-      if (forwardedHost) return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(new URL(next, publicEnv().NEXT_PUBLIC_SITE_URL));
     }
   }
 
