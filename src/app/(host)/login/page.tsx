@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { GoldRule } from "@/components/brand/gold-rule";
+import { Wordmark } from "@/components/brand/wordmark";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,15 +21,15 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const next = safeNext(params.next);
   const hasError = typeof params.error === "string";
   const t = await getTranslations("Auth");
-  const common = await getTranslations("Common");
 
   return (
     <main className="flex flex-1 items-center justify-center px-4 py-12">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <Link href="/" className="mb-2 block font-heading text-3xl font-bold">
-            {common("appName")}
-          </Link>
+          <div className="mb-2 flex flex-col items-center gap-3">
+            <Wordmark size="lg" href="/" />
+            <GoldRule className="w-24" />
+          </div>
           <CardTitle>{t("loginTitle")}</CardTitle>
           <CardDescription>{t("loginSubtitle")}</CardDescription>
         </CardHeader>
