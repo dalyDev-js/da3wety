@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { publicEnv } from "./public-env";
+export { publicEnv } from "./public-env";
 
 /**
  * Environment access with validation.
@@ -8,13 +10,6 @@ import { z } from "zod";
  * - `serverEnv()` is server-only and validated on first use so a missing or renamed
  *   key fails fast with a readable message instead of an undefined at request time.
  */
-
-const publicSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: z.url().default("http://localhost:3000"),
-  NEXT_PUBLIC_SUPABASE_URL: z.url(),
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
-  NEXT_PUBLIC_SUPPORT_WHATSAPP: z.string().optional(),
-});
 
 const serverSchema = z.object({
   SUPABASE_SECRET_KEY: z.string().min(1),
@@ -44,26 +39,7 @@ function formatIssues(error: z.ZodError): string {
     .join("\n");
 }
 
-function parsePublic() {
-  const result = publicSchema.safeParse({
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-    NEXT_PUBLIC_SUPPORT_WHATSAPP: process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP,
-  });
-  if (!result.success) {
-    throw new Error(`Invalid public environment variables:\n${formatIssues(result.error)}`);
-  }
-  return result.data;
-}
-
-let publicCache: z.infer<typeof publicSchema> | undefined;
 let serverCache: z.infer<typeof serverSchema> | undefined;
-
-export function publicEnv() {
-  publicCache ??= parsePublic();
-  return publicCache;
-}
 
 export function serverEnv() {
   if (typeof window !== "undefined") {

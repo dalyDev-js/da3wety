@@ -1,5 +1,5 @@
-import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import sharp from "sharp";
 
 import { ImageResponse } from "next/og";
 
@@ -11,13 +11,30 @@ export const alt = "Da3wety invitation";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// The font is loaded once per instance; the event is read per request.
-const fontBold = readFile(join(process.cwd(), "src/assets/fonts/Amiri-Bold.ttf"));
+export async function generateImageMetadata({ params }: { params: { slug: string } }) {
+  const resolved = await params;
+  if (!resolved.slug) return [];
+  const ctx = await getEventBySlug(resolved.slug);
+  return [
+    {
+      id: ctx?.event.status === "published" ? String(ctx.event.updatedAt.getTime()) : "unpublished",
+      alt,
+      size,
+      contentType,
+    },
+  ];
+}
+
+function escapeMarkup(value: string) {
+  return value.replace(
+    /[&<>"']/g,
+    (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" })[character]!,
+  );
+}
 
 /**
  * Share preview: cover photo (or paper background) plus the honoree names.
- * Satori's Arabic shaping is unreliable for mixed runs, so only names are drawn,
- * each on its own line, with no dates or digits.
+ * Names are shaped by Pango before compositing, including Arabic and mixed runs.
  */
 export default async function OpenGraphImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -26,6 +43,25 @@ export default async function OpenGraphImage({ params }: { params: Promise<{ slu
   const theme = getTheme(event?.theme);
   const cover = event?.coverImagePath ? publicAssetUrl(event.coverImagePath) : null;
   const names = event ? [event.honoreePrimary, event.honoreeSecondary].filter(Boolean) : ["دعوتي"];
+  // Pango/HarfBuzz shapes Arabic before Satori composites the resulting bitmap.
+  const renderedNames = await Promise.all(
+    names.map(async (name) => {
+      const { data, info } = await sharp({
+        text: {
+          text: `<span foreground="${cover ? theme.paper : theme.ink}">${escapeMarkup(name!)}</span>`,
+          font: `Amiri Bold ${names.length > 1 ? 84 : 104}`,
+          fontfile: join(process.cwd(), "src/assets/fonts/Amiri-Bold.ttf"),
+          width: 1040,
+          height: 180,
+          align: "centre",
+          rgba: true,
+        },
+      })
+        .png()
+        .toBuffer({ resolveWithObject: true });
+      return { src: `data:image/png;base64,${data.toString("base64")}`, width: info.width, height: info.height };
+    }),
+  );
 
   return new ImageResponse(
     <div
@@ -51,7 +87,10 @@ export default async function OpenGraphImage({ params }: { params: Promise<{ slu
       <div
         style={{
           position: "absolute",
-          inset: 0,
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
           display: "flex",
           background: cover ? "linear-gradient(180deg, rgba(42,26,29,0) 35%, rgba(42,26,29,0.82) 100%)" : "transparent",
         }}
@@ -59,7 +98,8 @@ export default async function OpenGraphImage({ params }: { params: Promise<{ slu
       <div
         style={{
           position: "absolute",
-          insetInline: 0,
+          left: 0,
+          width: "100%",
           bottom: 0,
           display: "flex",
           flexDirection: "column",
@@ -69,20 +109,15 @@ export default async function OpenGraphImage({ params }: { params: Promise<{ slu
           color: cover ? theme.paper : theme.ink,
         }}
       >
-        {names.map((name) => (
-          <div
-            key={name}
-            style={{ display: "flex", fontSize: names.length > 1 ? 84 : 104, lineHeight: 1.2, textAlign: "center" }}
-          >
-            {name}
-          </div>
+        {renderedNames.map((name, index) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img key={index} src={name.src} width={name.width} height={name.height} alt="" />
         ))}
         <div style={{ display: "flex", width: 240, height: 2, background: theme.gold, marginTop: 20 }} />
       </div>
     </div>,
     {
       ...size,
-      fonts: [{ name: "Amiri", data: await fontBold, weight: 700, style: "normal" }],
     },
   );
 }

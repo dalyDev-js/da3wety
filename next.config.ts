@@ -21,6 +21,7 @@ function supabaseHost(): string | undefined {
 const host = supabaseHost();
 
 const nextConfig: NextConfig = {
+  outputFileTracingIncludes: { "/e/*/opengraph-image*": ["./src/assets/fonts/Amiri-Bold.ttf"] },
   htmlLimitedBots: HTML_LIMITED_BOTS,
   images: {
     remotePatterns: host

@@ -1,6 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 
-import { publicEnv } from "@/lib/env";
+import { publicEnv } from "@/lib/public-env";
 
 /** Browser Supabase client (publishable key). Used for the Google OAuth redirect only. */
 export function createClient() {
