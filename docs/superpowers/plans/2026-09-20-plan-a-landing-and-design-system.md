@@ -602,7 +602,7 @@ const NAV = [
 export async function SiteHeader({ locale }: { locale: AppLocale }) {
   const [t, common] = await Promise.all([getTranslations("Landing.nav"), getTranslations("Common")]);
   return (
-    <header className="border-gold/30 sticky top-0 z-40 border-b bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-gold/30 bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
         <Wordmark size="sm" href="/" />
         <nav aria-label="primary" className="hidden items-center gap-6 md:flex">
@@ -651,7 +651,7 @@ export async function SiteFooter({ locale }: { locale: AppLocale }) {
   const whatsapp = supportWhatsAppUrl();
   void locale;
   return (
-    <footer className="border-gold/30 bg-paper border-t">
+    <footer className="border-t border-gold/30 bg-paper">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-4 py-12 text-center">
         <Wordmark size="md" href="/" />
         <p className="text-sm text-muted-foreground">{t("tagline")}</p>
@@ -716,7 +716,7 @@ export async function InvitationPreview({ locale }: { locale: AppLocale }) {
     <div
       aria-hidden="true"
       style={invitationThemeStyle("ivory")}
-      className="shadow-ink/20 relative mx-auto aspect-[5/8] w-full max-w-[320px] rounded-sm bg-(--inv-paper) text-(--inv-ink) shadow-2xl motion-safe:animate-in motion-safe:duration-700 motion-safe:fade-in motion-safe:slide-in-from-bottom-4"
+      className="relative mx-auto aspect-[5/8] w-full max-w-[320px] rounded-sm bg-(--inv-paper) text-(--inv-ink) shadow-2xl shadow-ink/20 motion-safe:animate-in motion-safe:duration-700 motion-safe:fade-in motion-safe:slide-in-from-bottom-4"
     >
       <FrameCorners />
       <div className="relative z-10 flex h-full flex-col items-center justify-center gap-5 px-[14%] py-[12%] text-center">
@@ -827,7 +827,7 @@ export async function FeatureGrid({ locale }: { locale: AppLocale }) {
           <li key={key}>
             <Card className="h-full">
               <CardHeader>
-                <span className="bg-gold-soft/40 mb-2 inline-flex size-10 items-center justify-center rounded-full text-primary">
+                <span className="mb-2 inline-flex size-10 items-center justify-center rounded-full bg-gold-soft/40 text-primary">
                   <Icon className="size-5" />
                 </span>
                 <CardTitle className="text-xl">{t(`items.${key}.title`)}</CardTitle>
@@ -862,7 +862,7 @@ export async function HowItWorks({ locale }: { locale: AppLocale }) {
         {STEPS.map((key, i) => (
           <li key={key} className="relative flex flex-col items-center gap-3 text-center">
             <span className="relative flex size-12 items-center justify-center">
-              <span aria-hidden="true" className="border-gold absolute inset-0 rotate-45 border" />
+              <span aria-hidden="true" className="absolute inset-0 rotate-45 border border-gold" />
               <span className="font-heading text-xl font-bold text-primary" dir="ltr">
                 {i + 1}
               </span>
@@ -995,8 +995,8 @@ export async function Pricing() {
             const popular = pkg.tier === POPULAR_TIER;
             return (
               <li key={pkg.tier}>
-                <Card data-tier={pkg.tier} className={popular ? "ring-gold relative h-full ring-2" : "h-full"}>
-                  {popular ? <Badge className="bg-gold text-ink absolute start-4 -top-3">{t("popular")}</Badge> : null}
+                <Card data-tier={pkg.tier} className={popular ? "relative h-full ring-2 ring-gold" : "h-full"}>
+                  {popular ? <Badge className="absolute start-4 -top-3 bg-gold text-ink">{t("popular")}</Badge> : null}
                   <CardHeader>
                     <CardTitle className="text-2xl">{appLocale === "ar" ? pkg.nameAr : pkg.nameEn}</CardTitle>
                     <CardDescription>
@@ -1105,7 +1105,7 @@ export async function CtaBand({ locale }: { locale: AppLocale }) {
       <p className="mx-auto mt-3 max-w-xl text-lg text-primary-foreground/80">{t("subtitle")}</p>
       <GoldRule className="mx-auto mt-6 w-40" />
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <Button asChild size="lg" className="bg-gold text-ink hover:bg-gold/90 h-11 px-6 text-base">
+        <Button asChild size="lg" className="h-11 bg-gold px-6 text-base text-ink hover:bg-gold/90">
           <Link href="/dashboard">{t("cta")}</Link>
         </Button>
         {whatsapp ? (
