@@ -1660,12 +1660,12 @@ git commit -m "feat(guests): WhatsApp reminder for pending guests and copy-all-p
 
 Run: `npm run build` and compare the `/e/[slug]` first-load JS to the previous build (`git stash`-free: read the sizes printed by `next build` before/after, or `ls -la .next/static/chunks`). Must be ≤ +15 KB gz. If over, lazy-load `Countdown` with `next/dynamic`.
 
-- [ ] **Step 2: Apply the migration to prod**
+- [x] **Step 2: Apply the migration to prod**
 
 Run: `node --env-file=.env.prod node_modules/drizzle-kit/bin.cjs migrate`
 Expected: `migrations applied successfully!`; re-run → no-op.
 
-- [ ] **Step 3: Push and watch**
+- [x] **Step 3: Push and watch**
 
 ```bash
 git push origin main
@@ -1673,6 +1673,6 @@ git push origin main
 
 Wait for the Vercel deployment to be READY, then: `curl -sI https://da3wety.vercel.app/e/<any-published-slug>/event.ics | grep -i content-type` → `text/calendar`.
 
-- [ ] **Step 4: Update the README feature list**
+- [x] **Step 4: Update the README feature list**
 
 Add one line each for themes, gift, calendar/countdown, wishes/reminders under a "Features" heading; commit `docs: readme features for v1.1 plan 1`.
