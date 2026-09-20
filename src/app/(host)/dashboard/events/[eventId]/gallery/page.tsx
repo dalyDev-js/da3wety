@@ -12,7 +12,7 @@ import { getEventForHost } from "@/db/queries/events";
 import { countPhotosForEvent, listPhotosForHost } from "@/db/queries/photos";
 import type { PhotoStatus } from "@/db/schema/enums";
 import { requireHost } from "@/lib/auth";
-import { publicEnv } from "@/lib/env";
+import { supportWhatsAppUrl } from "@/lib/whatsapp";
 import { galleryState } from "@/lib/gallery-access";
 import { packageAllows } from "@/lib/packages";
 import { BUCKETS, createSignedReadUrls } from "@/lib/storage";
@@ -37,6 +37,7 @@ export default async function HostGalleryPage({
   const [t, format] = await Promise.all([getTranslations("Gallery"), getFormatter()]);
 
   if (!packageAllows(pkg, "gallery")) {
+    const whatsapp = supportWhatsAppUrl();
     return (
       <Empty className="border">
         <EmptyHeader>
@@ -44,13 +45,9 @@ export default async function HostGalleryPage({
           <EmptyTitle>{t("locked.title")}</EmptyTitle>
           <EmptyDescription>{t("locked.body")}</EmptyDescription>
         </EmptyHeader>
-        {publicEnv().NEXT_PUBLIC_SUPPORT_WHATSAPP ? (
+        {whatsapp ? (
           <Button asChild>
-            <a
-              href={`https://wa.me/${publicEnv().NEXT_PUBLIC_SUPPORT_WHATSAPP!.replace(/[^0-9]/g, "")}`}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={whatsapp} target="_blank" rel="noreferrer">
               {t("locked.cta")}
             </a>
           </Button>
