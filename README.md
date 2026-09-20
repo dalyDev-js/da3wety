@@ -2,6 +2,13 @@
 
 Digital invitations and events platform for the Egyptian market. Hosts create an event page, share a digital invitation, collect RSVPs, run a temporary shared photo gallery (Standard tier) and QR check-in at the door (Premium tier).
 
+## Features
+
+- Invitation themes: four palettes (ivory, sage, navy, noir) applied to the envelope, foil, confetti and share image.
+- Digital gift: optional localized gift section with a copy-to-clipboard handle (Instapay, wallet, bank).
+- Calendar and countdown: Google/Outlook links, Apple `.ics` download at `/e/<slug>/event.ics`, and a live countdown in the hero.
+- Wishes and reminders: guest messages on the event overview and in the CSV export; WhatsApp reminders for pending guests and copy-all-pending links.
+
 ## Stack
 
 Next.js 16 App Router (single app on Vercel) · Supabase (Postgres, Auth with Google, Storage) · Drizzle ORM · Tailwind CSS v4 + shadcn/ui (Radix, RTL) · zod v4 · motion · next-intl (Arabic-first, bilingual).
