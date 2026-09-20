@@ -25,10 +25,149 @@
   "Landing": {
     "title": "Da3wety — digital invitations for weddings and occasions",
     "description": "Create your event page, send the invitation on WhatsApp, and track guest replies in one place.",
-    "hero": "A digital invitation worthy of your celebration",
-    "heroSub": "An envelope that opens, a photo that is revealed, and RSVPs that reach you instantly.",
-    "cta": "Get started",
-    "login": "Sign in"
+    "nav": {
+      "features": "Features",
+      "howItWorks": "How it works",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "login": "Sign in",
+      "cta": "Create your invitation"
+    },
+    "hero": {
+      "eyebrow": "Digital invitations, made in Egypt",
+      "title": "A digital invitation worthy of your celebration",
+      "subtitle": "An envelope that opens, a photo that is revealed, and RSVPs that reach you instantly — all from one link you share on WhatsApp.",
+      "cta": "Create your invitation",
+      "secondary": "See how it works",
+      "trust": "No app to install · Works on any phone · Arabic and English"
+    },
+    "preview": {
+      "eyebrow": "You are invited",
+      "primary": "Ahmed",
+      "and": "&",
+      "secondary": "Sara",
+      "date": "Friday 12 June · 7:00 PM",
+      "attending": "Attending",
+      "declined": "Apologies"
+    },
+    "features": {
+      "eyebrow": "Everything an occasion needs",
+      "title": "More than a card",
+      "subtitle": "Each invitation is a small experience for your guests and a control room for you.",
+      "items": {
+        "envelope": {
+          "title": "An envelope that opens",
+          "body": "Guests tap to open a sealed envelope and scratch to reveal your photo."
+        },
+        "rsvp": {
+          "title": "RSVPs with seats",
+          "body": "Guests confirm, choose their seats and leave a wish. You see it instantly."
+        },
+        "whatsapp": {
+          "title": "Share on WhatsApp",
+          "body": "One public link, or a personal link per guest, with ready-made reminders."
+        },
+        "tickets": {
+          "title": "QR tickets",
+          "body": "Every confirmed guest gets a ticket with a QR code and a short code."
+        },
+        "gallery": {
+          "title": "Shared photo gallery",
+          "body": "Guests upload their photos to one gallery you can moderate. Kept for a week."
+        },
+        "checkin": {
+          "title": "Door check-in",
+          "body": "Your staff scan tickets at the door from any phone. Live attendance counts."
+        }
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "Three steps",
+      "title": "From idea to invitation in minutes",
+      "steps": {
+        "create": {
+          "title": "Create your event",
+          "body": "Names, date, place, a photo and the colours you like."
+        },
+        "share": {
+          "title": "Share the link",
+          "body": "Send the public link or a personal link to each guest on WhatsApp."
+        },
+        "track": {
+          "title": "Track replies",
+          "body": "Watch RSVPs, wishes and seats come in. Remind those who haven't answered."
+        }
+      }
+    },
+    "themes": {
+      "eyebrow": "Four palettes",
+      "title": "Pick the colours of your day",
+      "names": {
+        "ivory": "Ivory",
+        "sage": "Sage",
+        "navy": "Navy",
+        "noir": "Noir"
+      }
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "One price per event",
+      "subtitle": "Pay once for your occasion. Packages are activated after sign-up.",
+      "perEvent": "per event",
+      "contactForPrice": "Contact us for pricing",
+      "popular": "Most popular",
+      "cta": "Start with this package",
+      "note": "Prices shown are launch prices. Need something custom? Message us on WhatsApp.",
+      "highlights": {
+        "guests": "{count, plural, one {Up to # guest} other {Up to # guests}}",
+        "guestsUnlimited": "Unlimited guests",
+        "galleryOn": "Shared photo gallery",
+        "galleryOff": "No photo gallery",
+        "photos": "{count, plural, one {Up to # photo} other {Up to # photos}}",
+        "retention": "{days, plural, one {Photos kept for # day} other {Photos kept for # days}}",
+        "moderationOn": "Photo moderation",
+        "moderationOff": "No photo moderation",
+        "checkinOn": "QR door check-in",
+        "checkinOff": "No door check-in"
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "title": "Frequently asked",
+      "items": {
+        "app": {
+          "q": "Do my guests need an app?",
+          "a": "No. The invitation is a web page that opens in any browser on any phone."
+        },
+        "whatsapp": {
+          "q": "How do I send the invitation?",
+          "a": "Copy the link from your dashboard and share it on WhatsApp, or send each guest their personal link."
+        },
+        "edit": {
+          "q": "Can I change the invitation after sending it?",
+          "a": "Yes. The link stays the same; guests always see the latest version."
+        },
+        "photos": {
+          "q": "How long are gallery photos kept?",
+          "a": "Seven days after the event, then they are deleted automatically."
+        },
+        "payment": {
+          "q": "How do I pay?",
+          "a": "Sign in, create your event, then message us on WhatsApp to activate your package."
+        }
+      }
+    },
+    "ctaBand": {
+      "title": "Your celebration deserves a beautiful invitation",
+      "subtitle": "Create it in minutes, share it in seconds.",
+      "cta": "Create your invitation",
+      "whatsapp": "Talk to us on WhatsApp"
+    },
+    "footer": {
+      "tagline": "Elegant digital invitations for your occasions",
+      "whatsapp": "WhatsApp",
+      "rights": "© {year} Da3wety. All rights reserved."
+    }
   },
   "Auth": {
     "loginTitle": "Sign in",
@@ -92,7 +231,12 @@
     "sectionInvitation": "Invitation",
     "sectionTheme": "Invitation colours",
     "themeHint": "Envelope, card and confetti change together.",
-    "themes": { "ivory": "Ivory & oxblood", "sage": "Sage & gold", "navy": "Navy & gold", "noir": "Black & gold" },
+    "themes": {
+      "ivory": "Ivory & oxblood",
+      "sage": "Sage & gold",
+      "navy": "Navy & gold",
+      "noir": "Black & gold"
+    },
     "sectionGift": "Digital gift",
     "giftHint": "Shows a wallet number or InstaPay address with a copy button. Optional.",
     "giftEnabled": "Show the gift section on the invitation",
