@@ -9,7 +9,7 @@ type Props = { size?: keyof typeof SIZES; href?: string; className?: string };
 /** The "Da3wety" mark in Amiri. Renders a link when `href` is given. */
 export async function Wordmark({ size = "md", href, className }: Props) {
   const t = await getTranslations("Common");
-  const cls = cn("font-heading font-bold tracking-tight text-foreground", SIZES[size], className);
+  const cls = cn("font-heading tracking-tight text-foreground", SIZES[size], className);
   return href ? (
     <Link href={href} className={cls}>
       {t("appName")}

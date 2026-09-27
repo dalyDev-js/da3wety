@@ -60,7 +60,7 @@ export async function Pricing() {
                     <CardDescription>
                       {pkg.priceEgp > 0 ? (
                         <span className="flex items-baseline gap-2">
-                          <span className="font-heading text-4xl font-bold text-foreground" dir="ltr">
+                          <span className="font-heading text-4xl text-foreground" dir="ltr">
                             {format.number(pkg.priceEgp, "egp")}
                           </span>
                           <span>{t("perEvent")}</span>

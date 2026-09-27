@@ -10,14 +10,26 @@ import { htmlLang, TEXT_DIRECTION, toAppLocale } from "@/lib/i18n/config";
 import "@/app/globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("Landing");
+  const [t, common] = await Promise.all([getTranslations("Landing"), getTranslations("Common")]);
+  const locale = toAppLocale(await getLocale());
+  const title = t("title");
+  const description = t("description");
+  const url = publicEnv().NEXT_PUBLIC_SITE_URL;
+
   return {
-    metadataBase: new URL(publicEnv().NEXT_PUBLIC_SITE_URL),
-    title: {
-      default: t("title"),
-      template: "%s | Da3wety",
+    metadataBase: new URL(url),
+    title: { default: title, template: `%s | ${common("appName")}` },
+    description,
+    // Shared on WhatsApp and Facebook far more often than it is searched for.
+    openGraph: {
+      type: "website",
+      siteName: common("appName"),
+      locale: htmlLang(locale).replace("-", "_"),
+      url,
+      title,
+      description,
     },
-    description: t("description"),
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

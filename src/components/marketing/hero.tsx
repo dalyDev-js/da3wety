@@ -14,9 +14,7 @@ export async function Hero({ locale }: { locale: AppLocale }) {
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 py-16 sm:py-24 lg:grid-cols-2">
         <div className="space-y-6 text-center lg:text-start">
           <Eyebrow locale={locale}>{t("eyebrow")}</Eyebrow>
-          <h1 className="font-heading text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl">
-            {t("title")}
-          </h1>
+          <h1 className="font-heading text-4xl leading-tight text-balance sm:text-5xl lg:text-6xl">{t("title")}</h1>
           <p className="mx-auto max-w-xl text-lg text-pretty text-muted-foreground lg:mx-0">{t("subtitle")}</p>
           <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
             <Button asChild size="lg" className="h-11 px-6 text-base">

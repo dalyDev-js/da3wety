@@ -23,7 +23,7 @@ export async function InvitationPreview({ locale }: { locale: AppLocale }) {
         <Eyebrow locale={locale} className="text-(--inv-gold)">
           {t("eyebrow")}
         </Eyebrow>
-        <p className="font-heading text-4xl leading-tight font-bold">
+        <p className="font-heading text-4xl leading-tight">
           {t("primary")}
           <span className="mx-2 text-(--inv-gold)">{t("and")}</span>
           {t("secondary")}

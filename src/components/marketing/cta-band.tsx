@@ -13,7 +13,7 @@ export async function CtaBand() {
   const whatsapp = supportWhatsAppUrl();
   return (
     <Section tone="primary" className="text-center">
-      <h2 className="font-heading text-3xl font-bold text-balance sm:text-4xl">{t("title")}</h2>
+      <h2 className="font-heading text-3xl text-balance sm:text-4xl">{t("title")}</h2>
       <p className="mx-auto mt-3 max-w-xl text-lg text-primary-foreground/80">{t("subtitle")}</p>
       <GoldRule className="mx-auto mt-6 w-40" />
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

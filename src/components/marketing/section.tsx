@@ -35,7 +35,7 @@ export function SectionHeading({ locale, eyebrow, title, subtitle, align = "cent
   return (
     <div className={cn("max-w-2xl space-y-3", centred ? "mx-auto text-center" : "text-start", className)}>
       <Eyebrow locale={locale}>{eyebrow}</Eyebrow>
-      <h2 className="font-heading text-3xl font-bold text-balance sm:text-4xl">{title}</h2>
+      <h2 className="font-heading text-3xl text-balance sm:text-4xl">{title}</h2>
       {subtitle ? <p className="text-lg text-pretty text-muted-foreground">{subtitle}</p> : null}
       <GoldRule className={cn("w-40", centred && "mx-auto")} />
     </div>

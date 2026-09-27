@@ -63,15 +63,15 @@ The product (invitations, RSVP, gallery, check-in) is live at `da3wety.vercel.ap
 
 **Files:** create the two docs above.
 
-- [ ] **Step 1: Branch**
+- [x] **Step 1: Branch**
 
 ```bash
 git checkout main && git pull --ff-only && git checkout -b feat/plan-a-landing-design-system
 ```
 
-- [ ] **Step 2: Write the spec** — the "Context", "Architecture" and section list from this document (tokens, brand primitives, marketing components, landing order, pricing data, login/not-found, tests, out-of-scope) into `docs/superpowers/specs/2026-09-20-plan-a-landing-design-system-design.md`. Copy this plan verbatim to `docs/superpowers/plans/2026-09-20-plan-a-landing-and-design-system.md`.
+- [x] **Step 2: Write the spec** — the "Context", "Architecture" and section list from this document (tokens, brand primitives, marketing components, landing order, pricing data, login/not-found, tests, out-of-scope) into `docs/superpowers/specs/2026-09-20-plan-a-landing-design-system-design.md`. Copy this plan verbatim to `docs/superpowers/plans/2026-09-20-plan-a-landing-and-design-system.md`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs/superpowers && git commit -m "docs: Plan A spec and plan (landing + design system)"
@@ -85,7 +85,7 @@ git add docs/superpowers && git commit -m "docs: Plan A spec and plan (landing +
 
 **Interfaces — Produces:** Tailwind utilities `bg-paper`, `text-ink`, `bg-gold`, `text-gold`, `border-gold`, `bg-gold-soft`; CSS vars `--color-gold`, `--color-gold-soft`, `--color-paper`, `--color-ink`.
 
-- [ ] **Step 1: Add the four brand colours to `@theme inline`** (after `--color-foreground`):
+- [x] **Step 1: Add the four brand colours to `@theme inline`** (after `--color-foreground`):
 
 ```css
 --color-paper: var(--paper);
@@ -94,7 +94,7 @@ git add docs/superpowers && git commit -m "docs: Plan A spec and plan (landing +
 --color-gold-soft: var(--gold-soft);
 ```
 
-- [ ] **Step 2: Replace the `:root` values** (keep `.dark` untouched — dark mode is dormant and out of scope). Values are the ivory invitation palette from `src/components/invitation/invitation-theme.ts`, with a lighter paper for app backgrounds:
+- [x] **Step 2: Replace the `:root` values** (keep `.dark` untouched — dark mode is dormant and out of scope). Values are the ivory invitation palette from `src/components/invitation/invitation-theme.ts`, with a lighter paper for app backgrounds:
 
 ```css
 :root {
@@ -139,11 +139,11 @@ git add docs/superpowers && git commit -m "docs: Plan A spec and plan (landing +
 }
 ```
 
-- [ ] **Step 3: Update `themeColor`** in `src/app/(host)/layout.tsx` from `"#ffffff"` to `"#faf6ee"`.
+- [x] **Step 3: Update `themeColor`** in `src/app/(host)/layout.tsx` from `"#ffffff"` to `"#faf6ee"`.
 
-- [ ] **Step 4: Verify** — `npm run lint && npm run typecheck && npm run build` pass. Start `npm run dev`, open `/dashboard` (dev host) and `/dashboard/events/<id>/guests`: buttons are burgundy, background warm ivory, tables readable, focus rings gold. Screenshot for the PR.
+- [x] **Step 4: Verify** — `npm run lint && npm run typecheck && npm run build` pass. Start `npm run dev`, open `/dashboard` (dev host) and `/dashboard/events/<id>/guests`: buttons are burgundy, background warm ivory, tables readable, focus rings gold. Screenshot for the PR.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(theme): brand tokens from the ivory invitation palette"`
+- [x] **Step 5: Commit** — `git commit -m "feat(theme): brand tokens from the ivory invitation palette"`
 
 ---
 
@@ -158,7 +158,7 @@ git add docs/superpowers && git commit -m "docs: Plan A spec and plan (landing +
 - `FrameCorners({ className? })` — the double-hairline bracketed SVG frame, absolutely positioned, `text-[var(--inv-gold,var(--color-gold))]`.
 - `eyebrowClass(locale: string, size?: string): string` — re-export of `captionClass` from `components/invitation/caption.ts`; plus `Eyebrow({ locale, children, className? })` rendering a `<p>` with that class and `text-gold`.
 
-- [ ] **Step 1: `src/components/brand/gold-rule.tsx`**
+- [x] **Step 1: `src/components/brand/gold-rule.tsx`**
 
 ```tsx
 /** The double hairline of a printed invitation, with a small lozenge at the centre. */
@@ -175,7 +175,7 @@ export function GoldRule({ className = "" }: { className?: string }) {
 
 Replace the body of `src/components/invitation/gold-rule.tsx` with `export { GoldRule } from "@/components/brand/gold-rule";`.
 
-- [ ] **Step 2: `src/components/brand/frame-corners.tsx`** — move `OUTER`/`INNER` from `invitation-hero.tsx`:
+- [x] **Step 2: `src/components/brand/frame-corners.tsx`** — move `OUTER`/`INNER` from `invitation-hero.tsx`:
 
 ```tsx
 /* Double hairline frame with bracketed corners; hairlines stay 1px at any size. */
@@ -200,7 +200,7 @@ export function FrameCorners({ className = "" }: { className?: string }) {
 
 In `invitation-hero.tsx` delete the constants and replace the inline `<svg …>…</svg>` with `<FrameCorners />` (import from `@/components/brand/frame-corners`).
 
-- [ ] **Step 3: `src/components/brand/eyebrow.tsx`**
+- [x] **Step 3: `src/components/brand/eyebrow.tsx`**
 
 ```tsx
 import { captionClass } from "@/components/invitation/caption";
@@ -215,7 +215,7 @@ export function Eyebrow({ locale, children, className = "" }: Props) {
 }
 ```
 
-- [ ] **Step 4: `src/components/brand/wordmark.tsx`**
+- [x] **Step 4: `src/components/brand/wordmark.tsx`**
 
 ```tsx
 import Link from "next/link";
@@ -241,9 +241,9 @@ export async function Wordmark({ size = "md", href, className }: Props) {
 }
 ```
 
-- [ ] **Step 5: Verify** — `npm run lint && npm run typecheck`; open a published `/e/<slug>` locally: frame and gold rule unchanged.
+- [x] **Step 5: Verify** — `npm run lint && npm run typecheck`; open a published `/e/<slug>` locally: frame and gold rule unchanged.
 
-- [ ] **Step 6: Commit** — `git commit -m "refactor(brand): shared wordmark, gold rule, frame corners and eyebrow"`
+- [x] **Step 6: Commit** — `git commit -m "refactor(brand): shared wordmark, gold rule, frame corners and eyebrow"`
 
 ---
 
@@ -269,7 +269,7 @@ export function packageHighlights(
 ): PackageHighlight[];
 ```
 
-- [ ] **Step 1: Failing test** — append to `tests/unit/packages.test.ts`:
+- [x] **Step 1: Failing test** — append to `tests/unit/packages.test.ts`:
 
 ```ts
 import { packageHighlights } from "@/lib/packages";
@@ -298,9 +298,9 @@ describe("packageHighlights", () => {
 });
 ```
 
-- [ ] **Step 2: Run** `npx vitest run tests/unit/packages.test.ts` → FAIL (`packageHighlights` is not exported).
+- [x] **Step 2: Run** `npx vitest run tests/unit/packages.test.ts` → FAIL (`packageHighlights` is not exported).
 
-- [ ] **Step 3: Implement** in `src/lib/packages.ts`:
+- [x] **Step 3: Implement** in `src/lib/packages.ts`:
 
 ```ts
 export type PackageHighlight =
@@ -334,11 +334,11 @@ export function packageHighlights(pkg: HighlightSource): PackageHighlight[] {
 }
 ```
 
-- [ ] **Step 4: Placeholder prices** in `src/db/seed-data.ts`: basic `499`, standard `999`, premium `1999`, with a comment `// Placeholder launch prices; operators set the real value in the DB (seed.ts never overwrites price_egp).`
+- [x] **Step 4: Placeholder prices** in `src/db/seed-data.ts`: basic `499`, standard `999`, premium `1999`, with a comment `// Placeholder launch prices; operators set the real value in the DB (seed.ts never overwrites price_egp).`
 
-- [ ] **Step 5: Run** `npx vitest run tests/unit/packages.test.ts` → PASS. Run `npm run db:seed` locally (inserts prices on a fresh DB; existing rows keep their price — set them with `update packages set price_egp = …` locally to see numbers on the landing).
+- [x] **Step 5: Run** `npx vitest run tests/unit/packages.test.ts` → PASS. Run `npm run db:seed` locally (inserts prices on a fresh DB; existing rows keep their price — set them with `update packages set price_egp = …` locally to see numbers on the landing).
 
-- [ ] **Step 6: Commit** — `git commit -m "feat(packages): packageHighlights for pricing display and placeholder prices"`
+- [x] **Step 6: Commit** — `git commit -m "feat(packages): packageHighlights for pricing display and placeholder prices"`
 
 ---
 
@@ -348,7 +348,7 @@ export function packageHighlights(pkg: HighlightSource): PackageHighlight[] {
 
 **Interfaces — Produces:** keys used by Tasks 6–10. Replace the existing `Landing` object entirely.
 
-- [ ] **Step 1: `en.json` → `Landing`**
+- [x] **Step 1: `en.json` → `Landing`**
 
 ```json
 "Landing": {
@@ -425,7 +425,7 @@ export function packageHighlights(pkg: HighlightSource): PackageHighlight[] {
 }
 ```
 
-- [ ] **Step 2: `ar.json` → `Landing`** (same keys; Arabic plurals carry all six forms)
+- [x] **Step 2: `ar.json` → `Landing`** (same keys; Arabic plurals carry all six forms)
 
 ```json
 "Landing": {
@@ -502,9 +502,9 @@ export function packageHighlights(pkg: HighlightSource): PackageHighlight[] {
 }
 ```
 
-- [ ] **Step 3: Run** `npx vitest run tests/unit/messages.test.ts` → PASS (identical key sets, six plural forms).
+- [x] **Step 3: Run** `npx vitest run tests/unit/messages.test.ts` → PASS (identical key sets, six plural forms).
 
-- [ ] **Step 4: Commit** — `git commit -m "feat(i18n): landing page copy in Arabic and English"`
+- [x] **Step 4: Commit** — `git commit -m "feat(i18n): landing page copy in Arabic and English"`
 
 ---
 
@@ -519,7 +519,7 @@ export function packageHighlights(pkg: HighlightSource): PackageHighlight[] {
 - `SectionHeading({ locale, eyebrow, title, subtitle?, align?: "center"|"start" })`.
 - `SiteHeader({ locale })`, `SiteFooter({ locale })` — server components; header sticky, uses `Wordmark`, anchor nav, `LocaleToggle`, `Button` ghost (Sign in) + default (CTA).
 
-- [ ] **Step 1: `src/lib/whatsapp.ts`**
+- [x] **Step 1: `src/lib/whatsapp.ts`**
 
 ```ts
 import { publicEnv } from "@/lib/public-env";
@@ -536,7 +536,7 @@ export function supportWhatsAppUrl(text?: string): string | null {
 
 Replace the inline `https://wa.me/${…}` construction in `gallery/page.tsx` with `supportWhatsAppUrl()` (render the button only when non-null).
 
-- [ ] **Step 2: `src/components/marketing/section.tsx`**
+- [x] **Step 2: `src/components/marketing/section.tsx`**
 
 ```tsx
 import { cn } from "cn";
@@ -581,7 +581,7 @@ export function SectionHeading({ locale, eyebrow, title, subtitle, align = "cent
 }
 ```
 
-- [ ] **Step 3: `src/components/marketing/site-header.tsx`**
+- [x] **Step 3: `src/components/marketing/site-header.tsx`**
 
 ```tsx
 import Link from "next/link";
@@ -634,7 +634,7 @@ export async function SiteHeader({ locale }: { locale: AppLocale }) {
 }
 ```
 
-- [ ] **Step 4: `src/components/marketing/site-footer.tsx`**
+- [x] **Step 4: `src/components/marketing/site-footer.tsx`**
 
 ```tsx
 import { MessageCircleIcon } from "lucide-react";
@@ -686,9 +686,9 @@ export async function SiteFooter({ locale }: { locale: AppLocale }) {
 
 (Remove the `void locale` line and the prop if the footer ends up not needing the locale — keep the signature symmetric with `SiteHeader` only if used.)
 
-- [ ] **Step 5: Verify** — `npm run lint && npm run typecheck`.
+- [x] **Step 5: Verify** — `npm run lint && npm run typecheck`.
 
-- [ ] **Step 6: Commit** — `git commit -m "feat(marketing): section, site header and footer; shared WhatsApp link helper"`
+- [x] **Step 6: Commit** — `git commit -m "feat(marketing): section, site header and footer; shared WhatsApp link helper"`
 
 ---
 
@@ -698,7 +698,7 @@ export async function SiteFooter({ locale }: { locale: AppLocale }) {
 
 **Interfaces — Produces:** `Hero({ locale })`, `InvitationPreview({ locale })` — both server components. Preview is a static card styled with `invitationThemeStyle("ivory")` from `@/components/invitation/invitation-theme`, `FrameCorners`, `GoldRule`, `Eyebrow`; CSS-only entrance via tw-animate-css classes (`animate-in fade-in slide-in-from-bottom-4 duration-700`).
 
-- [ ] **Step 1: `invitation-preview.tsx`**
+- [x] **Step 1: `invitation-preview.tsx`**
 
 ```tsx
 import { getTranslations } from "next-intl/server";
@@ -744,7 +744,7 @@ export async function InvitationPreview({ locale }: { locale: AppLocale }) {
 }
 ```
 
-- [ ] **Step 2: `hero.tsx`**
+- [x] **Step 2: `hero.tsx`**
 
 ```tsx
 import { ArrowDownIcon } from "lucide-react";
@@ -786,9 +786,9 @@ export async function Hero({ locale }: { locale: AppLocale }) {
 }
 ```
 
-- [ ] **Step 3: Verify** — temporarily render `<Hero locale="ar" />` in `page.tsx` (final assembly is Task 10) and check `/` in both locales; the preview animates once, respects reduced motion.
+- [x] **Step 3: Verify** — temporarily render `<Hero locale="ar" />` in `page.tsx` (final assembly is Task 10) and check `/` in both locales; the preview animates once, respects reduced motion.
 
-- [ ] **Step 4: Commit** — `git commit -m "feat(marketing): hero with static invitation preview"`
+- [x] **Step 4: Commit** — `git commit -m "feat(marketing): hero with static invitation preview"`
 
 ---
 
@@ -798,7 +798,7 @@ export async function Hero({ locale }: { locale: AppLocale }) {
 
 **Interfaces — Produces:** `FeatureGrid({ locale })`, `HowItWorks({ locale })`, `ThemeStrip({ locale })`; all server components using `Section` + `SectionHeading` from Task 6 and shadcn `Card`.
 
-- [ ] **Step 1: `feature-grid.tsx`**
+- [x] **Step 1: `feature-grid.tsx`**
 
 ```tsx
 import { ImagesIcon, MailOpenIcon, MessageCircleIcon, QrCodeIcon, ScanLineIcon, UsersIcon } from "lucide-react";
@@ -843,7 +843,7 @@ export async function FeatureGrid({ locale }: { locale: AppLocale }) {
 }
 ```
 
-- [ ] **Step 2: `how-it-works.tsx`**
+- [x] **Step 2: `how-it-works.tsx`**
 
 ```tsx
 import { getTranslations } from "next-intl/server";
@@ -877,7 +877,7 @@ export async function HowItWorks({ locale }: { locale: AppLocale }) {
 }
 ```
 
-- [ ] **Step 3: `theme-strip.tsx`** — real palettes from `THEMES`:
+- [x] **Step 3: `theme-strip.tsx`** — real palettes from `THEMES`:
 
 ```tsx
 import { getTranslations } from "next-intl/server";
@@ -924,9 +924,9 @@ export async function ThemeStrip({ locale }: { locale: AppLocale }) {
 }
 ```
 
-- [ ] **Step 4: Verify** — `npm run lint && npm run typecheck`; render each in `page.tsx` temporarily and eyeball at 375px and 1280px widths.
+- [x] **Step 4: Verify** — `npm run lint && npm run typecheck`; render each in `page.tsx` temporarily and eyeball at 375px and 1280px widths.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(marketing): feature grid, how-it-works steps and theme strip"`
+- [x] **Step 5: Commit** — `git commit -m "feat(marketing): feature grid, how-it-works steps and theme strip"`
 
 ---
 
@@ -936,7 +936,7 @@ export async function ThemeStrip({ locale }: { locale: AppLocale }) {
 
 **Interfaces — Consumes:** `listPackages()` from `@/db/queries/packages`; `packageHighlights()` from Task 4; `supportWhatsAppUrl()` from Task 6. **Produces:** `Pricing()`, `Faq({ locale })`, `CtaBand({ locale })`.
 
-- [ ] **Step 1: `pricing.tsx`**
+- [x] **Step 1: `pricing.tsx`**
 
 ```tsx
 import { CheckIcon, MinusIcon } from "lucide-react";
@@ -1053,7 +1053,7 @@ export async function Pricing() {
 
 Note: the `egp` named number format already exists in `src/lib/i18n/config.ts`.
 
-- [ ] **Step 2: `faq.tsx`**
+- [x] **Step 2: `faq.tsx`**
 
 ```tsx
 import { getTranslations } from "next-intl/server";
@@ -1082,7 +1082,7 @@ export async function Faq({ locale }: { locale: AppLocale }) {
 }
 ```
 
-- [ ] **Step 3: `cta-band.tsx`**
+- [x] **Step 3: `cta-band.tsx`**
 
 ```tsx
 import { MessageCircleIcon } from "lucide-react";
@@ -1126,9 +1126,9 @@ export async function CtaBand({ locale }: { locale: AppLocale }) {
 }
 ```
 
-- [ ] **Step 4: Verify** — `npm run lint && npm run typecheck`; pricing shows three cards with EGP numbers (after local `update packages set price_egp` if needed) and "contact us" when price is 0.
+- [x] **Step 4: Verify** — `npm run lint && npm run typecheck`; pricing shows three cards with EGP numbers (after local `update packages set price_egp` if needed) and "contact us" when price is 0.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(marketing): pricing from package tiers, FAQ accordion and CTA band"`
+- [x] **Step 5: Commit** — `git commit -m "feat(marketing): pricing from package tiers, FAQ accordion and CTA band"`
 
 ---
 
@@ -1136,7 +1136,7 @@ export async function CtaBand({ locale }: { locale: AppLocale }) {
 
 **Files:** Modify `src/app/(host)/page.tsx` (replace entirely).
 
-- [ ] **Step 1: `page.tsx`**
+- [x] **Step 1: `page.tsx`**
 
 ```tsx
 import { getLocale } from "next-intl/server";
@@ -1172,9 +1172,9 @@ export default async function LandingPage() {
 }
 ```
 
-- [ ] **Step 2: Verify** — `/` in ar and en, 375px and 1280px: single `h1`, anchors scroll to sections (`scroll-mt-16` clears the sticky header), no horizontal scroll, RTL mirrors correctly. `npm run build` → `/` is `ƒ` (dynamic, because pricing reads the DB via cookies-scoped locale) — acceptable.
+- [x] **Step 2: Verify** — `/` in ar and en, 375px and 1280px: single `h1`, anchors scroll to sections (`scroll-mt-16` clears the sticky header), no horizontal scroll, RTL mirrors correctly. `npm run build` → `/` is `ƒ` (dynamic, because pricing reads the DB via cookies-scoped locale) — acceptable.
 
-- [ ] **Step 3: Commit** — `git commit -m "feat(landing): compose the marketing landing page"`
+- [x] **Step 3: Commit** — `git commit -m "feat(landing): compose the marketing landing page"`
 
 ---
 
@@ -1182,7 +1182,7 @@ export default async function LandingPage() {
 
 **Files:** Modify `src/app/(host)/login/page.tsx:26-31`, `src/app/(host)/not-found.tsx`.
 
-- [ ] **Step 1: Login** — replace the inline wordmark `<Link>` inside `CardHeader` with:
+- [x] **Step 1: Login** — replace the inline wordmark `<Link>` inside `CardHeader` with:
 
 ```tsx
 <div className="mb-2 flex flex-col items-center gap-3">
@@ -1193,11 +1193,11 @@ export default async function LandingPage() {
 
 (imports from `@/components/brand/wordmark` and `@/components/brand/gold-rule`). Keep every form field, name, and `devLoginEnabled()` branch exactly as-is.
 
-- [ ] **Step 2: Not-found** — replace the `font-mono` "404" line with `<Wordmark size="lg" href="/" />` followed by `<GoldRule className="w-24" />`, keep the heading, body and button.
+- [x] **Step 2: Not-found** — replace the `font-mono` "404" line with `<Wordmark size="lg" href="/" />` followed by `<GoldRule className="w-24" />`, keep the heading, body and button.
 
-- [ ] **Step 3: Verify** — `npm run lint && npm run typecheck`; `/login` renders and dev-login still posts (`tests/e2e/global-setup.ts` path).
+- [x] **Step 3: Verify** — `npm run lint && npm run typecheck`; `/login` renders and dev-login still posts (`tests/e2e/global-setup.ts` path).
 
-- [ ] **Step 4: Commit** — `git commit -m "feat(auth): brand wordmark on login and not-found"`
+- [x] **Step 4: Commit** — `git commit -m "feat(auth): brand wordmark on login and not-found"`
 
 ---
 
@@ -1205,7 +1205,7 @@ export default async function LandingPage() {
 
 **Files:** Create `tests/e2e/landing.spec.ts`.
 
-- [ ] **Step 1: Spec**
+- [x] **Step 1: Spec**
 
 ```ts
 import { expect, test } from "@playwright/test";
@@ -1243,21 +1243,21 @@ test.describe("landing", () => {
 
 Runs in both projects: `host-desktop` (signed in → CTA lands on `/dashboard`) and `guest-mobile` (no session → `/login`).
 
-- [ ] **Step 2: Run** `npx playwright test tests/e2e/landing.spec.ts` → 6 passed (3 × 2 projects).
+- [x] **Step 2: Run** `npx playwright test tests/e2e/landing.spec.ts` → 6 passed (3 × 2 projects).
 
-- [ ] **Step 3: Commit** — `git commit -m "test(e2e): landing page smoke in both projects"`
+- [x] **Step 3: Commit** — `git commit -m "test(e2e): landing page smoke in both projects"`
 
 ---
 
 ### Task 13: Full gate, visual QA, ship
 
-- [ ] **Step 1: Gate** — `npm run format && npm run lint && npm run typecheck && npm run test && npm run build && npm run test:e2e` all green (existing `invitation.spec.ts` unaffected).
+- [x] **Step 1: Gate** — `npm run format && npm run lint && npm run typecheck && npm run test && npm run build && npm run test:e2e` all green (existing `invitation.spec.ts` unaffected).
 
-- [ ] **Step 2: Visual QA** — with the dev server, screenshot `/`, `/login`, `/dashboard`, `/dashboard/events/<id>` in `ar` and `en` at 375px and 1280px (agent-browser or Claude-in-Chrome). Check: contrast of burgundy on paper (AA), gold only as accent never as body text, focus rings visible, no clipped Arabic ascenders in Amiri headings (`leading-tight` minimum).
+- [x] **Step 2: Visual QA** — with the dev server, screenshot `/`, `/login`, `/dashboard`, `/dashboard/events/<id>` in `ar` and `en` at 375px and 1280px (agent-browser or Claude-in-Chrome). Check: contrast of burgundy on paper (AA), gold only as accent never as body text, focus rings visible, no clipped Arabic ascenders in Amiri headings (`leading-tight` minimum).
 
-- [ ] **Step 3: Lighthouse (mobile)** on `/`: accessibility, best practices, SEO = 100; performance ≥ 90 (page ships no `motion` JS; only `LocaleToggle` + Accordion are client components).
+- [x] **Step 3: Lighthouse (mobile)** on `/`: accessibility, best practices, SEO = 100; performance ≥ 90 (page ships no `motion` JS; only `LocaleToggle` + Accordion are client components).
 
-- [ ] **Step 4: Push and PR**
+- [x] **Step 4: Push and PR**
 
 ```bash
 git push -u origin feat/plan-a-landing-design-system
@@ -1278,3 +1278,20 @@ After merge: set real prices on prod with `update packages set price_egp = … w
 ## Deferred to Plan B (dashboard redesign)
 
 Shared dashboard composites (`PageHeader`, `StatCard`/`StatGrid`, `SectionCard`, `LockedFeature`, `CopyableLink`, `SimplePager`, `EventBadges`), replacing the `🔒` emoji in `EventTabs` with `LockIcon`, the hard-coded emerald banner in `edit/page.tsx`, consistent table wrappers, a landing OG image, dark mode.
+
+---
+
+## Completion note (2026-09-27)
+
+All tasks implemented and merged to `main` (`7bdd5ad..c0e545b`, 14 commits). Deviations from the plan as written:
+
+- **Task 13 Step 4** — merged to `main` by fast-forward instead of opening a PR, at the user's request. The branch `feat/plan-a-landing-design-system` is pushed and still on the remote.
+- **Task 9** — `highlightLabel` became a closure over the translator instead of taking it as a typed parameter; next-intl narrows the translator's key type, so the standalone signature in the plan did not typecheck.
+- **Task 6** — `SiteFooter` takes no `locale` prop; it never needed one.
+- **Task 13 Step 3** — the Lighthouse **performance** category was not measured in the first pass (only accessibility, best practices and SEO, all 100). Measured afterwards at **76** against the plan's ≥90 target; addressed in the follow-up below.
+
+### Follow-up (branch `fix/landing-signup-og-perf`)
+
+- **Sign-up signal.** The landing CTA sent first-time visitors to a page headed "Sign in" with no indication an account would be created. Added `Auth.newAccountNote` in both catalogs and reworded `Auth.loginSubtitle`.
+- **Share previews.** The host surface emitted no `og:*` or `twitter:*` tags, so the landing had no preview card on WhatsApp. Added `openGraph` and `twitter` to `(host)/layout.tsx`. A landing OG **image** is still deferred.
+- **Performance.** Dropped Amiri 700 from `src/lib/fonts.ts` (~100 KB) and removed `font-bold` from all 11 `font-heading` call sites, which would otherwise render a synthetic faux bold. The invitation OG image is unaffected — it loads `src/assets/fonts/Amiri-Bold.ttf` directly through sharp, not next/font.

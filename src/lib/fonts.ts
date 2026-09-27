@@ -14,7 +14,10 @@ export const fontSans = Cairo({
 
 export const fontHeading = Amiri({
   subsets: ["arabic", "latin"],
-  weight: ["400", "700"],
+  // 400 only: Amiri bold costs ~100 KB and the display face reads better at regular
+  // weight. Never pair font-heading with font-bold/semibold — the browser would
+  // synthesise a faux bold.
+  weight: ["400"],
   display: "swap",
   variable: "--font-heading",
 });

@@ -22,7 +22,7 @@ export async function ThemeStrip({ locale }: { locale: AppLocale }) {
                 style={{ backgroundColor: theme.paper, borderColor: theme.gold }}
               >
                 <div className="flex h-full flex-col items-center justify-center gap-2 p-4">
-                  <span className="font-heading text-2xl font-bold" style={{ color: theme.ink }}>
+                  <span className="font-heading text-2xl" style={{ color: theme.ink }}>
                     {preview("primary")} <span style={{ color: theme.gold }}>{preview("and")}</span>{" "}
                     {preview("secondary")}
                   </span>

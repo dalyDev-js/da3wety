@@ -26,7 +26,7 @@ export default async function DashboardLayout({ children }: LayoutProps<"/dashbo
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-3 px-4">
           <nav className="flex items-center gap-4">
-            <Link href="/dashboard" className="font-heading text-xl font-bold">
+            <Link href="/dashboard" className="font-heading text-xl">
               {common("appName")}
             </Link>
             <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground">

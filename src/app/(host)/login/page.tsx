@@ -40,6 +40,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             </p>
           ) : null}
           <GoogleSignInButton next={next} label={t("continueWithGoogle")} errorLabel={t("error")} />
+          <p className="text-center text-xs text-muted-foreground">{t("newAccountNote")}</p>
 
           {devLoginEnabled() ? (
             <form action="/auth/dev-login" method="post" className="space-y-3 border-t pt-4">

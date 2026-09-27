@@ -171,8 +171,9 @@
   },
   "Auth": {
     "loginTitle": "Sign in",
-    "loginSubtitle": "Sign in with Google to manage your events.",
+    "loginSubtitle": "Continue with Google to create and manage your events.",
     "continueWithGoogle": "Continue with Google",
+    "newAccountNote": "New to Da3wety? Signing in with Google creates your account — no password to remember.",
     "signOut": "Sign out",
     "devLogin": "Developer login (development only)",
     "email": "Email",

@@ -60,7 +60,7 @@ export async function InvitationCard({ event, guestName, galleryHref, children }
           </>
         }
         names={
-          <h1 className="font-heading text-4xl leading-tight font-bold text-balance sm:text-5xl">
+          <h1 className="font-heading text-4xl leading-tight text-balance sm:text-5xl">
             {event.honoreePrimary}
             {event.honoreeSecondary ? (
               <>
